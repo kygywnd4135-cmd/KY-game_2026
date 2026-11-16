@@ -97,8 +97,8 @@ window.Keywords = (function () {
   const COUNT = NOTES.length;
 
   const hint = (cls, x, y, sign, label) =>
-    `<div class="hint kw__hint ${cls}" style="left:${x}px;top:${y}px"><svg width="59" height="59" viewBox="0 0 59 59" fill="none" aria-hidden="true"><rect width="59" height="59" rx="29.5" fill="#4C4C4C"/>` +
-    (sign === "+" ? `<path d="M31.5 28.4H46V31.5H31.5V46H28.4V31.5H14V28.4H28.4V14H31.5V28.4Z" fill="#F0F0F0"/>` : `<path d="M46 31.5H14V28.4H46V31.5Z" fill="#F0F0F0"/>`) +
+    `<div class="hint kw__hint ${cls}" style="left:${x}px;top:${y}px"><svg width="59" height="59" viewBox="0 0 59 59" fill="none" aria-hidden="true"><rect width="59" height="59" rx="29.5" fill="#F1F1F1"/>` +
+    (sign === "+" ? `<path d="M31.5 28.4H46V31.5H31.5V46H28.4V31.5H14V28.4H28.4V14H31.5V28.4Z" fill="#2D2D2D"/>` : `<path d="M46 31.5H14V28.4H46V31.5Z" fill="#2D2D2D"/>`) +
     `</svg><span class="hint__label">${label}</span></div>`;
 
   // 칩의 자리(피그마 그대로): 윗줄 셋, 아랫줄 둘

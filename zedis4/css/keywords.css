@@ -2,7 +2,7 @@
    메모(동그란 종이)의 위치·크기·선택 정도(--sel)는 js/keywords.js가 매 프레임 넣는다. */
 
 .screen--keywords {
-  background: #fff;
+  background: #434343;
 }
 
 .keywords svg {
@@ -78,9 +78,10 @@
   top: 242px;
   width: 1432px;
   height: 1432px;
-  background: rgba(153, 153, 153, 0.2);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  /* 반투명 유리: 뒤에 있는 보라가 뿌옇게 비친다 */
+  background: rgba(153, 153, 153, 0.45);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
 }
 
 .kw__plate {
@@ -88,7 +89,9 @@
   top: 344px;
   width: 1228px;
   height: 1228px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
 /* ── 메모 ── */
@@ -126,9 +129,8 @@
   overflow: hidden;
   border: 13px solid #fff;
   border-radius: 50%;
-  /* 고른 메모는 종이가 더 짙어진다 */
-  background: color-mix(in oklab, #252525 calc(var(--sel) * 100%), #696969);
-  box-shadow: 0 6px 34px rgba(0, 0, 0, 0.22);
+  background: #f8f8f8;
+  box-shadow: 0 0 59px rgba(45, 47, 51, 0.16);
 }
 
 .note__disc svg {
@@ -197,7 +199,7 @@
 .kw__title {
   left: 966px;
   top: 557px;
-  color: #9533ff;
+  color: #353535;
   font-size: 65px;
   font-weight: 800;
   line-height: 80px;
@@ -272,7 +274,7 @@
 }
 
 .keywords .kw__hint {
-  color: #4c4c4c;
+  color: #f1f1f1;
   cursor: pointer;
 }
 
