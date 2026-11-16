@@ -64,6 +64,8 @@ window.Lobby = (function () {
     {
       id: "pink", vivid: "#ff1a75", vividDeep: "#a30f55", pastel: "#ffacce", pastelDeep: "#e18abb",
       face: white(-58.5, 9.5, 40.5) + white(40.5, 9.5, 40.5) + dot(-52.5, -2.5, 29) + dot(37.5, 21, 29) + spiral("lc__spin--a", -53, -4) + spiral("lc__spin--b", 36, 21),
+      title: "오늘의 추천 시나리오",
+      desc: ["다른 사람들은 어떤 일상을 재구성하고 있을까요?", "엄선된 추천 시나리오를 확인해봐요!"],
     },
     { id: "green", vivid: "#2fd45a", vividDeep: "#138a3a", pastel: "#b9ffb8", pastelDeep: "#79df65", face: lid(-37.5, 27.5) + lid(44.5, 27.5) },
     { id: "lilac", vivid: "#c24dff", vividDeep: "#7a1fb8", pastel: "#e5c3fd", pastelDeep: "#cc89ff", face: lid(-58.5, 27.5) + lid(23.5, 27.5) },
