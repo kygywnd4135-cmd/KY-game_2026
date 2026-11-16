@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/power.css" />
     <link rel="stylesheet" href="css/loading.css" />
     <link rel="stylesheet" href="css/lobby.css" />
+    <link rel="stylesheet" href="css/talk.css" />
   </head>
   <body>
     <div class="viewport">
@@ -180,6 +181,75 @@
 
           <p class="stamp" data-clock-short>11/17 Tue. 9:41</p>
         </section>
+
+        <!-- ───────── 대화(극장) ───────── -->
+        <section class="screen screen--talk talk" data-screen="talk">
+          <div class="talk__light"></div>
+          <div class="talk__floor"></div>
+
+          <!-- 배우: 수염 쓴 파랑 -->
+          <div class="actor" role="img" aria-label="수염을 쓴 파란 캐릭터">
+            <div class="actor__bounce">
+              <div class="actor__idle">
+                <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M958 895H874C884.648 875.289 884.648 863.694 918.958 860.216C946.406 857.433 956.423 882.246 958 895Z" fill="#17179B" />
+                  <path d="M1000 895H1086C1075.1 875.289 1075.1 863.694 1039.97 860.216C1011.87 857.433 1001.62 882.246 1000 895Z" fill="#17179B" />
+                  <circle cx="983.5" cy="724.5" r="135.5" fill="#3A3AFF" />
+                  <!-- 오른쪽 눈: 지그시 내리깐 눈 -->
+                  <g>
+                    <path d="M987.492 708.008C986.377 714.576 986.566 721.298 988.049 727.792C989.532 734.286 992.279 740.425 996.134 745.857C999.989 751.289 1004.88 755.909 1010.52 759.452C1016.16 762.996 1022.44 765.393 1029.01 766.509C1035.58 767.624 1042.3 767.434 1048.79 765.952C1055.29 764.469 1061.42 761.721 1066.86 757.866C1072.29 754.011 1076.91 749.123 1080.45 743.483C1084 737.842 1086.39 731.559 1087.51 724.992L1037.5 716.5L987.492 708.008Z" fill="white" />
+                    <path d="M1003.99 710.81C1003.25 715.21 1003.37 719.714 1004.37 724.065C1005.36 728.416 1007.2 732.529 1009.78 736.169C1012.37 739.809 1015.64 742.904 1019.42 745.278C1023.2 747.652 1027.41 749.259 1031.81 750.006C1036.21 750.753 1040.72 750.626 1045.07 749.633C1049.42 748.639 1053.53 746.798 1057.17 744.215C1060.81 741.632 1063.9 738.358 1066.28 734.578C1068.65 730.799 1070.26 726.589 1071.01 722.189L1037.5 716.5L1003.99 710.81Z" fill="#191EAB" />
+                  </g>
+                  <!-- 왼쪽 눈: 동그랗게 뜬 눈 -->
+                  <g class="actor__eye">
+                    <circle cx="925.5" cy="719.5" r="45.5" fill="white" />
+                    <ellipse class="actor__pupil" cx="931" cy="719.5" rx="33" ry="32.5" fill="#191EAB" />
+                  </g>
+                  <path class="actor__stache actor__stache--l" d="M922.977 758.789C951.386 727.741 982.163 749.548 994 764.333C982.163 779.58 952.523 811.459 928.659 817.004C904.795 822.548 878.943 803.605 869 793.441C875.155 794.827 894.568 789.837 922.977 758.789Z" fill="black" />
+                  <path class="actor__stache actor__stache--r" d="M1036.45 757.21C1008.27 725.334 977.742 747.723 966 762.902C977.742 778.555 1007.15 811.285 1030.82 816.977C1054.49 822.669 1080.14 803.221 1090 792.786C1083.89 794.209 1064.64 789.086 1036.45 757.21Z" fill="black" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bubble">
+            <div class="bubble__pop">
+              <svg class="bubble__shape" width="1049" height="359" viewBox="0 0 1049 359" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M58.988 326.482L14.08 73.178L527.887 18.48L1048.96 73.178L1025.84 282.854L664.59 359.04L58.988 326.482Z" fill="#6B6B6B" />
+                <path d="M44.87 308.001L0 54.698L513.371 0L1034 54.698L1010.9 264.373L649.96 340.56L44.87 308.001Z" fill="#F4F4F4" />
+              </svg>
+              <p class="bubble__text" data-talk-text></p>
+              <svg class="bubble__next" width="24.42" height="44.202" viewBox="974.38 206.699 24.42 44.202" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M998.8 228.8L974.38 250.901L974.38 206.699L998.8 228.8Z" fill="#1871ED" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- 관객석 -->
+          <div class="crowd" aria-hidden="true">
+            <div class="crowd__seat" data-seat="peach" style="--x:88px;--y:1047px;--r:117px;--c:#ffd3af;--tempo:2.6s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="mint" style="--x:365px;--y:1059px;--r:91px;--c:#c7fffa;--tempo:2.1s;--offset:-0.7s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="green" style="--x:573.5px;--y:1075.5px;--r:74.5px;--c:#b9ffb8;--tempo:2.9s;--offset:-1.3s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="violet" style="--x:1597px;--y:1045px;--r:105px;--c:#bea9ff;--tempo:2.3s;--offset:-0.4s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="pink" style="--x:1871.5px;--y:1027.5px;--r:122.5px;--c:#ffacce;--tempo:2.7s;--offset:-1.8s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+          </div>
+
+          <!-- 관객 반응: 한마디와 느낌표 (내용은 js/talk.js가 채운다) -->
+          <p class="shout" data-shout="farLeft" style="transform: translate(44.85px, 829.96px) rotate(-18.08deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+          <p class="shout" data-shout="left" style="transform: translate(397.22px, 878px) rotate(16.52deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+          <p class="shout" data-shout="right" style="transform: translate(1393px, 938.89px) rotate(-18.08deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+          <p class="shout" data-shout="farRight" style="transform: translate(1813.94px, 802px) rotate(15deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+
+          <svg class="gasp" data-gasp="l" style="left:186px;top:853px" width="36" height="76" viewBox="186 853 36 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M205.801 854.167L193.886 904.02L206.518 907.404L221.16 858.282L205.801 854.167ZM194.283 927.801C196.561 928.411 198.733 928.13 200.798 926.957C202.869 925.761 204.199 924.021 204.786 921.737C205.413 919.488 205.126 917.34 203.924 915.291C202.722 913.243 200.982 911.914 198.704 911.303C196.518 910.718 194.381 911.008 192.293 912.175C190.205 913.342 188.847 915.049 188.22 917.298C187.836 918.823 187.865 920.323 188.309 921.798C188.735 923.244 189.468 924.513 190.507 925.605C191.552 926.674 192.811 927.406 194.283 927.801Z" fill="#A9A9A9" />
+          </svg>
+          <svg class="gasp" data-gasp="r" style="left:1721px;top:864px" width="20" height="76" viewBox="1721 864 20 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M1722.74 865.002L1724.41 916.231L1737.49 916.159L1738.64 864.914L1722.74 865.002ZM1731.08 939.063C1733.44 939.05 1735.46 938.205 1737.14 936.528C1738.82 934.828 1739.64 932.798 1739.61 930.44C1739.62 928.106 1738.77 926.109 1737.07 924.451C1735.37 922.793 1733.34 921.971 1730.98 921.984C1728.72 921.996 1726.74 922.841 1725.03 924.518C1723.32 926.194 1722.47 928.2 1722.46 930.535C1722.49 932.107 1722.91 933.545 1723.73 934.851C1724.52 936.133 1725.56 937.164 1726.86 937.943C1728.15 938.698 1729.55 939.071 1731.08 939.063Z" fill="#A9A9A9" />
+          </svg>
+        </section>
+
+        <!-- 화면 전환용 암전 막 -->
+        <div class="blackout" aria-hidden="true"></div>
       </main>
       </div>
     </div>
@@ -188,6 +258,7 @@
     <script src="js/clock.js"></script>
     <script src="js/typewriter.js"></script>
     <script src="js/lobby.js"></script>
+    <script src="js/talk.js"></script>
     <script src="js/flow.js"></script>
   </body>
 </html>

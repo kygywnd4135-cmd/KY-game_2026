@@ -213,6 +213,7 @@ window.Lobby = (function () {
     pop.classList.remove("is-picked");
     void pop.offsetWidth;
     pop.classList.add("is-picked");
+    if (api.onPick) api.onPick(CHARACTERS[selected].id);
   }
 
   // 화면 좌표 → 스테이지(1935×1047) 좌표
@@ -307,5 +308,7 @@ window.Lobby = (function () {
   });
   render(performance.now());
 
-  return { enter, leave, handleKey, turn, pick };
+  // onPick(캐릭터 id): 결정(Enter·탭)했을 때 불린다. js/flow.js가 연결한다.
+  const api = { enter, leave, handleKey, turn, pick, onPick: null };
+  return api;
 })();

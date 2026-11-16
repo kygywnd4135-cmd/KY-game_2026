@@ -1,0 +1,429 @@
+/* ───────── 대화(극장) ─────────
+   처음엔 불이 꺼져 모두 실루엣으로 보이다가, .is-lit 이 붙으면 조명이 켜진다.
+   대사와 관객 반응의 내용·타이밍은 js/talk.js의 SCRIPT에서 정한다. */
+
+.screen--talk {
+  background: #1a1a1a;
+}
+
+/* 암전용 막: 화면 전환 때 스르륵 덮였다가 걷힌다 */
+.blackout {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease-in-out;
+  z-index: 50;
+}
+
+.blackout.is-on {
+  opacity: 1;
+  transition-duration: 0.75s;
+}
+
+/* ── 조명 ── */
+.talk__light {
+  position: absolute;
+  left: 429.677px;
+  top: -575px;
+  width: 1107.646px;
+  height: 1559.25px;
+  filter: blur(3px);
+  opacity: 0;
+}
+
+.talk__light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  /* 흰색 → 투명한 황토색. 중간 단계를 넣어 피그마처럼 따뜻한 빛이 돌게 한다 */
+  background: linear-gradient(
+    to bottom,
+    #fff 0,
+    rgba(230, 222, 206, 0.75) 337.3px,
+    rgba(204, 189, 157, 0.5) 674.6px,
+    rgba(179, 156, 108, 0.25) 1012px,
+    rgba(153, 123, 59, 0) 1349.3px
+  );
+}
+
+.talk.is-lit .talk__light {
+  animation: light-on 0.75s both, light-breathe 5s 0.75s ease-in-out infinite;
+}
+
+/* 형광등 켜지듯 깜빡, 깜빡, 팟! */
+@keyframes light-on {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.75;
+  }
+  15% {
+    opacity: 0.1;
+  }
+  26% {
+    opacity: 0.9;
+  }
+  34% {
+    opacity: 0.45;
+  }
+  46%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes light-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* 객석(검은 바닥) */
+.talk__floor {
+  position: absolute;
+  left: -68px;
+  top: 895px;
+  width: 2132px;
+  height: 216px;
+  border-radius: 25px;
+  background: #000;
+}
+
+/* ── 배우(수염 쓴 파랑) ── */
+.actor,
+.actor__bounce,
+.actor__idle {
+  position: absolute;
+  inset: 0;
+}
+
+.actor__bounce,
+.actor__idle {
+  transform-origin: 983.5px 895px;
+}
+
+.actor svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* 불이 꺼져 있을 땐 새까만 실루엣 */
+.actor {
+  filter: brightness(0);
+  transition: filter 0.2s;
+}
+
+.talk.is-lit .actor {
+  filter: none;
+  transition: filter 0.18s 0.2s;
+}
+
+.talk.is-lit .actor__bounce {
+  animation: jelly 0.75s 0.22s both;
+}
+
+.actor__idle {
+  animation: actor-bob 2.6s ease-in-out infinite;
+}
+
+.actor__stache,
+.actor__eye,
+.actor__pupil {
+  transform-box: fill-box;
+}
+
+.actor__stache--l {
+  transform-origin: 100% 30%;
+  animation: stache-l 2.6s ease-in-out infinite;
+}
+
+.actor__stache--r {
+  transform-origin: 0% 30%;
+  animation: stache-r 2.6s ease-in-out infinite;
+}
+
+.actor__eye {
+  transform-origin: 50% 50%;
+  animation: blink 4.2s infinite;
+}
+
+.actor__pupil {
+  animation: actor-glance 6s ease-in-out infinite;
+}
+
+/* 말하는 동안: 수염이 들썩들썩, 몸도 살짝 통통 */
+.talk.is-talking .actor__idle {
+  animation: actor-talk 0.36s ease-in-out infinite;
+}
+
+.talk.is-talking .actor__stache--l {
+  animation: stache-talk-l 0.24s ease-in-out infinite alternate;
+}
+
+.talk.is-talking .actor__stache--r {
+  animation: stache-talk-r 0.24s ease-in-out infinite alternate;
+}
+
+@keyframes actor-bob {
+  0%,
+  100% {
+    transform: scale(1.015, 0.985);
+  }
+  50% {
+    transform: translateY(-6px) scale(0.99, 1.012);
+  }
+}
+
+@keyframes actor-talk {
+  0%,
+  100% {
+    transform: scale(1.02, 0.98);
+  }
+  50% {
+    transform: translateY(-5px) scale(0.985, 1.02);
+  }
+}
+
+@keyframes stache-l {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes stache-r {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes stache-talk-l {
+  from {
+    transform: rotate(-4deg) translateY(-2px);
+  }
+  to {
+    transform: rotate(9deg) translateY(4px);
+  }
+}
+
+@keyframes stache-talk-r {
+  from {
+    transform: rotate(4deg) translateY(-2px);
+  }
+  to {
+    transform: rotate(-9deg) translateY(4px);
+  }
+}
+
+@keyframes actor-glance {
+  0%,
+  30%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  62% {
+    transform: translate(-9px, 4px);
+  }
+  72%,
+  88% {
+    transform: translate(7px, 3px);
+  }
+}
+
+/* ── 말풍선: 불이 켜진 뒤에 나온다 ── */
+.talk .bubble {
+  opacity: 0;
+}
+
+.talk.is-lit .bubble {
+  opacity: 1;
+}
+
+.talk .bubble__text {
+  left: 517px;
+  top: 93px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.talk.is-lit .bubble__pop.is-entering {
+  animation-delay: 0.55s;
+}
+
+/* ── 관객 ── */
+.crowd {
+  position: absolute;
+  inset: 0;
+}
+
+.crowd__seat {
+  position: absolute;
+  left: calc(var(--x) - var(--r));
+  top: calc(var(--y) - var(--r));
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  animation: crowd-murmur var(--tempo, 2.4s) var(--offset, 0s) ease-in-out infinite;
+}
+
+.crowd__hop {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+}
+
+.crowd__head {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  /* 불이 꺼져 있을 땐 색 없는 실루엣 */
+  background: #2b2b2b;
+  transition: background-color 0.5s 0.25s, opacity 0.5s 0.25s;
+}
+
+.talk.is-lit .crowd__head {
+  background: var(--c);
+  opacity: 0.3;
+}
+
+/* 반응할 때: 들썩! 하고 잠깐 환해진다 */
+.crowd__hop.is-hopping {
+  animation: crowd-hop 0.7s both;
+}
+
+.crowd__hop.is-hopping .crowd__head {
+  animation: crowd-flash 0.7s both;
+}
+
+@keyframes crowd-murmur {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(1.5deg);
+  }
+}
+
+@keyframes crowd-hop {
+  0% {
+    transform: none;
+  }
+  14% {
+    transform: scale(1.1, 0.88);
+  }
+  38% {
+    transform: translateY(-58px) scale(0.93, 1.08);
+  }
+  62% {
+    transform: translateY(0) scale(1.08, 0.92);
+  }
+  80% {
+    transform: translateY(-10px) scale(0.98, 1.02);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes crowd-flash {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  30%,
+  55% {
+    opacity: 0.6;
+  }
+}
+
+/* 관객의 한마디 */
+.shout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  transform-origin: 0 0;
+  color: #9c9c9c;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 50px;
+  white-space: nowrap;
+}
+
+.shout__pop {
+  display: block;
+  transform: scale(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.15s var(--back-in);
+}
+
+.shout.is-on .shout__pop {
+  transform: none;
+  transition: transform 0.5s var(--spring);
+}
+
+.shout__wiggle {
+  display: block;
+}
+
+.shout.is-on .shout__wiggle {
+  animation: shout-wiggle 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes shout-wiggle {
+  from {
+    transform: rotate(-2.5deg) translateY(1px);
+  }
+  to {
+    transform: rotate(2.5deg) translateY(-3px);
+  }
+}
+
+/* 관객의 느낌표 */
+.gasp {
+  position: absolute;
+  overflow: visible;
+  transform: scale(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.15s var(--back-in);
+}
+
+.gasp.is-on {
+  transform: none;
+  transition: transform 0.5s var(--spring);
+}
+
+.gasp.is-on path {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: lc-bang 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talk *,
+  .talk *::before {
+    animation: none !important;
+  }
+
+  .talk.is-lit .talk__light {
+    opacity: 1;
+  }
+}

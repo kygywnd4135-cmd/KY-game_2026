@@ -10,7 +10,9 @@ window.Typewriter = (function () {
     el.classList.add("tw");
     el.classList.remove("is-instant");
     const chars = [];
+    let pos = 0; // 원문에서 몇 번째 글자까지인지(공백·줄바꿈 포함)
     for (const ch of Array.from(text)) {
+      pos += ch.length;
       if (ch === "\n") {
         el.appendChild(document.createElement("br"));
       } else if (ch === " ") {
@@ -19,6 +21,7 @@ window.Typewriter = (function () {
         const span = document.createElement("span");
         span.className = "tw__ch";
         span.textContent = ch;
+        span.twPos = pos;
         el.appendChild(span);
         chars.push(span);
       }
@@ -30,6 +33,7 @@ window.Typewriter = (function () {
     const speed = (options && options.speed) || 42;
     const gap = (options && options.gap) || 260; // 문장 사이 쉬는 시간
     const onDone = options && options.onDone;
+    const onChar = options && options.onChar; // 글자가 나올 때마다 (원문 기준 위치)를 알려 준다
 
     // 각 글자에 "몇 ms 뒤에 나올지"를 미리 매긴다
     const queue = [];
@@ -59,6 +63,7 @@ window.Typewriter = (function () {
       const elapsed = now - start;
       while (index < queue.length && queue[index].at <= elapsed) {
         queue[index].span.classList.add("is-on");
+        if (onChar) onChar(queue[index].span.twPos);
         index++;
       }
       if (index >= queue.length) complete();

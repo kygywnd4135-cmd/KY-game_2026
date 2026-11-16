@@ -1,4 +1,4 @@
-// 화면 흐름: 대기화면 → 전원 1 → 전원 2 → 전원 3 → 펜 로딩
+// 화면 흐름: 대기화면 → 전원 1 → 전원 2 → 전원 3 → 펜 로딩 → 로비 → 대화(극장)
 // 터치(클릭)하거나 아무 키나 누르면 진행한다.
 // 글자가 출력되는 중이면 먼저 남은 글자를 전부 보여 주고, 한 번 더 누르면 다음으로 넘어간다.
 (function () {
@@ -17,7 +17,10 @@
     { screen: "power", step: 3 },
     { screen: "loading" },
     { screen: "lobby" },
+    { screen: "talk" },
   ];
+  const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
+  const TALK = STEPS.findIndex((s) => s.screen === "talk");
 
   const screens = {};
   document.querySelectorAll("[data-screen]").forEach((el) => (screens[el.dataset.screen] = el));
@@ -29,9 +32,11 @@
   const bounce = power.querySelector(".pc__bounce");
   const loadingLead = screens.loading.querySelector("[data-loading-lead]");
   const loadingSub = screens.loading.querySelector("[data-loading-sub]");
+  const blackoutEl = document.querySelector(".blackout");
 
   let index = 0;
   let typer = null;
+  let busy = false; // 암전 전환 중에는 입력을 받지 않는다
 
   // 같은 애니메이션 클래스를 다시 붙여 처음부터 재생한다
   function replay(el, className, others) {
@@ -79,9 +84,12 @@
 
     showScreen(cur.screen);
     if (prev.screen === "lobby" && cur.screen !== "lobby") Lobby.leave();
+    if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
 
     if (cur.screen === "lobby") {
       Lobby.enter();
+    } else if (cur.screen === "talk") {
+      Talk.enter();
     } else if (cur.screen === "power") {
       enterPower(cur.step, prev.screen !== "power");
     } else if (cur.screen === "loading") {
@@ -93,6 +101,17 @@
     }
   }
 
+  // 스르륵 암전 → 화면 교체 → 다시 밝아짐
+  function blackout(next) {
+    busy = true;
+    blackoutEl.classList.add("is-on");
+    setTimeout(() => {
+      go(next);
+      blackoutEl.classList.remove("is-on");
+      setTimeout(() => (busy = false), 350);
+    }, 850);
+  }
+
   function advance() {
     if (typer && !typer.done) {
       typer.finish();
@@ -101,12 +120,26 @@
     go((index + 1) % STEPS.length);
   }
 
-  const inLobby = () => STEPS[index].screen === "lobby";
+  const screenNow = () => STEPS[index].screen;
+
+  // 로비에서 캐릭터를 골랐을 때: 파랑("오늘의 기록 준비 완료!")이면 극장으로
+  Lobby.onPick = (id) => {
+    if (busy || id !== "blue") return;
+    busy = true;
+    setTimeout(() => blackout(TALK), 380); // 고른 캐릭터가 통! 튀는 걸 잠깐 보여 주고
+  };
+
+  function advanceTalk() {
+    // 대화 다음 화면은 아직 없어서, 끝나면 일단 로비로 돌아간다
+    if (Talk.advance() === "done") blackout(LOBBY);
+  }
 
   // ── 입력: 터치/클릭, 아무 키 ──
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    if (inLobby()) return; // 로비의 터치·밀기는 js/lobby.js가 처리
+    if (busy) return;
+    if (screenNow() === "lobby") return; // 로비의 터치·밀기는 js/lobby.js가 처리
+    if (screenNow() === "talk") return advanceTalk();
     advance();
   });
 
@@ -116,10 +149,17 @@
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(e.key)) return;
     if (e.key === " " || e.key.startsWith("Arrow") || e.key.startsWith("Page")) e.preventDefault();
-    if (inLobby()) {
-      // 로비: ←/→ 로 다이얼을 돌린다. 로비 다음 화면은 아직 없어서 Esc는 대기화면으로 돌아간다.
+    if (busy) return;
+
+    if (screenNow() === "lobby") {
+      // 로비: ←/→ 로 다이얼을 돌리고 Enter로 고른다. Esc는 대기화면으로.
       if (e.key === "Escape") go(0);
       else Lobby.handleKey(e);
+      return;
+    }
+    if (screenNow() === "talk") {
+      if (e.key === "Escape") blackout(LOBBY);
+      else advanceTalk();
       return;
     }
     advance();
