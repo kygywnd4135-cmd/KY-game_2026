@@ -61,6 +61,8 @@ window.Play = (function () {
     ["아니에요죄송합니다....", 30],
   ].flatMap(([chars, size]) => Array.from(chars).map(() => size));
 
+  const END_HOLD = 2200; // END! 가 나온 뒤 암전까지 머무는 시간(ms)
+
   const root = document.querySelector('[data-screen="play"]');
 
   // ── 화면 요소 만들기 ──
@@ -300,7 +302,14 @@ window.Play = (function () {
     later(() => root.classList.add("is-finale"), 500);
     later(() => root.classList.add("is-wink"), 1650);
     later(() => {
-      typer = Typewriter.run([{ el: endText, text: "END!" }], { speed: 90, onDone: () => (phase = "ended") });
+      typer = Typewriter.run([{ el: endText, text: "END!" }], {
+        speed: 90,
+        onDone: () => {
+          phase = "ended";
+          // 여운을 잠깐 두고, 누르지 않아도 다음으로 넘어간다
+          later(() => api.onEnd && api.onEnd(), END_HOLD);
+        },
+      });
     }, 2000);
   }
 
@@ -333,5 +342,7 @@ window.Play = (function () {
     return "handled";
   }
 
-  return { enter, leave, advance, scenes: SCENES, goScene: (i) => enterScene(i, 500) };
+  // onEnd: END! 가 나온 뒤 여운이 지나면 불린다. js/flow.js가 연결한다.
+  const api = { enter, leave, advance, scenes: SCENES, goScene: (i) => enterScene(i, 500), onEnd: null };
+  return api;
 })();

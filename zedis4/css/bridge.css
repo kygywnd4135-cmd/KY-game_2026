@@ -1,0 +1,257 @@
+/* ───────── 연극 종료 → 연극 결과 연결 ─────────
+   캄캄한 화면에서 .is-on 이 붙으면 베레모 쓴 파랑이 뿅! 튀어나오고 말풍선이 뜬다. */
+
+.screen--bridge {
+  background: #141414;
+}
+
+.bridge svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* 아주 은은한 조명: 캐릭터가 나올 때 같이 켜진다 */
+.bridge__light {
+  position: absolute;
+  left: 289.62px;
+  top: -774px;
+  width: 1313.76px;
+  height: 1848.75px;
+  filter: blur(15px);
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+.bridge__light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: linear-gradient(
+    to bottom,
+    #fff 0,
+    rgba(230, 222, 206, 0.75) 394px,
+    rgba(204, 189, 157, 0.5) 789px,
+    rgba(179, 156, 108, 0.25) 1183px,
+    rgba(153, 123, 59, 0) 1578px
+  );
+}
+
+.bridge.is-on .bridge__light {
+  opacity: 0.2;
+  transition-delay: 0.15s;
+}
+
+/* 그림자: 캐릭터가 내려앉을 때 퍼진다 */
+.painter__shadow {
+  transform-box: fill-box;
+  transform-origin: 40% 50%;
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.bridge.is-on .painter__shadow {
+  animation: painter-shadow 0.9s both;
+}
+
+@keyframes painter-shadow {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  35% {
+    transform: scaleX(0.55);
+    opacity: 0.6;
+  }
+  55% {
+    transform: scaleX(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ── 캐릭터 ── */
+.painter,
+.painter__idle {
+  position: absolute;
+  inset: 0;
+  transform-origin: 932px 947px;
+}
+
+.painter {
+  transform: translateY(300px) scale(0);
+}
+
+/* 뿅! — 바닥에서 길쭉하게 솟구쳤다가 납작, 출렁출렁 잦아든다 */
+.bridge.is-on .painter {
+  animation: painter-pop 0.95s both;
+}
+
+@keyframes painter-pop {
+  0% {
+    transform: translateY(300px) scale(0.2, 0.1);
+    animation-timing-function: cubic-bezier(0.15, 0.8, 0.3, 1);
+  }
+  26% {
+    transform: translateY(-150px) scale(0.84, 1.28);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.6, 1);
+  }
+  46% {
+    transform: translateY(0) scale(1.22, 0.78);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.5, 1);
+  }
+  62% {
+    transform: translateY(-40px) scale(0.93, 1.1);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  77% {
+    transform: translateY(0) scale(1.07, 0.94);
+  }
+  89% {
+    transform: translateY(-8px) scale(0.98, 1.02);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.bridge.is-on .painter__idle {
+  animation: actor-bob 2.6s 1s ease-in-out infinite;
+}
+
+.bridge.is-talking .painter__idle {
+  animation: actor-talk 0.36s ease-in-out infinite;
+}
+
+/* 베레모: 한 박자 늦게 따라와 붕 떴다가 폭 앉는다 */
+.painter__beret {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.bridge.is-on .painter__beret {
+  animation: beret-flop 0.95s both, beret-sway 2.6s 1s ease-in-out infinite;
+}
+
+@keyframes beret-flop {
+  0%,
+  26% {
+    transform: translateY(18px) scale(1.06, 0.86);
+  }
+  46% {
+    transform: translateY(-64px) rotate(-12deg);
+  }
+  62% {
+    transform: translateY(8px) scale(1.08, 0.86) rotate(4deg);
+  }
+  77% {
+    transform: translateY(-14px) rotate(-3deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes beret-sway {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(-3px) rotate(-2.5deg);
+  }
+}
+
+/* 붓 든 손: 등장하며 휙 휘두르고, 그 뒤로는 허공에 쓱쓱 */
+.painter__arm {
+  transform-box: fill-box;
+  transform-origin: 20% 95%;
+}
+
+.bridge.is-on .painter__arm {
+  animation: brush-flourish 0.8s 0.45s both, brush-stroke 1.9s 1.25s ease-in-out infinite;
+}
+
+@keyframes brush-flourish {
+  0% {
+    transform: rotate(60deg) scale(0.6);
+  }
+  40% {
+    transform: rotate(-34deg) scale(1.08);
+  }
+  65% {
+    transform: rotate(16deg);
+  }
+  85% {
+    transform: rotate(-6deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes brush-stroke {
+  0%,
+  100% {
+    transform: none;
+  }
+  30% {
+    transform: rotate(-13deg) translateY(-6px);
+  }
+  60% {
+    transform: rotate(9deg);
+  }
+}
+
+/* 웃는 눈: 가끔 더 활짝 */
+.painter__eyes {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: painter-smile 3.4s infinite;
+}
+
+@keyframes painter-smile {
+  0%,
+  80%,
+  100% {
+    transform: none;
+  }
+  86%,
+  92% {
+    transform: scaleY(1.16);
+  }
+}
+
+/* ── 말풍선 ── */
+.bridge .bubble {
+  left: 453.52px;
+  top: 174px;
+  opacity: 0;
+}
+
+.bridge.is-speaking .bubble {
+  opacity: 1;
+}
+
+.bridge .bubble__text {
+  left: 524px;
+  top: 96px;
+  transform: translateX(-50%);
+  font-size: 59px;
+  line-height: 74px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bridge *,
+  .bridge *::before {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}

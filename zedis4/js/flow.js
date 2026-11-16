@@ -1,4 +1,4 @@
-// 화면 흐름: 대기화면 → 전원 1~3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리 → 연극 1~5
+// 화면 흐름: 대기화면 → 전원 1~3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리 → 연극 1~5 → 연극 결과 연결
 // 터치(클릭)하거나 아무 키나 누르면 진행한다.
 // 글자가 출력되는 중이면 먼저 남은 글자를 전부 보여 주고, 한 번 더 누르면 다음으로 넘어간다.
 (function () {
@@ -20,11 +20,13 @@
     { screen: "talk" },
     { screen: "scenario" },
     { screen: "play" },
+    { screen: "bridge" },
   ];
   const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
   const SCENARIO = STEPS.findIndex((s) => s.screen === "scenario");
   const PLAY = STEPS.findIndex((s) => s.screen === "play");
+  const BRIDGE = STEPS.findIndex((s) => s.screen === "bridge");
 
   const screens = {};
   document.querySelectorAll("[data-screen]").forEach((el) => (screens[el.dataset.screen] = el));
@@ -91,6 +93,7 @@
     if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
     if (prev.screen === "scenario" && cur.screen !== "scenario") Scenario.leave();
     if (prev.screen === "play" && cur.screen !== "play") Play.leave();
+    if (prev.screen === "bridge" && cur.screen !== "bridge") Bridge.leave();
 
     if (cur.screen === "lobby") {
       Lobby.enter();
@@ -100,6 +103,8 @@
       Scenario.enter();
     } else if (cur.screen === "play") {
       Play.enter();
+    } else if (cur.screen === "bridge") {
+      Bridge.enter();
     } else if (cur.screen === "power") {
       enterPower(cur.step, prev.screen !== "power");
     } else if (cur.screen === "loading") {
@@ -150,8 +155,18 @@
   }
 
   function advancePlay() {
-    // 연극이 END! 까지 끝나면 일단 로비로 돌아간다
-    if (Play.advance() === "done") blackout(LOBBY);
+    // END! 다음: 암전 → 연극 결과 연결 연출
+    if (Play.advance() === "done") blackout(BRIDGE);
+  }
+
+  // END! 가 나오고 잠시 뒤에는 누르지 않아도 자연스럽게 암전된다
+  Play.onEnd = () => {
+    if (!busy && screenNow() === "play") blackout(BRIDGE);
+  };
+
+  function advanceBridge() {
+    // 연결 연출 다음 화면은 아직 없어서, 끝나면 일단 로비로 돌아간다
+    if (Bridge.advance() === "done") blackout(LOBBY);
   }
 
   // 장면마다 터치/아무 키를 처리하는 방법
@@ -159,6 +174,7 @@
     talk: advanceTalk,
     scenario: advanceScenario,
     play: advancePlay,
+    bridge: advanceBridge,
   };
 
   // ── 입력: 터치/클릭, 아무 키 ──
