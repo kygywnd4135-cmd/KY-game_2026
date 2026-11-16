@@ -71,12 +71,22 @@ window.Lobby = (function () {
       title: "커스터마이징 숍",
       desc: ["오늘은 어떤 무드가 모리에게 어울릴까요?", "코스튬을 확인하고 꾸며보세요!"],
     },
-    { id: "lilac", vivid: "#c24dff", vividDeep: "#7a1fb8", pastel: "#e5c3fd", pastelDeep: "#cc89ff", face: lid(-58.5, 27.5) + lid(23.5, 27.5) },
+    {
+      id: "lilac", vivid: "#c24dff", vividDeep: "#7a1fb8", pastel: "#e5c3fd", pastelDeep: "#cc89ff", face: lid(-58.5, 27.5) + lid(23.5, 27.5),
+      title: "내 에피소드 다시보기",
+      desc: ["지나온 연극들의 내용이 모두 담겨있어요.", "다시 보고싶은 순간이 있으신가요?"],
+    },
     {
       id: "mint", vivid: "#17d6c2", vividDeep: "#0b8a80", pastel: "#c7fffa", pastelDeep: "#5acac0",
       face: lid(-44.5, 17.5, 75) + white(54.5, 16.5, 42.5) + dot(66.5, 15, 30.2) + STAR,
+      title: "세부 설정",
+      desc: ["다양한 세팅값을 조절할 수 있어요."],
     },
-    { id: "peach", vivid: "#ff8a2b", vividDeep: "#b5540f", pastel: "#ffd3af", pastelDeep: "#dd9765", face: arch(-35.35, 26) + arch(61.4, 26) },
+    {
+      id: "peach", vivid: "#ff8a2b", vividDeep: "#b5540f", pastel: "#ffd3af", pastelDeep: "#dd9765", face: arch(-35.35, 26) + arch(61.4, 26),
+      title: "주간 키워드 확인하기",
+      desc: ["지난 일주일동안 작성한 키워드를 확인할 수 있어요.", "이번주는 어떤 일상을 보냈을까요?"],
+    },
   ];
   const COUNT = CHARACTERS.length;
   const titleEl = root.querySelector(".lobby__title");
