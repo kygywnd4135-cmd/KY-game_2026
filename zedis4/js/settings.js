@@ -4,8 +4,10 @@
 //   Enter      값 바꾸기(목록은 다음 값으로, 켜고 끄기, '접속 테스트'는 다시 검사)
 //   ＋ 버튼 / + 키   저장
 //   − 버튼 / − 키 / Esc   로비로 돌아가기
-// 탭은 '기본 설정'만 열려 있고, 나머지(데이터 관리·유저·테마)는 아직 고를 수 없다.
-// 설정 항목과 값은 임시로 채워 둔 것이다(SECTIONS만 고치면 된다).
+// 탭은 '기본 설정'과 '테마'가 열려 있고, 나머지(데이터 관리·유저)는 아직 고를 수 없다.
+//   맨 위 줄에서 ↑ 를 누르면 탭 줄로 올라가고, 거기서 ← / → 로 탭을 바꾼다(↓ 로 다시 목록).
+//   테마 > 화면 모드: 일반 모드 ↔ 야간 모드(바로 적용, js/theme.js)
+// 기본 설정의 항목과 값은 임시로 채워 둔 것이다(SECTIONS만 고치면 된다).
 window.Settings = (function () {
   // type: select(목록) | slider(막대 0~100) | toggle(켜짐/꺼짐) | test(다시 검사) | info(보기만)
   const SECTIONS = [
@@ -41,12 +43,29 @@ window.Settings = (function () {
       ],
     },
   ];
-  const TABS = [
-    { label: "기본 설정", open: true },
-    { label: "데이터 관리", open: false },
-    { label: "유저", open: false },
-    { label: "테마", open: false },
+  // 테마 탭. apply가 있는 줄은 값이 바뀌는 즉시 적용된다.
+  const THEME_SECTIONS = [
+    {
+      title: "화면 테마",
+      rows: [
+        {
+          label: "화면 모드", type: "select", options: ["일반 모드", "야간 모드"],
+          read: () => (Theme.get() === "night" ? 1 : 0),
+          apply: (i) => {
+            Theme.set(i === 1 ? "night" : "day");
+            say(i === 1 ? "야간 모드로 바꿨어요" : "일반 모드로 바꿨어요");
+          },
+        },
+      ],
+    },
   ];
+  const TABS = [
+    { label: "기본 설정", sections: SECTIONS },
+    { label: "데이터 관리" },
+    { label: "유저" },
+    { label: "테마", sections: THEME_SECTIONS },
+  ];
+  const OPEN_TABS = TABS.map((t, i) => (t.sections ? i : -1)).filter((i) => i >= 0);
 
   const root = document.querySelector('[data-screen="settings"]');
   const FOOT = "M-38 0H38C28.37 -18.585 28.37 -29.517 -2.68 -32.796C-27.51 -35.42 -36.57 -12.025 -38 0Z";
@@ -55,17 +74,20 @@ window.Settings = (function () {
     (sign === "+" ? `<path d="M31.5 28.4H46V31.5H31.5V46H28.4V31.5H14V28.4H28.4V14H31.5V28.4Z" fill="#F0F0F0"/>` : `<path d="M46 31.5H14V28.4H46V31.5Z" fill="#F0F0F0"/>`) +
     `</svg><span class="hint__label">${label}</span></div>`;
 
-  // 항목들을 한 줄로 펼쳐 둔다(구역 제목도 한 줄)
-  const rows = [];
-  SECTIONS.forEach((sec) => {
-    rows.push({ kind: "section", title: sec.title });
-    sec.rows.forEach((r) => {
-      const row = { kind: "row", ...r };
-      if (r.type === "select") row.index = 0;
-      rows.push(row);
+  // 탭마다 항목들을 한 줄로 펼쳐 둔다(구역 제목도 한 줄)
+  function flatten(sections) {
+    const out = [];
+    sections.forEach((sec) => {
+      out.push({ kind: "section", title: sec.title });
+      sec.rows.forEach((r) => {
+        const row = { kind: "row", ...r };
+        if (r.type === "select") row.index = 0;
+        out.push(row);
+      });
     });
-  });
-  const picks = rows.filter((r) => r.kind === "row"); // 고를 수 있는 줄
+    return out;
+  }
+  const TAB_ROWS = TABS.map((t) => (t.sections ? flatten(t.sections) : null));
 
   root.innerHTML =
     `<svg class="set__grid" width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true"></svg>` +
@@ -82,19 +104,9 @@ window.Settings = (function () {
     // 설정 판
     `<div class="set__panel">` +
     `<div class="set__head">` +
-    TABS.map((t, i) => `<button class="set__tab${t.open ? " is-on" : " is-locked"}" type="button" data-tab="${i}">${t.label}</button>`).join("") +
+    TABS.map((t, i) => `<button class="set__tab${t.sections ? "" : " is-locked"}" type="button" data-tab="${i}">${t.label}</button>`).join("") +
     `<i class="set__underline"></i></div>` +
-    `<div class="set__view"><div class="set__list">` +
-    rows
-      .map((r, i) => {
-        if (r.kind === "section") return `<div class="set__section"><i></i>${r.title}</div>`;
-        let value = "";
-        if (r.type === "slider") value = `<span class="set__bar"><i></i></span><b class="set__value set__value--num"></b>`;
-        else value = `<b class="set__value"></b>`;
-        return `<div class="set__row" data-row="${i}"><span class="set__label">${r.label}</span>${value}</div>`;
-      })
-      .join("") +
-    `</div></div>` +
+    `<div class="set__view"><div class="set__list"></div>` +
     `<i class="set__scroll"></i>` +
     `</div>` +
     `<p class="set__toast" role="status" aria-live="polite"></p>` +
@@ -114,12 +126,60 @@ window.Settings = (function () {
   const view = root.querySelector(".set__view");
   const thumb = root.querySelector(".set__scroll");
   const toast = root.querySelector(".set__toast");
-  const rowEls = Array.from(root.querySelectorAll(".set__row"));
-  rowEls.forEach((el) => (el.rowData = rows[Number(el.dataset.row)]));
+  const head = root.querySelector(".set__head");
+  const underline = root.querySelector(".set__underline");
+  const tabEls = Array.from(root.querySelectorAll(".set__tab"));
+  let rowEls = [];
 
-  let focus = 0; // picks 안에서 몇 번째
+  let tab = 0; // 지금 보고 있는 탭
+  let focus = 0; // rowEls 안에서 몇 번째, -1 이면 탭 줄
   let active = false;
   let toastTimer = 0;
+
+  // 탭의 목록을 그린다
+  function buildList() {
+    const rows = TAB_ROWS[tab];
+    list.innerHTML = rows
+      .map((r, i) => {
+        if (r.kind === "section") return `<div class="set__section"><i></i>${r.title}</div>`;
+        let value = "";
+        if (r.type === "slider") value = `<span class="set__bar"><i></i></span><b class="set__value set__value--num"></b>`;
+        else value = `<b class="set__value"></b>`;
+        return `<div class="set__row" data-row="${i}"><span class="set__label">${r.label}</span>${value}</div>`;
+      })
+      .join("");
+    rowEls = Array.from(list.querySelectorAll(".set__row"));
+    rowEls.forEach((el, i) => {
+      el.rowData = rows[Number(el.dataset.row)];
+      if (el.rowData.read) el.rowData.index = el.rowData.read();
+      paint(el);
+      el.addEventListener("pointerdown", (e) => {
+        if (!active) return;
+        e.stopPropagation();
+        if (i !== focus) {
+          focus = i;
+          render();
+        } else change(1, true);
+      });
+    });
+    list.dataset.scroll = 0;
+  }
+
+  function placeUnderline() {
+    const t = tabEls[tab];
+    underline.style.transform = `translateX(${t.offsetLeft - 36 - 236}px)`;
+    underline.style.width = t.offsetWidth + 72 + "px";
+    tabEls.forEach((el, i) => el.classList.toggle("is-on", i === tab));
+  }
+
+  function openTab(next) {
+    if (next === tab) return;
+    tab = next;
+    placeUnderline();
+    buildList();
+    replay(list, "is-switching");
+    render();
+  }
 
   const replay = (el, className) => {
     el.classList.remove(className);
@@ -161,14 +221,21 @@ window.Settings = (function () {
 
   function render() {
     rowEls.forEach((el, i) => el.classList.toggle("is-focus", i === focus));
-    scrollToFocus();
+    head.classList.toggle("is-focus", focus < 0);
+    if (focus >= 0) scrollToFocus();
   }
 
   function move(step) {
-    const next = Math.max(0, Math.min(rowEls.length - 1, focus + step));
+    const next = Math.max(-1, Math.min(rowEls.length - 1, focus + step));
     if (next === focus) return;
     focus = next;
     render();
+  }
+
+  // 탭 줄에서 ← / →: 열린 탭끼리만 오간다
+  function moveTab(step) {
+    const k = OPEN_TABS.indexOf(tab);
+    openTab(OPEN_TABS[(k + step + OPEN_TABS.length) % OPEN_TABS.length]);
   }
 
   function change(step, viaEnter) {
@@ -176,6 +243,7 @@ window.Settings = (function () {
     const r = el.rowData;
     if (r.type === "select") {
       r.index = (r.index + step + r.options.length) % r.options.length;
+      if (r.apply) r.apply(r.index);
     } else if (r.type === "slider") {
       if (viaEnter) return;
       const next = Math.max(0, Math.min(100, r.value + step * 10));
@@ -214,23 +282,17 @@ window.Settings = (function () {
   }
 
   // ── 마우스·터치 ──
-  rowEls.forEach((el, i) =>
-    el.addEventListener("pointerdown", (e) => {
+  tabEls.forEach((tabEl) =>
+    tabEl.addEventListener("pointerdown", (e) => {
       if (!active) return;
       e.stopPropagation();
-      if (i !== focus) {
-        focus = i;
-        render();
-      } else change(1, true);
-    })
-  );
-  root.querySelectorAll(".set__tab").forEach((tab) =>
-    tab.addEventListener("pointerdown", (e) => {
-      if (!active) return;
-      e.stopPropagation();
-      if (tab.classList.contains("is-locked")) {
-        replay(tab, "is-refusing");
+      if (tabEl.classList.contains("is-locked")) {
+        replay(tabEl, "is-refusing");
         say("아직 준비 중인 메뉴예요");
+      } else {
+        openTab(Number(tabEl.dataset.tab));
+        focus = 0;
+        render();
       }
     })
   );
@@ -241,9 +303,9 @@ window.Settings = (function () {
   function handleKey(e) {
     if (e.key === "ArrowDown") move(1);
     else if (e.key === "ArrowUp") move(-1);
-    else if (e.key === "ArrowRight") change(1);
-    else if (e.key === "ArrowLeft") change(-1);
-    else if (e.key === "Enter" || e.key === " ") change(1, true);
+    else if (e.key === "ArrowRight") focus < 0 ? moveTab(1) : change(1);
+    else if (e.key === "ArrowLeft") focus < 0 ? moveTab(-1) : change(-1);
+    else if (e.key === "Enter" || e.key === " ") focus < 0 ? move(1) : change(1, true);
     else if (e.key === "+" || e.key === "=") save();
     else if (e.key === "-" || e.key === "Escape" || e.key === "Backspace") return "back";
     else return false;
@@ -252,8 +314,10 @@ window.Settings = (function () {
 
   function enter() {
     active = true;
+    tab = 0;
     focus = 0;
-    rowEls.forEach(paint);
+    buildList();
+    placeUnderline();
     toast.classList.remove("is-on");
     replay(root, "is-opening");
     render();
@@ -264,8 +328,8 @@ window.Settings = (function () {
     clearTimeout(toastTimer);
   }
 
-  rowEls.forEach(paint);
+  buildList();
   // onBack: 화면의 − 버튼을 눌렀을 때 불린다. js/flow.js가 연결한다.
-  const api = { enter, leave, handleKey, onBack: null, rows: picks };
+  const api = { enter, leave, handleKey, onBack: null, tabs: TABS };
   return api;
 })();

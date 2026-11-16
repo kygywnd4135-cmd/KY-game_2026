@@ -1,0 +1,281 @@
+/* ───────── 야간 모드 ─────────
+   설정 > 테마 > 화면 모드. js/theme.js가 <html>에 is-night 를 붙인다.
+   밝은 바탕·판·글자만 차분한 남색 계열로 바꾸고, 캐릭터와 강조색은 그대로 둔다.
+   연극(대화·연극·수정) 화면은 원래 어두워서 손대지 않는다. */
+
+:root {
+  --n-bg: #161925;      /* 밝던 화면 바탕 */
+  --n-bg-deep: #0f111a; /* 회색이던 화면 바탕 */
+  --n-plate: #222738;   /* 큰 원판 · 패널 */
+  --n-ring: #2d3348;    /* 원판 테두리 · 칸 */
+  --n-card: #2a3044;    /* 알약 · 칩 · 칸 */
+  --n-line: #3b4259;
+  --n-text: #eceef6;
+  --n-sub: #a3a9be;
+}
+
+/* 바뀌는 순간만 부드럽게 */
+.is-theming .screen,
+.is-theming .screen * {
+  transition: background-color 0.4s, color 0.4s, fill 0.4s, border-color 0.4s !important;
+}
+
+/* ── 공통 ── */
+.is-night .screen--lobby,
+.is-night .screen--settings,
+.is-night .screen--custom,
+.is-night .screen--rate {
+  background: var(--n-bg);
+}
+
+.is-night .screen--recommend,
+.is-night .screen--history,
+.is-night .screen--replay,
+.is-night .screen--keywords {
+  background: var(--n-bg-deep);
+}
+
+.is-night .lobby__grid,
+.is-night .set__grid,
+.is-night .cu__grid,
+.is-night .rc__grid,
+.is-night .hs__grid,
+.is-night .rp__grid {
+  opacity: 0.1;
+}
+
+.is-night .screen--lobby .stamp {
+  color: var(--n-sub);
+}
+
+/* 동그란 조작 안내(＋/−): 밝은 원 + 어두운 기호 */
+.is-night .hint rect,
+.is-night .lobby__hint-icon rect {
+  fill: #e6e8f1;
+}
+
+.is-night .hint path,
+.is-night .lobby__hint-icon path {
+  fill: #20243a;
+}
+
+.is-night .hint,
+.is-night .lobby__hint-text,
+.is-night .rate__save {
+  color: var(--n-text) !important;
+}
+
+/* ── 로비 ── */
+.is-night .lobby__plate {
+  background: var(--n-plate);
+}
+
+.is-night .lobby__desc {
+  color: var(--n-text);
+}
+
+.is-night .lc__shadow {
+  background: #0a0c12;
+}
+
+/* ── 세부 설정 ── */
+.is-night .set__panel {
+  border-color: var(--n-line);
+  background: var(--n-plate);
+  box-shadow: 0 0 59px rgba(0, 0, 0, 0.5);
+}
+
+.is-night .set__head {
+  background: #1b1f2d;
+}
+
+.is-night .set__tab {
+  color: var(--n-sub);
+}
+
+.is-night .set__tab.is-on {
+  color: #3ce1aa;
+}
+
+.is-night .set__section {
+  color: var(--n-sub);
+}
+
+.is-night .set__section i {
+  background: var(--n-sub);
+}
+
+.is-night .set__section + .set__row,
+.is-night .set__row + .set__section,
+.is-night .set__row + .set__row {
+  border-top-color: var(--n-line);
+}
+
+.is-night .set__row.is-focus {
+  background: linear-gradient(var(--n-card), var(--n-card)) padding-box,
+    linear-gradient(90deg, #3ce1aa 0%, #13b25f 45%, #8affc4 100%) border-box;
+}
+
+.is-night .set__row.is-focus + .set__row {
+  border-top-color: transparent;
+}
+
+.is-night .set__label {
+  color: var(--n-text);
+}
+
+.is-night .set__value {
+  color: #3ce1aa;
+}
+
+.is-night .set__row.is-off .set__value,
+.is-night .set__row.is-testing .set__value {
+  color: #6c7288;
+}
+
+.is-night .set__bar {
+  background: var(--n-line);
+}
+
+.is-night .set__scroll {
+  background: var(--n-line);
+}
+
+/* ── 커스터마이징 ── */
+.is-night .cu__disc {
+  background: color-mix(in srgb, #343b52 calc(var(--sel) * 100%), var(--n-card));
+}
+
+.is-night .cu__disc svg {
+  filter: brightness(1.45);
+}
+
+.is-night .cu__name {
+  color: var(--n-text);
+}
+
+.is-night .cu__shadow,
+.is-night .cu__buddy-shadow {
+  background: #0a0c12;
+}
+
+.is-night .cu__arrow path {
+  fill: #e6e8f1;
+}
+
+/* ── 추천 시나리오 · 지난 기록 · 리플레이 ── */
+.is-night .rc__ring,
+.is-night .hs__ring,
+.is-night .rp__ring {
+  background: var(--n-ring);
+}
+
+.is-night .rc__plate,
+.is-night .hs__plate,
+.is-night .rp__plate {
+  background: var(--n-plate);
+}
+
+.is-night .rc__desc,
+.is-night .hs__desc,
+.is-night .rp__desc,
+.is-night .rp__title {
+  color: var(--n-text);
+}
+
+.is-night .rc__director,
+.is-night .rp__date {
+  color: var(--n-sub);
+}
+
+.is-night .rc__rating,
+.is-night .rp__pill {
+  border-color: var(--n-line);
+  background: var(--n-card);
+}
+
+.is-night .rc__star > svg path,
+.is-night .rp__star > svg path {
+  fill: #474e66;
+}
+
+.is-night .hs__chip {
+  background: var(--n-card);
+}
+
+.is-night .hs__more {
+  color: var(--n-text);
+}
+
+.is-night .hs__more rect {
+  fill: #e6e8f1;
+}
+
+.is-night .hs__more path {
+  fill: #20243a;
+}
+
+/* ── 키워드 ── */
+.is-night .kw__plate {
+  background: rgba(34, 39, 56, 0.9);
+}
+
+.is-night .kw__title,
+.is-night .kw__ask {
+  color: var(--n-text);
+}
+
+.is-night .kw__time {
+  color: var(--n-sub);
+}
+
+.is-night .kw__chip {
+  background: var(--n-card);
+}
+
+/* ── 연극 결과(별점) ── */
+.is-night .rate__title,
+.is-night .rate__more {
+  color: var(--n-text);
+}
+
+.is-night .rate__ask,
+.is-night .reco__title {
+  color: var(--n-sub);
+}
+
+.is-night .rate__pill {
+  background: var(--n-card);
+}
+
+/* ── 알림창 ── */
+.is-night .al {
+  border-color: var(--n-line);
+  background: var(--n-plate);
+}
+
+.is-night .al__text {
+  color: var(--n-text);
+}
+
+.is-night .al__text b {
+  color: #fff;
+}
+
+.is-night .al__btn.is-muted {
+  background: #555c73;
+}
+
+/* 로비 안내 글씨는 뒤 캐릭터 위에 걸칠 때도 읽히게 */
+.is-night .lobby__hint-text {
+  text-shadow: 0 0 6px rgba(10, 12, 20, 0.85), 0 0 2px rgba(10, 12, 20, 0.9);
+}
+
+/* 빈 별 · 0.0 */
+.is-night .rate__star > svg path {
+  fill: #474e66;
+}
+
+.is-night .rate__pill.is-empty .rate__value {
+  color: #6c7288;
+}

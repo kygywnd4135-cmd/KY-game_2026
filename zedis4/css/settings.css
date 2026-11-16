@@ -140,6 +140,27 @@
   width: 238px;
   height: 7px;
   background: #29bd8b;
+  transition: transform 0.3s var(--spring-soft), width 0.3s var(--spring-soft);
+}
+
+/* ↑ 로 탭 줄에 올라오면 지금 탭이 살짝 떠오르고 밑줄이 두꺼워진다 */
+.set__head.is-focus .set__tab.is-on {
+  animation: set-tab-focus 1.2s ease-in-out infinite;
+}
+
+.set__head.is-focus .set__underline {
+  height: 11px;
+  margin-top: -4px;
+}
+
+@keyframes set-tab-focus {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.set__list.is-switching {
+  animation: lobby-info 0.3s var(--spring-soft) both;
 }
 
 /* 목록 */
