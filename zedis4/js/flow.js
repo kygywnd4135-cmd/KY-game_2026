@@ -1,4 +1,4 @@
-// 화면 흐름: 대기화면 → 전원 1 → 전원 2 → 전원 3 → 펜 로딩 → 로비 → 대화(극장)
+// 화면 흐름: 대기화면 → 전원 1 → 전원 2 → 전원 3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리
 // 터치(클릭)하거나 아무 키나 누르면 진행한다.
 // 글자가 출력되는 중이면 먼저 남은 글자를 전부 보여 주고, 한 번 더 누르면 다음으로 넘어간다.
 (function () {
@@ -18,9 +18,11 @@
     { screen: "loading" },
     { screen: "lobby" },
     { screen: "talk" },
+    { screen: "scenario" },
   ];
   const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
+  const SCENARIO = STEPS.findIndex((s) => s.screen === "scenario");
 
   const screens = {};
   document.querySelectorAll("[data-screen]").forEach((el) => (screens[el.dataset.screen] = el));
@@ -85,11 +87,14 @@
     showScreen(cur.screen);
     if (prev.screen === "lobby" && cur.screen !== "lobby") Lobby.leave();
     if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
+    if (prev.screen === "scenario" && cur.screen !== "scenario") Scenario.leave();
 
     if (cur.screen === "lobby") {
       Lobby.enter();
     } else if (cur.screen === "talk") {
       Talk.enter();
+    } else if (cur.screen === "scenario") {
+      Scenario.enter();
     } else if (cur.screen === "power") {
       enterPower(cur.step, prev.screen !== "power");
     } else if (cur.screen === "loading") {
@@ -130,8 +135,13 @@
   };
 
   function advanceTalk() {
-    // 대화 다음 화면은 아직 없어서, 끝나면 일단 로비로 돌아간다
-    if (Talk.advance() === "done") blackout(LOBBY);
+    // 대사가 모두 끝나면 두루마리 장면으로
+    if (Talk.advance() === "done") go(SCENARIO);
+  }
+
+  function advanceScenario() {
+    // 두루마리 다음 화면은 아직 없어서, 끝나면 일단 로비로 돌아간다
+    if (Scenario.advance() === "done") blackout(LOBBY);
   }
 
   // ── 입력: 터치/클릭, 아무 키 ──
@@ -140,6 +150,7 @@
     if (busy) return;
     if (screenNow() === "lobby") return; // 로비의 터치·밀기는 js/lobby.js가 처리
     if (screenNow() === "talk") return advanceTalk();
+    if (screenNow() === "scenario") return advanceScenario();
     advance();
   });
 
@@ -157,9 +168,10 @@
       else Lobby.handleKey(e);
       return;
     }
-    if (screenNow() === "talk") {
+    if (screenNow() === "talk" || screenNow() === "scenario") {
       if (e.key === "Escape") blackout(LOBBY);
-      else advanceTalk();
+      else if (screenNow() === "talk") advanceTalk();
+      else advanceScenario();
       return;
     }
     advance();

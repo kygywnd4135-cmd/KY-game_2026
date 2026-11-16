@@ -18,6 +18,12 @@ window.Talk = (function () {
         { after: "치셨구만!", say: { right: "에라이~" }, hop: ["violet", "mint", "pink"] },
       ],
     },
+    {
+      text: "후임이 점점 불쌍해지기 시작하는군..\n좋아, 연극을 시작해볼까?",
+      cues: [
+        { after: "시작해볼까?", say: { farLeft: "와!!", farRight: "꺄!!", right: "기대된다!!" }, hop: ["peach", "pink", "violet", "mint", "green"] },
+      ],
+    },
   ];
 
   const DARK_TIME = 1500; // 실루엣으로 보이는 시간(ms)

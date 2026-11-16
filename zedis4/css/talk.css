@@ -305,20 +305,20 @@
 
 /* 반응할 때: 들썩! 하고 잠깐 환해진다 */
 .crowd__hop.is-hopping {
-  animation: crowd-hop 0.7s both;
+  animation: crowd-hop 0.6s ease-in-out both;
 }
 
 .crowd__hop.is-hopping .crowd__head {
-  animation: crowd-flash 0.7s both;
+  animation: crowd-flash 0.6s both;
 }
 
 @keyframes crowd-murmur {
   0%,
   100% {
-    transform: translateY(0) rotate(-1.5deg);
+    transform: translateY(0) rotate(-0.5deg);
   }
   50% {
-    transform: translateY(-7px) rotate(1.5deg);
+    transform: translateY(-2.5px) rotate(0.5deg);
   }
 }
 
@@ -326,17 +326,14 @@
   0% {
     transform: none;
   }
-  14% {
-    transform: scale(1.1, 0.88);
+  18% {
+    transform: scale(1.03, 0.97);
   }
-  38% {
-    transform: translateY(-58px) scale(0.93, 1.08);
+  45% {
+    transform: translateY(-16px) scale(0.985, 1.02);
   }
-  62% {
-    transform: translateY(0) scale(1.08, 0.92);
-  }
-  80% {
-    transform: translateY(-10px) scale(0.98, 1.02);
+  75% {
+    transform: translateY(0) scale(1.02, 0.985);
   }
   100% {
     transform: none;
@@ -350,7 +347,7 @@
   }
   30%,
   55% {
-    opacity: 0.6;
+    opacity: 0.42;
   }
 }
 
@@ -385,15 +382,15 @@
 }
 
 .shout.is-on .shout__wiggle {
-  animation: shout-wiggle 0.5s ease-in-out infinite alternate;
+  animation: shout-wiggle 0.9s ease-in-out infinite alternate;
 }
 
 @keyframes shout-wiggle {
   from {
-    transform: rotate(-2.5deg) translateY(1px);
+    transform: rotate(-1.2deg) translateY(1px);
   }
   to {
-    transform: rotate(2.5deg) translateY(-3px);
+    transform: rotate(1.2deg) translateY(-1.5px);
   }
 }
 

@@ -1,0 +1,383 @@
+/* ───────── 대화2: 두루마리에서 시나리오가 촤라라락 ─────────
+   .is-open 이 붙으면: 민트가 두루마리 끝을 잡고 달려가며 종이가 펼쳐지고 →
+   배우가 종이 뒤에서 쏙 올라오고 → 말풍선이 나온다. (글자 출력은 js/scenario.js) */
+
+.screen--scenario {
+  background: #1a1a1a;
+  --unroll: 0.8s;
+  --unroll-ease: cubic-bezier(0.3, 0.75, 0.25, 1);
+}
+
+.scenario svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* 조명은 은은하게만 */
+.scenario__light {
+  position: absolute;
+  left: 429.677px;
+  top: -575px;
+  width: 1107.646px;
+  height: 1559.25px;
+  filter: blur(7.5px);
+  opacity: 0.3;
+}
+
+.scenario__light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: linear-gradient(
+    to bottom,
+    #fff 0,
+    rgba(230, 222, 206, 0.75) 337.3px,
+    rgba(204, 189, 157, 0.5) 674.6px,
+    rgba(179, 156, 108, 0.25) 1012px,
+    rgba(153, 123, 59, 0) 1349.3px
+  );
+}
+
+.scenario__floor {
+  position: absolute;
+  left: -68px;
+  top: 895px;
+  width: 2132px;
+  height: 216px;
+  border-radius: 25px;
+  background: #000;
+  filter: blur(5px);
+}
+
+/* ── 펼쳐지는 부분: 오른쪽을 가렸다가 한 번에 걷어 낸다 ── */
+.sheet,
+.sheet-shadow {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(-100px 1640px -100px 0);
+}
+
+.scenario.is-open .sheet,
+.scenario.is-open .sheet-shadow {
+  animation: unroll var(--unroll) 0.35s var(--unroll-ease) both;
+}
+
+@keyframes unroll {
+  from {
+    clip-path: inset(-100px 1640px -100px 0);
+  }
+  to {
+    clip-path: inset(-100px 250px -100px 0);
+  }
+}
+
+.sheet__paper {
+  position: absolute;
+  left: 347.15px;
+  top: 373.4px;
+  width: 1274.15px;
+  height: 555.9px;
+  border-radius: 17px;
+  background: #fff;
+}
+
+/* 두루마리 옆에 드리운 그늘 */
+.sheet__shade {
+  position: absolute;
+  left: 295.3px;
+  top: 373.4px;
+  width: 116.45px;
+  height: 555.9px;
+  background: #d0d0d0;
+  filter: blur(4.25px);
+}
+
+.sheet__title {
+  position: absolute;
+  left: 693.8px;
+  top: 421.85px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #787878;
+  font-size: 48.45px;
+  font-weight: 800;
+  line-height: 74.8px;
+  white-space: nowrap;
+}
+
+.sheet__body {
+  position: absolute;
+  left: 1004.8px;
+  top: 583.35px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #333;
+  font-size: 46.75px;
+  font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sheet__body span {
+  display: block;
+  line-height: 68px;
+}
+
+/* 피그마의 줄 간격(74.8 / 68 / 85 / 68)을 글자 기준선에 맞춰 옮긴 값 */
+.sheet__body span:nth-child(1) {
+  margin-top: 3.4px;
+}
+
+.sheet__body span:nth-child(3) {
+  margin-top: 17px;
+}
+
+/* ── 두루마리(말린 부분) ── */
+.roll {
+  position: absolute;
+  inset: 0;
+  transform-origin: 329px 660px;
+}
+
+/* 펼쳐지는 동안 드르르륵 떨린다 */
+.scenario.is-open .roll {
+  animation: roll-rattle 0.07s 0.35s 11 alternate, roll-settle 0.45s 1.15s var(--spring-soft) both;
+}
+
+@keyframes roll-rattle {
+  from {
+    transform: translateY(-3px) rotate(-0.5deg);
+  }
+  to {
+    transform: translateY(3px) rotate(0.5deg);
+  }
+}
+
+@keyframes roll-settle {
+  0% {
+    transform: scale(1.04, 0.97);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* ── 민트: 두루마리 끝을 잡고 오른쪽으로 달려간다 ── */
+.puller,
+.puller__idle {
+  position: absolute;
+  inset: 0;
+}
+
+.puller {
+  transform: translateX(-1215px);
+}
+
+.scenario.is-open .puller {
+  animation: pull var(--unroll) 0.35s var(--unroll-ease) both;
+}
+
+.puller__idle {
+  transform-origin: 1629px 1047px;
+}
+
+.scenario.is-open .puller__idle {
+  animation: puller-run 0.2s 0.35s 4 ease-in-out, puller-skid 0.6s 1.15s both, puller-bob 2.2s 1.75s ease-in-out infinite;
+}
+
+.puller__pupil {
+  transform-box: fill-box;
+  animation: puller-peek 4.4s ease-in-out infinite;
+}
+
+.puller__hand {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: puller-tug 2.2s 1.75s ease-in-out infinite;
+}
+
+@keyframes pull {
+  from {
+    transform: translateX(-1215px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes puller-run {
+  0%,
+  100% {
+    transform: translateY(0) rotate(6deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(9deg) scale(0.97, 1.04);
+  }
+}
+
+/* 끝까지 달려와 끼익 멈춤 */
+@keyframes puller-skid {
+  0% {
+    transform: rotate(8deg) scale(1.08, 0.92);
+  }
+  35% {
+    transform: rotate(-6deg) scale(0.95, 1.06);
+  }
+  65% {
+    transform: rotate(2deg) scale(1.03, 0.97);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes puller-bob {
+  0%,
+  100% {
+    transform: scale(1.02, 0.98);
+  }
+  50% {
+    transform: translateY(-6px) scale(0.99, 1.015);
+  }
+}
+
+@keyframes puller-peek {
+  0%,
+  35%,
+  100% {
+    transform: translate(0, 0);
+  }
+  45%,
+  70% {
+    transform: translate(-9px, -5px);
+  }
+}
+
+@keyframes puller-tug {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(3px, -4px);
+  }
+}
+
+/* ── 배우: 종이 뒤에서 쏙 ── */
+.peek,
+.peek__idle {
+  position: absolute;
+  inset: 0;
+}
+
+/* 몸통(종이 뒤)과 손(종이 앞)이 같은 움직임을 쓴다 */
+.peek {
+  opacity: 0;
+  transform: translateY(190px);
+}
+
+/* forwards: 시작 전에는 숨어 있다가, 차례가 되면 종이 뒤에서 올라온다 */
+.scenario.is-open .peek {
+  animation: peek-up 0.7s 1.25s var(--spring) forwards;
+}
+
+/* 손은 몸이 다 올라온 뒤 종이 위에 척 */
+.scenario.is-open .peek--hand {
+  animation: hand-grab 0.4s 1.62s var(--spring) forwards;
+}
+
+.peek__idle {
+  transform-origin: 1340px 400px;
+}
+
+.scenario.is-open .peek__idle {
+  animation: peek-bob 2.6s 1.95s ease-in-out infinite;
+}
+
+.peek__wave {
+  transform-box: fill-box;
+  transform-origin: 90% 90%;
+  animation: peek-wave 0.5s ease-in-out infinite alternate;
+}
+
+.peek .actor__eye {
+  animation: blink 4.2s infinite;
+}
+
+@keyframes peek-up {
+  from {
+    opacity: 1;
+    transform: translateY(190px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hand-grab {
+  from {
+    opacity: 1;
+    transform: translateY(-34px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes peek-bob {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(-7px) rotate(1.5deg);
+  }
+}
+
+@keyframes peek-wave {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+
+/* ── 말풍선 ── */
+.cue {
+  position: absolute;
+  inset: 0;
+  transform-origin: 1130px 270px;
+  transform: scale(0);
+}
+
+.scenario.is-open .cue {
+  animation: bubble-enter 0.6s 1.7s both;
+}
+
+.cue__text {
+  position: absolute;
+  left: 886.5px;
+  top: 159px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--c-blue);
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 52px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scenario *,
+  .scenario *::before {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
