@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>대기화면</title>
+    <link rel="preload" href="fonts/SUITE-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/standby.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <main class="stage" data-screen="standby">
+        <p class="clock">
+          <span class="clock__date" data-clock-date>11/17 TUE</span>
+          <span class="clock__time" data-clock-time>09:41</span>
+        </p>
+
+        <div class="sleeper__shadow" aria-hidden="true"></div>
+
+        <svg
+          class="sleeper"
+          viewBox="0 0 282 280"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="꾸벅꾸벅 졸고 있는 캐릭터"
+        >
+          <g class="sleeper__breath">
+            <g class="sleeper__nod">
+              <ellipse cx="154" cy="131" rx="128" ry="131" fill="#1871ED" />
+              <g class="sleeper__eyes">
+                <path
+                  d="M118 158.5C118 160.798 117.082 163.074 115.298 165.197C113.514 167.32 110.899 169.249 107.602 170.874C104.306 172.499 100.392 173.788 96.0853 174.668C91.7782 175.547 87.1619 176 82.5 176C77.8381 176 73.2218 175.547 68.9147 174.668C64.6077 173.788 60.6942 172.499 57.3977 170.874C54.1012 169.249 51.4863 167.32 49.7023 165.197C47.9182 163.074 47 160.798 47 158.5L82.5 158.5H118Z"
+                  fill="#1949AB"
+                />
+                <path
+                  d="M214 158.5C214 160.798 213.056 163.074 211.222 165.197C209.387 167.32 206.699 169.249 203.309 170.874C199.92 172.499 195.896 173.788 191.468 174.668C187.04 175.547 182.293 176 177.5 176C172.707 176 167.96 175.547 163.532 174.668C159.104 173.788 155.08 172.499 151.691 170.874C148.301 169.249 145.613 167.32 143.778 165.197C141.944 163.074 141 160.798 141 158.5L177.5 158.5H214Z"
+                  fill="#1949AB"
+                />
+              </g>
+            </g>
+          </g>
+          <!-- 발은 바닥에 붙어 있다 -->
+          <ellipse cx="42.5037" cy="233.612" rx="28" ry="36.5" transform="rotate(-30.0162 42.5037 233.612)" fill="#1949AB" />
+          <ellipse cx="28" cy="36.5" rx="28" ry="36.5" transform="matrix(-0.865884 -0.500244 -0.500244 0.865884 251.007 216.014)" fill="#1949AB" />
+        </svg>
+      </main>
+    </div>
+
+    <script src="js/stage.js"></script>
+    <script src="js/standby.js"></script>
+  </body>
+</html>

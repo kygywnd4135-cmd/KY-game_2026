@@ -1,0 +1,64 @@
+/* ───────── 공통 기반: 폰트 · 토큰 · 반원 스테이지 ───────── */
+
+@font-face {
+  font-family: "SUITE";
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("../fonts/SUITE-Variable.woff2") format("woff2-variations"),
+       url("../fonts/SUITE-Variable.woff2") format("woff2");
+}
+
+:root {
+  /* 피그마 프레임 기준 크기 */
+  --stage-w: 1935px;
+  --stage-h: 1047px;
+
+  --font: "SUITE", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  /* 색상 */
+  --c-outside: #0b0b0b;   /* 반원 바깥(기기 베젤) */
+  --c-dark: #1d1d1d;      /* 어두운 화면 배경 */
+  --c-dim-text: #a9a9a9;  /* AOD 글자 */
+  --c-shadow: #4d4d4d;
+  --c-blue: #1871ed;      /* 주인공 */
+  --c-blue-deep: #1949ab;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--c-outside);
+  font-family: var(--font);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 뷰포트 한가운데에 스테이지를 놓고, js/stage.js가 --scale로 맞춘다 */
+.viewport {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.stage {
+  position: relative;
+  flex: none;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  transform: scale(var(--scale, 1));
+  transform-origin: center;
+  border-radius: 1000px 1000px 0 0;
+  overflow: hidden;
+  background: var(--c-dark);
+}
