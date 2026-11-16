@@ -193,8 +193,8 @@
       `<div class="say"><div class="say__pop">` +
       stageSvg("", `<path d="M180 975L154 848L543 768L1330 782L1313.5 841L1382 914L1288 902L1257 956.5L948.5 996.5L180 975Z" fill="#6B6B6B"/><path d="M173 960L147 833L536 753L1323 767L1306.5 826L1375 899L1281 887L1250 941.5L941.5 981.5L173 960Z" fill="#F4F4F4"/>`) +
       `<p class="say__text" data-edit-say></p></div></div>` +
-      hint("edit__hint", 75, 850, "+", `<span data-edit-ok>선택</span>`, "#C7C7C7") +
-      hint("edit__hint", 75, 945, "-", `<span data-edit-back>뒤로</span>`, "#C7C7C7");
+      hint("edit__hint edit__hint--ok", 75, 850, "+", `<span data-edit-ok>선택</span>`, "#C7C7C7") +
+      hint("edit__hint edit__hint--back", 75, 945, "-", `<span data-edit-back>뒤로</span>`, "#C7C7C7");
 
     const script = root.querySelector(".edit__script");
     const thumb = root.querySelector(".edit__thumb");
@@ -420,6 +420,27 @@
       else leaveStage();
     }
 
+    // 화면의 ＋ / − 버튼도 키와 똑같이 동작한다
+    root.querySelector(".edit__hint--ok").addEventListener("pointerdown", (e) => {
+      if (phase === "select") {
+        e.stopPropagation();
+        e.preventDefault();
+        startTyping();
+      } else if (phase === "typing") {
+        e.stopPropagation();
+        commit();
+      }
+    });
+    root.querySelector(".edit__hint--back").addEventListener("pointerdown", (e) => {
+      if (phase === "select") {
+        e.stopPropagation();
+        if (api.onBack) api.onBack();
+      } else if (phase === "typing") {
+        e.stopPropagation();
+        cancelTyping();
+      }
+    });
+
     function advanceIntro() {
       if (!root.classList.contains("is-greeting")) {
         clearTimers();
@@ -454,14 +475,15 @@
         if (e.key === "ArrowDown") move(1);
         else if (e.key === "ArrowUp") move(-1);
         else if (e.key === "Enter" || e.key === " ") startTyping();
-        else if (e.key === "Escape" || e.key === "Backspace") return "back";
+        else if (e.key === "-" || e.key === "Escape" || e.key === "Backspace") return "back"; // − : 뒤로
         else return false;
       }
       return true;
     }
 
     // onFinish: 마무리 인사가 끝나면 불린다. js/flow.js가 연결한다.
-    const api = { enter, leave, handleKey, finish, isTyping: () => phase === "typing", lines: LINES, onFinish: null };
+    // onBack: 뒤로(− 버튼)를 눌렀을 때 불린다.
+    const api = { enter, leave, handleKey, finish, isTyping: () => phase === "typing", lines: LINES, onFinish: null, onBack: null };
     return api;
   })();
 })();

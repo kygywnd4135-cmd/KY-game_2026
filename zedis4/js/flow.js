@@ -195,6 +195,11 @@
     if (Bridge.advance() === "done") go(bridgeMode === "outro" ? WRAP : PICK);
   }
 
+  // 대본 고치기에서 뒤로(− 키·버튼): 장면 고르기로
+  Edit.onBack = () => {
+    if (!busy && screenNow() === "edit") go(PICK);
+  };
+
   // 대본을 다 고치고 Alt → 마무리 인사가 끝나면: 암전 → 작별 인사
   Edit.onFinish = () => {
     if (!busy && screenNow() === "edit") toBridge("outro");
@@ -277,7 +282,7 @@
       return;
     }
     if (screenNow() === "edit") {
-      // 대본 고치기: ↑/↓ 로 대사를 고르고 Enter로 고친다. Esc는 장면 고르기로.
+      // 대본 고치기: ↑/↓ 로 대사를 고르고 Enter로 고친다. −(또는 Esc)는 장면 고르기로.
       if (Edit.handleKey(e) === "back") go(PICK);
       return;
     }
