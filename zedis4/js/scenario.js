@@ -2,7 +2,7 @@
 // 펼쳐지는 연출은 css/scenario.css가 맡고, 여기서는 순서와 말풍선 글자 출력을 맡는다.
 window.Scenario = (function () {
   const LINE = "막을 올리러 가보자고!";
-  const SPEAK_AT = 4500; // 다 펼쳐지고 배우가 튀어나온 뒤 말하기 시작(ms)
+  const SPEAK_AT = 3700; // 다 펼쳐지고 배우가 튀어나온 뒤 말하기 시작(ms)
 
   const root = document.querySelector('[data-screen="scenario"]');
   const text = root.querySelector("[data-scenario-text]");
