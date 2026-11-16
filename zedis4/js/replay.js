@@ -44,23 +44,6 @@ window.Replay = (function () {
     "M674.1 326.4C676.3 322.1 682.6 322.1 684.8 326.4L693.1 342.6C693.9 344.3 695.6 345.5 697.5 345.8L715.4 348.7C720.2 349.4 722.2 355.4 718.7 358.8L705.9 371.7C704.5 373 703.9 375 704.2 376.8L707 394.8C707.8 399.6 702.7 403.3 698.4 401.1L682.2 392.8C680.5 392 678.4 392 676.7 392.8L660.5 401.1C656.2 403.3 651.1 399.6 651.9 394.8L654.7 376.8C655 375 654.4 373 653 371.7L640.2 358.8C636.7 355.4 638.7 349.4 643.5 348.7L661.4 345.8C663.3 345.5 665 344.3 665.8 342.6L674.1 326.4Z";
   const star = (fill) => `<svg width="44" height="43" viewBox="637 320 86 84" fill="none" aria-hidden="true"><path d="${RATE_STAR}" fill="${fill}"/></svg>`;
 
-  // 알림창(피그마 '알림창1' · '알림창2')
-  const ALERTS = {
-    confirm: {
-      theme: "violet",
-      text: "시나리오는 한번 지우면 <b>영영 복구할 수 없어</b>.<br>정말 삭제할거야?",
-      buttons: [
-        { id: "cancel", label: "취소", kind: "muted" },
-        { id: "delete", label: "삭제", kind: "main" },
-      ],
-    },
-    sorry: {
-      theme: "orange",
-      text: "으아악! 미안해!<br>아직 준비되지 않은 기능이야.",
-      buttons: [{ id: "ok", label: "확인", kind: "main" }],
-    },
-  };
-
   root.innerHTML =
     `<svg class="rp__grid" width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true"></svg>` +
     `<div class="rp__ring"></div><div class="rp__plate"></div>` +
@@ -75,8 +58,7 @@ window.Replay = (function () {
     `<button class="rp__btn rp__btn--play" type="button">리플레이!</button>` +
     `<div class="rp__dial"></div>` +
     `<svg class="rp__marker" width="62.74" height="82.9" viewBox="936 18 62.74 82.9" fill="none" aria-hidden="true"><path d="M969.137 99.8916C968.15 101.232 966.144 101.223 965.17 99.874L942.502 68.4961L942.506 68.4961C938.427 63.2019 936 56.5699 936 49.3701C936 32.045 950.045 18 967.37 18C984.695 18.0001 998.74 32.0451 998.74 49.3701C998.74 56.57 996.312 63.2019 992.233 68.4961L992.237 68.4961L969.137 99.8916Z" fill="currentColor"/></svg>` +
-    `<div class="hint rp__hint" style="left:1690px;top:945px"><svg width="59" height="59" viewBox="0 0 59 59" fill="none" aria-hidden="true"><rect width="59" height="59" rx="29.5" fill="#FFFFFF"/><path d="M46 31.5H14V28.4H46V31.5Z" fill="#202020"/></svg><span class="hint__label">뒤로</span></div>` +
-    `<div class="rp__dim"><div class="rp__alert" role="alertdialog" aria-modal="true"></div></div>`;
+    `<div class="hint rp__hint" style="left:1690px;top:945px"><svg width="59" height="59" viewBox="0 0 59 59" fill="none" aria-hidden="true"><rect width="59" height="59" rx="29.5" fill="#FFFFFF"/><path d="M46 31.5H14V28.4H46V31.5Z" fill="#202020"/></svg><span class="hint__label">뒤로</span></div>` ;
 
   (function grid() {
     const xs = [0, 193.2, 386.41, 579.61, 772.81, 966.01, 1159.22, 1352.42, 1545.62, 1738.82];
@@ -98,8 +80,6 @@ window.Replay = (function () {
   const stars = Array.from(root.querySelectorAll(".rp__star"));
   const playBtn = $(".rp__btn--play");
   const deleteBtn = $(".rp__btn--delete");
-  const dim = $(".rp__dim");
-  const alertEl = $(".rp__alert");
 
   const nodes = EPISODES.map((ep, i) => {
     const el = document.createElement("div");
@@ -110,7 +90,7 @@ window.Replay = (function () {
       `</div>`;
     dial.appendChild(el);
     el.addEventListener("pointerdown", () => {
-      if (active && !alertKind) clickIndex = i;
+      if (active && !Alert.isOpen()) clickIndex = i;
     });
     return { el, pop: el.querySelector(".rp__pop"), index: i };
   });
@@ -149,8 +129,6 @@ window.Replay = (function () {
   let last = 0;
   let drag = null;
   let clickIndex = -1;
-  let alertKind = null;
-  let alertFocus = 0;
 
   const replay = (el, className) => {
     el.classList.remove(className);
@@ -222,53 +200,26 @@ window.Replay = (function () {
     if (api.onPick) api.onPick(selected);
   }
 
-  // ── 알림창 ──
-  function openAlert(kind) {
-    const a = ALERTS[kind];
-    alertKind = kind;
-    alertFocus = 0;
-    alertEl.className = `rp__alert rp__alert--${a.theme}`;
-    alertEl.innerHTML =
-      `<div class="rp__alert-head">알림</div>` +
-      `<p class="rp__alert-text">${a.text}</p>` +
-      `<div class="rp__alert-line">${a.buttons.map((_, i) => `<i style="left:${a.buttons.length === 2 ? 221.5 + i * 386 : 414.5}px"></i>`).join("")}</div>` +
-      `<div class="rp__alert-btns">${a.buttons.map((b, i) => `<button type="button" class="rp__alert-btn is-${b.kind}" data-i="${i}">${b.label}</button>`).join("")}</div>`;
-    alertEl.querySelectorAll(".rp__alert-btn").forEach((btn) =>
-      btn.addEventListener("pointerdown", (e) => {
-        e.stopPropagation();
-        alertFocus = Number(btn.dataset.i);
-        focusAlert();
-        choose();
-      })
-    );
-    focusAlert();
-    dim.classList.add("is-open");
-    replay(alertEl, "is-popping");
-  }
-
-  function closeAlert() {
-    alertKind = null;
-    dim.classList.remove("is-open");
-  }
-
-  function focusAlert() {
-    alertEl.querySelectorAll(".rp__alert-btn").forEach((b, i) => b.classList.toggle("is-focus", i === alertFocus));
-  }
-
-  function choose() {
-    const id = ALERTS[alertKind].buttons[alertFocus].id;
-    if (id === "delete") openAlert("sorry"); // 실제 삭제는 아직 → 알림창2
-    else closeAlert();
-  }
+  // ── 알림창: 이 화면은 연보라(내 에피소드 다시보기) 색 ──
+  const THEME = "lilac";
 
   function askDelete() {
     replay(deleteBtn, "is-pressed");
-    openAlert("confirm");
+    Alert.open(root, {
+      theme: THEME,
+      text: "시나리오는 한번 지우면 <b>영영 복구할 수 없어</b>.<br>정말 삭제할거야?",
+      buttons: [
+        { id: "cancel", label: "취소", kind: "muted" },
+        { id: "delete", label: "삭제", kind: "main" },
+      ],
+      // 실제 삭제는 아직 → 알림창2
+      onChoose: (id) => id === "delete" && Alert.notReady(root, THEME),
+    });
   }
 
   // ── 마우스·터치 ──
   root.addEventListener("pointerdown", (e) => {
-    if (!active || alertKind || (e.pointerType === "mouse" && e.button !== 0)) return;
+    if (!active || Alert.isOpen() || (e.pointerType === "mouse" && e.button !== 0)) return;
     if (e.target.closest(".rp__hint, .rp__btn")) return;
     drag = { x: Stage.point(e.clientX, e.clientY).x, rot, moved: false };
     vel = 0;
@@ -305,20 +256,12 @@ window.Replay = (function () {
   root.addEventListener("pointerup", endDrag);
   root.addEventListener("pointercancel", endDrag);
 
-  playBtn.addEventListener("pointerdown", () => active && !alertKind && play());
-  deleteBtn.addEventListener("pointerdown", () => active && !alertKind && askDelete());
-  $(".rp__hint").addEventListener("pointerdown", () => active && !alertKind && api.onBack && api.onBack());
+  playBtn.addEventListener("pointerdown", () => active && !Alert.isOpen() && play());
+  deleteBtn.addEventListener("pointerdown", () => active && !Alert.isOpen() && askDelete());
+  $(".rp__hint").addEventListener("pointerdown", () => active && !Alert.isOpen() && api.onBack && api.onBack());
 
   function handleKey(e) {
-    if (alertKind) {
-      const n = ALERTS[alertKind].buttons.length;
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        alertFocus = (alertFocus + (e.key === "ArrowRight" ? 1 : -1) + n) % n;
-        focusAlert();
-      } else if (e.key === "Enter" || e.key === " " || e.key === "+" || e.key === "=") choose();
-      else if (e.key === "-" || e.key === "Escape" || e.key === "Backspace") closeAlert();
-      return true;
-    }
+    if (Alert.handleKey(e)) return true;
     if (e.key === "ArrowRight") turn(1);
     else if (e.key === "ArrowLeft") turn(-1);
     else if (e.key === "Enter" || e.key === " " || e.key === "+" || e.key === "=") play();
@@ -330,7 +273,7 @@ window.Replay = (function () {
 
   function enter() {
     active = true;
-    closeAlert();
+    Alert.close();
     rot = target = START;
     vel = 0;
     selected = -1;
@@ -345,7 +288,7 @@ window.Replay = (function () {
   function leave() {
     active = false;
     drag = null;
-    closeAlert();
+    Alert.close();
     cancelAnimationFrame(raf);
   }
 

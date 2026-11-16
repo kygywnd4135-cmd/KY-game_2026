@@ -1,0 +1,144 @@
+/* ───────── 알림창(모든 화면 공용, js/alert.js) ─────────
+   색(--head 등)은 js가 로비 캐릭터 색에 맞춰 넣는다. */
+
+.al__dim {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: rgba(20, 20, 20, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0s 0.2s;
+}
+
+.al__dim.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s;
+}
+
+.al {
+  position: absolute;
+  left: 516.5px;
+  top: 300px;
+  width: 902px;
+  height: 446px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid #9a9a9a;
+  border-radius: 25px;
+  background: #fff;
+  box-shadow: 0 0 59px rgba(45, 47, 51, 0.16);
+}
+
+/* 말랑하게 톡 튀어나온다 */
+.al.is-popping {
+  animation: al-pop 0.5s var(--spring) both;
+}
+
+@keyframes al-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.al__head {
+  height: 84px;
+  border-bottom: 1px solid var(--head-line);
+  background: var(--head);
+  color: #fff;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 82px;
+  text-align: center;
+}
+
+.al__text {
+  position: absolute;
+  left: 45px;
+  top: 135px;
+  width: 811px;
+  margin: 0;
+  color: #3f3f3f;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 62px;
+  text-align: center;
+}
+
+.al__text b {
+  color: #1f1f1f;
+  font-weight: 800;
+}
+
+/* 구분선 + 버튼 위 점 */
+.al__line {
+  position: absolute;
+  left: 36px;
+  top: 309px;
+  width: 829px;
+  height: 1px;
+  background: var(--line);
+}
+
+.al__line i {
+  position: absolute;
+  top: -5px;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.al__btns {
+  position: absolute;
+  left: 0;
+  top: 338px;
+  display: flex;
+  justify-content: center;
+  gap: 127px;
+  width: 100%;
+}
+
+.al__btn {
+  width: 259px;
+  height: 70px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 3.2px 3.2px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font: inherit;
+  font-size: 40px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s var(--spring), box-shadow 0.15s;
+}
+
+.al__btn:only-child {
+  width: 312px;
+}
+
+.al__btn.is-muted {
+  background: #b5b5b5;
+}
+
+.al__btn.is-main {
+  background: var(--main);
+}
+
+/* 키보드로 고른 버튼: 살짝 떠오른다 */
+.al__btn.is-focus {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 7px 10px rgba(0, 0, 0, 0.22);
+}
+
