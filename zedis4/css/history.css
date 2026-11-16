@@ -45,9 +45,12 @@
   position: absolute;
   inset: 0;
   isolation: isolate;
+  /* 빈 곳은 아래 버튼들이 눌리도록 통과시키고, 원만 잡는다 */
+  pointer-events: none;
 }
 
 .hs {
+  pointer-events: auto;
   position: absolute;
   left: 0;
   top: 0;

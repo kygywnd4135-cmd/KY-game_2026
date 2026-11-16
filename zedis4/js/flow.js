@@ -21,6 +21,7 @@
     { screen: "settings" },
     { screen: "recommend" },
     { screen: "history" },
+    { screen: "replay" },
     { screen: "talk" },
     { screen: "scenario" },
     { screen: "play" },
@@ -35,6 +36,7 @@
   const SETTINGS = STEPS.findIndex((s) => s.screen === "settings");
   const RECOMMEND = STEPS.findIndex((s) => s.screen === "recommend");
   const HISTORY = STEPS.findIndex((s) => s.screen === "history");
+  const REPLAY = STEPS.findIndex((s) => s.screen === "replay");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
   const SCENARIO = STEPS.findIndex((s) => s.screen === "scenario");
   const PLAY = STEPS.findIndex((s) => s.screen === "play");
@@ -128,6 +130,7 @@
     if (prev.screen === "settings" && cur.screen !== "settings") Settings.leave();
     if (prev.screen === "recommend" && cur.screen !== "recommend") Recommend.leave();
     if (prev.screen === "history" && cur.screen !== "history") WeekLog.leave();
+    if (prev.screen === "replay" && cur.screen !== "replay") Replay.leave();
     if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
     if (prev.screen === "scenario" && cur.screen !== "scenario") Scenario.leave();
     if (prev.screen === "play" && cur.screen !== "play") Play.leave();
@@ -147,6 +150,8 @@
       Recommend.enter();
     } else if (cur.screen === "history") {
       WeekLog.enter();
+    } else if (cur.screen === "replay") {
+      Replay.enter();
     } else if (cur.screen === "talk") {
       Talk.enter();
     } else if (cur.screen === "scenario") {
@@ -201,7 +206,8 @@
   //   청록("세부 설정")                → 세부 설정
   //   빨강("오늘의 추천 시나리오")      → 오늘의 추천 시나리오
   //   주황("주간 키워드 확인하기")      → 지난 기록 확인하기
-  const LOBBY_TARGETS = { violet: () => KEYWORDS, mint: () => SETTINGS, pink: () => RECOMMEND, peach: () => HISTORY };
+  //   연보라("내 에피소드 다시보기")    → 지난스토리 리플레이
+  const LOBBY_TARGETS = { violet: () => KEYWORDS, mint: () => SETTINGS, pink: () => RECOMMEND, peach: () => HISTORY, lilac: () => REPLAY };
   Lobby.onPick = (id) => {
     if (busy || (id !== "blue" && !LOBBY_TARGETS[id])) return;
     busy = true;
@@ -223,6 +229,10 @@
 
   WeekLog.onBack = () => {
     if (!busy && screenNow() === "history") go(LOBBY);
+  };
+
+  Replay.onBack = () => {
+    if (!busy && screenNow() === "replay") go(LOBBY);
   };
 
   Keywords.onBack = () => {
@@ -297,7 +307,7 @@
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     if (busy) return;
-    if (["lobby", "keywords", "settings", "recommend", "history", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
+    if (["lobby", "keywords", "settings", "recommend", "history", "replay", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
     if (HANDLERS[screenNow()]) return HANDLERS[screenNow()]();
     advance();
   });
@@ -333,6 +343,11 @@
       // 로비: ←/→ 로 다이얼을 돌리고 Enter로 고른다. Esc는 대기화면으로.
       if (e.key === "Escape") go(0);
       else Lobby.handleKey(e);
+      return;
+    }
+    if (screenNow() === "replay") {
+      // 지난스토리 리플레이: ←/→ 다이얼, Delete 삭제 알림창. −(또는 Esc)는 로비로(알림창이 떠 있으면 닫기만).
+      if (Replay.handleKey(e) === "back") go(LOBBY);
       return;
     }
     if (screenNow() === "history") {
