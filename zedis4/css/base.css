@@ -175,3 +175,8 @@ body {
     animation: none;
   }
 }
+
+/* 키보드 초점을 받아도 테두리는 그리지 않는다(js/flow.js grabFocus) */
+.stage:focus {
+  outline: none;
+}

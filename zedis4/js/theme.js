@@ -1,11 +1,12 @@
 // 화면 테마: 일반 모드 / 야간 모드.
 // 야간 모드는 <html>에 is-night 를 붙이고, 색은 css/night.css가 바꾼다.
-// 고른 모드는 이 브라우저에 기억해 두어서 새로고침해도 유지된다(저장이 막혀 있으면 일반 모드).
+// 링크를 열면 언제나 일반 모드로 시작한다(어느 컴퓨터에서 열어도 같다).
+// 야간 모드는 설정에서 바꾼 그때만 유지되고, 새로고침하면 다시 일반 모드.
 window.Theme = (function () {
-  const KEY = "zedis4-theme";
   let mode = "day";
+  // 예전 버전이 남겨 둔 기억값은 지운다
   try {
-    if (localStorage.getItem(KEY) === "night") mode = "night";
+    localStorage.removeItem("zedis4-theme");
   } catch (err) {}
 
   function apply() {
@@ -14,9 +15,6 @@ window.Theme = (function () {
 
   function set(next) {
     mode = next === "night" ? "night" : "day";
-    try {
-      localStorage.setItem(KEY, mode);
-    } catch (err) {}
     // 바뀌는 순간만 색이 부드럽게 넘어가도록
     document.documentElement.classList.add("is-theming");
     apply();

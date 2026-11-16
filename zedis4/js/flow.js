@@ -145,6 +145,8 @@
 
     if (cur.screen === "lobby") {
       Lobby.enter();
+      grabFocus();
+      setTimeout(grabFocus, 320); // 앞 화면이 접힌(display:none) 뒤에 한 번 더
     } else if (cur.screen === "keywords") {
       Keywords.enter();
     } else if (cur.screen === "settings") {
@@ -322,6 +324,23 @@
     advance();
   });
 
+  // Windows에서는 Alt를 뗄 때 브라우저 메뉴로 키보드 초점이 넘어가서,
+  // 그다음 방향키가 화면에 안 들어온다(한 번 클릭해야 다시 됨). Alt 를 뗄 때도 막는다.
+  document.addEventListener("keyup", (e) => {
+    if (e.key === "Alt") e.preventDefault();
+  });
+
+  // 키보드 초점을 화면으로 되돌린다(로비로 돌아올 때마다)
+  const stageEl = document.querySelector(".stage");
+  stageEl.setAttribute("tabindex", "-1");
+  function grabFocus() {
+    try {
+      window.focus();
+    } catch (err) {}
+    const a = document.activeElement;
+    if (!a || a === document.body || !stageEl.contains(a) || a.offsetParent === null) stageEl.focus({ preventScroll: true });
+  }
+
   document.addEventListener("keydown", (e) => {
     // 대본 고치기 화면에서 Alt: 수정을 마치고 연극을 종료한다
     if (e.key === "Alt" && screenNow() === "edit") {
@@ -356,7 +375,7 @@
     if (["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(e.key)) return;
     // F1~F12(전체 화면 F11 등)는 브라우저 기능이라 장면을 넘기지 않는다
     if (/^F\d{1,2}$/.test(e.key)) return;
-    if (e.key === " " || e.key.startsWith("Arrow") || e.key.startsWith("Page")) e.preventDefault();
+    if (e.key === " " || e.key === "Escape" || e.key.startsWith("Arrow") || e.key.startsWith("Page")) e.preventDefault();
     if (busy) return;
 
     if (screenNow() === "lobby") {

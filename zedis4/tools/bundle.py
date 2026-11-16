@@ -23,5 +23,5 @@ if "--fragment" in sys.argv:
     title = re.search(r"<title>.*?</title>", html).group(0)
     head = "".join(re.findall(r"<style>.*?</style>", html, re.S))
     body = re.search(r"<body>(.*)</body>", html, re.S).group(1)
-    html = title + "\n<style>:root { color-scheme: dark; }</style>\n" + head + body
+    html = title + "\n<style>:root { color-scheme: light; }</style>\n" + head + body
 pathlib.Path(sys.argv[1]).write_text(html, encoding="utf-8")
