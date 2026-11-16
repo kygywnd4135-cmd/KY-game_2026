@@ -1,6 +1,7 @@
 // 연극 결과 - 비슷한 시나리오 추천.
 // 내 시나리오에 별점을 매기고(← / → 로 반 칸씩, 별을 눌러도 됨),
 // 아래에는 비슷한 상황을 겪은 사람들의 이야기가 추천으로 뜬다(아직 고를 수는 없다).
+// 오른쪽 '나도 이번 스토리를 공개할래!' 칸은 눌러서(또는 ↑ / ↓ 키) 켜고 끈다.
 // Alt 를 누르면 로비로 돌아간다(js/flow.js가 처리).
 window.Rate = (function () {
   const root = document.querySelector('[data-screen="rate"]');
@@ -89,6 +90,10 @@ window.Rate = (function () {
     // 추천 목록
     `<div class="rate__band"></div>` +
     `<p class="rate__more">다른 사람들은 비슷한 시나리오에서 어떻게 행동했을까요?</p>` +
+    // 내 스토리 공개 체크
+    `<button class="rate__share" type="button" role="checkbox" aria-checked="false">` +
+    `<span class="rate__check"><svg width="56" height="53" viewBox="0 0 56 53" fill="none" aria-hidden="true"><path d="M14 27.5L24 37L43 17" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>` +
+    `<span class="rate__share-label">나도 이번 스토리를 공개할래!</span></button>` +
     THUMBS.map(
       (t, i) =>
         `<div class="reco" data-reco="${i}" style="--i:${i}"><div class="reco__pop"><div class="reco__disc" style="background:${t.bg}">` +
@@ -111,8 +116,11 @@ window.Rate = (function () {
   const stars = Array.from(root.querySelectorAll(".rate__star"));
   const recos = Array.from(root.querySelectorAll(".reco"));
 
+  const share = root.querySelector(".rate__share");
+
   let rating = START;
   let saved = false;
+  let shared = false;
   let active = false;
 
   const replay = (el, className) => {
@@ -161,12 +169,26 @@ window.Rate = (function () {
   );
   root.querySelector(".rate__save").addEventListener("pointerdown", () => active && save());
 
+  // 공개 체크 켜고 끄기
+  function toggleShare() {
+    shared = !shared;
+    share.classList.toggle("is-on", shared);
+    share.setAttribute("aria-checked", String(shared));
+    replay(share, "is-toggling");
+  }
+  share.addEventListener("pointerdown", (e) => {
+    if (!active) return;
+    e.stopPropagation();
+    toggleShare();
+  });
+
   // 추천 이야기는 아직 고를 수 없다: 누르면 도리도리
   recos.forEach((reco) => reco.addEventListener("pointerdown", () => active && replay(reco.querySelector(".reco__pop"), "is-refusing")));
 
   function handleKey(e) {
-    if (e.key === "ArrowRight" || e.key === "ArrowUp") setRating(rating + 0.5);
-    else if (e.key === "ArrowLeft" || e.key === "ArrowDown") setRating(rating - 0.5);
+    if (e.key === "ArrowRight") setRating(rating + 0.5);
+    else if (e.key === "ArrowLeft") setRating(rating - 0.5);
+    else if (e.key === "ArrowUp" || e.key === "ArrowDown") toggleShare();
     else if (/^[0-5]$/.test(e.key)) setRating(Number(e.key));
     else if (e.key === "Enter" || e.key === " ") save();
     else return false;
@@ -177,6 +199,9 @@ window.Rate = (function () {
     active = true;
     rating = START;
     saved = false;
+    shared = false;
+    share.classList.remove("is-on", "is-toggling");
+    share.setAttribute("aria-checked", "false");
     saveLabel.textContent = "저장";
     stars.forEach((s) => s.classList.remove("is-popping", "is-saved"));
     render(false);
@@ -187,5 +212,5 @@ window.Rate = (function () {
     active = false;
   }
 
-  return { enter, leave, handleKey, get rating() { return rating; }, get saved() { return saved; } };
+  return { enter, leave, handleKey, get rating() { return rating; }, get saved() { return saved; }, get shared() { return shared; } };
 })();

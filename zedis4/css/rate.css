@@ -152,7 +152,9 @@
   background: rgba(87, 86, 86, 0.2);
 }
 
+/* 피그마: 왼쪽으로 옮겨지고, 오른쪽에 '공개' 체크 칸이 생겼다 */
 .rate__more {
+  left: 702px;
   top: 545.5px;
   color: #353535;
   font-size: 36px;
@@ -285,4 +287,70 @@
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* ── 나도 이번 스토리를 공개할래! ── */
+.rate__share {
+  position: absolute;
+  left: 1274px;
+  top: 541px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.rate__check {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 53px;
+  box-sizing: border-box;
+  border: 1px solid #999;
+  border-radius: 6px;
+  background: #fff;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.rate__check svg {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  stroke-dasharray: 44;
+  stroke-dashoffset: 44;
+  transition: stroke-dashoffset 0.25s 0.05s ease-out;
+}
+
+.rate__share-label {
+  color: #353535;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 45px;
+  white-space: nowrap;
+}
+
+/* 켜짐: 칸이 분홍(EP 제목 색)으로 차고 체크가 그어진다 */
+.rate__share.is-on .rate__check {
+  border-color: #ff1777;
+  background: #ff1777;
+}
+
+.rate__share.is-on .rate__check svg {
+  stroke-dashoffset: 0;
+}
+
+.rate__share.is-on .rate__share-label {
+  color: #ff1777;
+}
+
+.rate__share.is-toggling .rate__check {
+  animation: jelly 0.5s both;
+}
+
+.rate.is-entering .rate__share {
+  animation: rate-fade 0.4s 0.6s both;
 }

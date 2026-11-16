@@ -279,3 +279,13 @@
 .is-night .rate__pill.is-empty .rate__value {
   color: #6c7288;
 }
+
+/* 별점 화면 '공개' 체크 */
+.is-night .rate__check {
+  border-color: var(--n-line);
+  background: var(--n-card);
+}
+
+.is-night .rate__share-label {
+  color: var(--n-text);
+}
