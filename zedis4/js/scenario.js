@@ -2,7 +2,7 @@
 // 펼쳐지는 연출은 css/scenario.css가 맡고, 여기서는 순서와 말풍선 글자 출력을 맡는다.
 window.Scenario = (function () {
   const LINE = "막을 올리러 가보자고!";
-  const SPEAK_AT = 2000; // 펼쳐지고 배우가 올라온 뒤 말하기 시작(ms)
+  const SPEAK_AT = 4500; // 다 펼쳐지고 배우가 튀어나온 뒤 말하기 시작(ms)
 
   const root = document.querySelector('[data-screen="scenario"]');
   const text = root.querySelector("[data-scenario-text]");
@@ -16,6 +16,20 @@ window.Scenario = (function () {
     typer = Typewriter.run([{ el: text, text: LINE }], {
       onDone: () => (phase = "waiting"),
     });
+  }
+
+  // 펼쳐지는 연출을 건너뛰고 다 펼쳐진 상태로 만든다
+  function skipOpening() {
+    clearTimeout(timer);
+    root.getAnimations({ subtree: true }).forEach((a) => {
+      const timing = a.effect && a.effect.getComputedTiming();
+      if (!timing) return;
+      try {
+        if (timing.iterations === Infinity) a.currentTime = Math.max(a.currentTime || 0, timing.delay);
+        else a.finish();
+      } catch (e) {}
+    });
+    speak();
   }
 
   function enter() {
@@ -36,12 +50,13 @@ window.Scenario = (function () {
 
   // 터치/아무 키. 장면이 끝났으면 "done"을 돌려준다.
   function advance() {
-    if (phase === "line") {
+    if (phase === "opening") {
+      skipOpening();
+    } else if (phase === "line") {
       if (typer) typer.finish();
     } else if (phase === "waiting") {
       return "done";
     }
-    // 펼쳐지는 중에는 짧은 연출이 끝나길 기다린다
     return "handled";
   }
 
