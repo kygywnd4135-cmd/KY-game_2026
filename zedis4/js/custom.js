@@ -4,7 +4,7 @@
 //   장식 원 · 캐릭터 양옆 화살표 누르기도 된다
 //   ＋ / Enter   저장(지금은 알림창2 "아직 준비되지 않은 기능")
 //   − / Esc      로비로 돌아가기
-// 뒤의 초록이는 혼자 돌아다니다가, 외형이 바뀔 때마다 멈춰서 말풍선으로 반응한다.
+// 뒤의 초록이는 제자리에서 숨 쉬다가, 외형이 바뀔 때마다 말풍선으로 반응한다.
 window.Custom = (function () {
   const THEME = "green"; // 알림창 색: 로비의 초록(커스터마이징 숍)
 
@@ -70,7 +70,7 @@ window.Custom = (function () {
 
   root.innerHTML =
     `<svg class="cu__grid" width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true"></svg>` +
-    // 뒤에서 돌아다니는 초록이(그림자 포함)
+    // 뒤에서 지켜보는 초록이(그림자 포함)
     `<div class="cu__buddy"><i class="cu__buddy-shadow"></i><div class="cu__buddy-flip">${BUDDY}</div></div>` +
     // 장식 줄
     `<div class="cu__row"></div>` +
@@ -107,7 +107,6 @@ window.Custom = (function () {
   const bodyEl = $(".cu__body");
   const wearEl = $(".cu__wear");
   const buddy = $(".cu__buddy");
-  const buddyFlip = $(".cu__buddy-flip");
   const say = $(".cu__say");
   const sayText = say.querySelector("b");
   const arrows = [$(".cu__arrow--left"), $(".cu__arrow--right")];
@@ -196,19 +195,8 @@ window.Custom = (function () {
     root.classList.toggle("is-color-row", r === 1);
   }
 
-  // ── 초록이: 혼자 걸어다니다가 외형이 바뀌면 반응 ──
-  const FLOOR_MIN = 300;
-  const FLOOR_MAX = 1640;
-  const SPEED = 150;
-  const bud = { x: 375, dir: 1, mode: "idle", timer: 1.2, goal: 375, lastLine: -1 };
-
-  function pickGoal() {
-    // 메인 캐릭터 바로 뒤(가려지는 자리)에서는 멈추지 않는다
-    let g;
-    do g = FLOOR_MIN + Math.random() * (FLOOR_MAX - FLOOR_MIN);
-    while ((g > 760 && g < 1160) || Math.abs(g - bud.x) < 180);
-    return g;
-  }
+  // ── 초록이: 외형이 바뀌면 반응 ──
+  const bud = { mode: "idle", timer: 0, lastLine: -1 };
 
   function react() {
     let k;
@@ -217,40 +205,20 @@ window.Custom = (function () {
     bud.lastLine = k;
     bud.mode = "react";
     bud.timer = 2;
-    bud.dir = bud.x < 959 ? 1 : -1; // 메인 캐릭터 쪽을 본다
     sayText.textContent = LINES[k];
-    buddy.classList.remove("is-walking");
     replay(buddy, "is-reacting");
     replay(say, "is-on");
   }
 
+  // 초록이는 피그마 자리에 가만히 서서 숨만 쉬고, 반응이 끝나면 말풍선을 거둔다
   function stepBuddy(dt) {
+    if (bud.mode !== "react") return;
     bud.timer -= dt;
-    if (bud.mode === "walk") {
-      const d = bud.goal - bud.x;
-      const step = Math.sign(d) * Math.min(Math.abs(d), SPEED * dt);
-      bud.x += step;
-      if (Math.abs(bud.goal - bud.x) < 1) {
-        bud.mode = "idle";
-        bud.timer = 1.2 + Math.random() * 2.2;
-        buddy.classList.remove("is-walking");
-      }
-    } else if (bud.timer <= 0) {
-      if (bud.mode === "react") {
-        say.classList.remove("is-on");
-        buddy.classList.remove("is-reacting");
-      }
-      bud.mode = "walk";
-      bud.goal = pickGoal();
-      bud.dir = bud.goal > bud.x ? 1 : -1;
-      buddy.classList.add("is-walking");
+    if (bud.timer <= 0) {
+      bud.mode = "idle";
+      say.classList.remove("is-on");
+      buddy.classList.remove("is-reacting");
     }
-    buddy.style.transform = `translateX(${(bud.x - 375).toFixed(1)}px)`;
-    buddyFlip.style.transform = bud.dir < 0 ? "scaleX(-1)" : "";
-    // 말풍선: 오른쪽 끝 근처에서는 왼쪽으로 뒤집어 띄운다
-    const flip = bud.x > 1250;
-    say.classList.toggle("is-flipped", flip);
-    say.style.transform = `translateX(${(bud.x - 375 + (flip ? -183 : 0)).toFixed(1)}px)`;
   }
 
   function frame(now) {
@@ -309,8 +277,8 @@ window.Custom = (function () {
     hero.style.setProperty("--body", COLORS[0].body);
     hero.style.setProperty("--deep", COLORS[0].deep);
     focusRow(0);
-    Object.assign(bud, { x: 375, dir: 1, mode: "idle", timer: 1.4 });
-    buddy.classList.remove("is-walking", "is-reacting");
+    Object.assign(bud, { mode: "idle", timer: 0 });
+    buddy.classList.remove("is-reacting");
     say.classList.remove("is-on");
     renderRow();
     replay(root, "is-entering");
