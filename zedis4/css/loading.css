@@ -1,0 +1,204 @@
+/* ───────── 펜 로딩 ───────── */
+
+.loading__title,
+.loading__lead,
+.loading__sub {
+  position: absolute;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.loading__title {
+  left: 967px;
+  top: 331px;
+  color: #fff;
+  font-size: 100px;
+  font-weight: 800;
+  line-height: 125px;
+}
+
+.loading__lead {
+  left: 967px;
+  top: 509px;
+  color: #bababa;
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 75px;
+}
+
+.loading__sub {
+  left: 967.5px;
+  top: 601px;
+  color: #bababa;
+  font-size: 41px;
+  font-weight: 500;
+  line-height: 51px;
+}
+
+/* 제목 끝의 점 두 개가 번갈아 통통 */
+.loading__dot {
+  display: inline-block;
+  animation: dot-hop 1s infinite;
+}
+
+.loading__dot + .loading__dot {
+  animation-delay: 0.16s;
+}
+
+@keyframes dot-hop {
+  0%,
+  45%,
+  100% {
+    transform: none;
+  }
+  15% {
+    transform: translateY(-0.2em) scale(0.92, 1.1);
+  }
+  30% {
+    transform: translateY(0) scale(1.15, 0.85);
+  }
+}
+
+/* ── 총총 뛰어가는 캐릭터 ──
+   .runner: 오른쪽에서 왼쪽으로 일정한 속도로 이동(화면 밖으로 나가면 반대편에서 다시 등장)
+   .runner__hop: 제자리에서 통통 튀는 움직임 */
+.runner,
+.runner__hop {
+  position: absolute;
+  inset: 0;
+}
+
+.runner {
+  /* 피그마의 위치(가운데)에서 시작하도록 절반만큼 앞당겨 재생 */
+  animation: run-across 6.4s -3.2s linear infinite;
+}
+
+.runner__hop {
+  transform-origin: 977.5px 941px;
+  animation: hop 0.34s infinite;
+}
+
+.runner__body {
+  position: absolute;
+  left: 914px;
+  top: 812px;
+  width: 127px;
+  height: 127px;
+  border-radius: 50%;
+  background: var(--c-blue);
+}
+
+.runner__eye {
+  position: absolute;
+  left: 924px;
+  top: 854px;
+  width: 31px;
+  height: 43px;
+  animation: runner-blink 2.9s infinite;
+}
+
+.runner__white,
+.runner__pupil {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.runner__white {
+  inset: 0;
+  background: #fff;
+}
+
+.runner__pupil {
+  left: 5px;
+  top: 6px;
+  width: 21px;
+  height: 30px;
+  background: var(--c-blue-deep);
+}
+
+.runner__foot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.runner__foot svg {
+  position: absolute;
+  left: -20.17px;
+  top: -17.79px;
+  overflow: visible;
+}
+
+/* 두 발이 앞(A)·뒤(B) 자세를 번갈아 오간다 */
+.runner__foot--a {
+  animation: stride 0.68s linear infinite;
+}
+
+.runner__foot--b {
+  animation: stride 0.68s -0.34s linear infinite;
+}
+
+@keyframes run-across {
+  from {
+    transform: translateX(1120px);
+  }
+  to {
+    transform: translateX(-1120px);
+  }
+}
+
+@keyframes hop {
+  0% {
+    transform: translateY(0) scale(1.1, 0.9);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  50% {
+    transform: translateY(-30px) scale(0.96, 1.05);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4);
+  }
+  100% {
+    transform: translateY(0) scale(1.1, 0.9);
+  }
+}
+
+@keyframes stride {
+  /* A: 앞으로 뻗은 발 */
+  0%,
+  100% {
+    transform: translate(909.8px, 938.95px) rotate(28.05deg);
+  }
+  /* 몸 아래를 지나며 */
+  25% {
+    transform: translate(968px, 956px) rotate(-6deg);
+  }
+  /* B: 뒤로 찬 발 */
+  50% {
+    transform: translate(1027.475px, 962.72px) rotate(-48.7deg);
+  }
+  /* 공중에서 앞으로 당겨 오기 */
+  75% {
+    transform: translate(972px, 940px) rotate(-8deg);
+  }
+}
+
+@keyframes runner-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading * {
+    animation: none !important;
+  }
+}
