@@ -130,6 +130,8 @@ window.Play = (function () {
     seat("peach", 88, 1047, 117, "#ffd3af", 2.6, 0) + seat("mint", 365, 1059, 91, "#c7fffa", 2.1, -0.7) +
     seat("violet", 1597, 1045, 105, "#bea9ff", 2.3, -0.4) + seat("pink", 1871.5, 1027.5, 122.5, "#ffacce", 2.7, -1.8) +
     `</div>` +
+    // 빵파레 조각: 말풍선을 가리지 않도록 말풍선보다 아래 층에 둔다
+    `<div class="confetti" aria-hidden="true"></div>` +
     `<div class="play__shouts"></div>` +
     // 보통 말풍선
     `<div class="bubble"><div class="bubble__pop">
@@ -143,8 +145,6 @@ window.Play = (function () {
     `<div class="yell"><div class="yell__pop">` +
     stageSvg("", `<path d="M1522.22 137.81L1486.16 311.54L1391.73 393.73L1221.61 377.88L545.25 480.31L362.02 326.71L378.49 169.47L894.68 98.43L1469.96 78.65L1522.22 137.81Z" fill="#878787"/><path d="M1496.7 109.46L1460.51 291.87L1364.81 377.97L1192 360.91L505.36 466.86L318.91 305.06L335.25 139.92L859.3 66.56L1443.48 47.18L1496.7 109.46Z" fill="#F0F0F0"/>`) +
     `<p class="yell__text" data-play-yell></p></div></div>` +
-    // 빵파레 조각
-    `<div class="confetti" aria-hidden="true"></div>` +
     `</div>` +
     // 엔딩: 캐릭터를 중심으로 좁혀지는 검은 원, 별, END!
     `<div class="iris"></div>` +
@@ -201,20 +201,19 @@ window.Play = (function () {
     (cue.hop || []).forEach((id, i) => seats[id] && setTimeout(() => replay(seats[id], "is-hopping"), i * 70));
   }
 
-  // ── 빵파레: 양옆에서 터져 올라 흩날린다 ──
+  // ── 빵파레: 위에서 팔랑팔랑 쏟아져 내린다 ──
   const CONFETTI_COLORS = ["#FF1777", "#1871ED", "#05E2CF", "#FFFFFF", "#FFD23F"];
   function burst(count) {
     for (let i = 0; i < count; i++) {
-      const fromLeft = i % 2 === 0;
       const piece = document.createElement("i");
       const size = 54 + Math.random() * 84;
       piece.className = "confetti__piece";
       piece.style.cssText =
-        `--x0:${fromLeft ? 260 : 1675}px;--y0:${930}px;` +
-        `--x1:${(fromLeft ? 120 : 780) + Math.random() * 1030}px;--y1:${40 + Math.random() * 560}px;` +
-        `--drift:${-120 + Math.random() * 240}px;--spin:${-540 + Math.random() * 1080}deg;` +
+        `--x0:${-60 + Math.random() * 1990}px;--y0:${-90 - Math.random() * 170}px;` +
+        `--drift:${-180 + Math.random() * 360}px;--sway:${50 + Math.random() * 90}px;` +
+        `--spin:${-620 + Math.random() * 1240}deg;--tilt:${Math.random() * 360}deg;` +
         `--size:${size}px;--thick:${size > 100 ? 22 : 14}px;--c:${CONFETTI_COLORS[i % CONFETTI_COLORS.length]};` +
-        `--dur:${3.2 + Math.random() * 2.6}s;--delay:${Math.random() * 0.25}s`;
+        `--dur:${2.6 + Math.random() * 2.4}s;--delay:${Math.random() * 0.9}s`;
       confettiBox.appendChild(piece);
       piece.addEventListener("animationend", () => piece.remove());
     }
@@ -270,6 +269,7 @@ window.Play = (function () {
     sceneIndex = index;
     const scene = SCENES[index];
     phase = "intro";
+    if (typer) typer.cancel();
     typer = null;
     clearFlags();
     root.classList.remove("is-talking", "is-finale", "is-wink");
@@ -307,6 +307,7 @@ window.Play = (function () {
 
   function leave() {
     clearTimers();
+    if (typer) typer.cancel();
     phase = "off";
     root.classList.remove("is-talking");
   }

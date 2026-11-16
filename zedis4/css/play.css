@@ -892,7 +892,7 @@
   white-space: pre;
 }
 
-/* ── 빵파레 ── */
+/* ── 빵파레: 위에서 쏟아지는 종이 조각 ── */
 .confetti {
   position: absolute;
   inset: 0;
@@ -909,27 +909,28 @@
   border: var(--thick) solid transparent;
   border-top-color: var(--c);
   border-radius: 50%;
-  animation: confetti-fly var(--dur) var(--delay) both;
+  animation: confetti-fall var(--dur) var(--delay) linear both;
 }
 
-/* 뻥! 하고 솟구쳤다가 팔랑팔랑 내려온다 */
-@keyframes confetti-fly {
+/* 화면 위에서 나타나 좌우로 흔들리고 빙글 돌며 바닥까지 떨어진다 */
+@keyframes confetti-fall {
   0% {
-    opacity: 1;
-    transform: translate(var(--x0), var(--y0)) rotate(0deg) scale(0.2);
-    animation-timing-function: cubic-bezier(0.1, 0.8, 0.25, 1);
+    transform: translate(var(--x0), var(--y0)) rotate(var(--tilt));
   }
-  22% {
-    opacity: 1;
-    transform: translate(var(--x1), var(--y1)) rotate(calc(var(--spin) * 0.5)) scale(1);
-    animation-timing-function: cubic-bezier(0.4, 0, 0.8, 0.7);
+  25% {
+    transform: translate(calc(var(--x0) + var(--drift) * 0.25 + var(--sway)), calc(var(--y0) + 340px))
+      rotate(calc(var(--tilt) + var(--spin) * 0.25));
   }
-  85% {
-    opacity: 1;
+  50% {
+    transform: translate(calc(var(--x0) + var(--drift) * 0.5 - var(--sway)), calc(var(--y0) + 690px))
+      rotate(calc(var(--tilt) + var(--spin) * 0.5));
+  }
+  75% {
+    transform: translate(calc(var(--x0) + var(--drift) * 0.75 + var(--sway)), calc(var(--y0) + 1050px))
+      rotate(calc(var(--tilt) + var(--spin) * 0.75));
   }
   100% {
-    opacity: 0;
-    transform: translate(calc(var(--x1) + var(--drift)), calc(var(--y1) + 760px)) rotate(var(--spin)) scale(1);
+    transform: translate(calc(var(--x0) + var(--drift)), calc(var(--y0) + 1420px)) rotate(calc(var(--tilt) + var(--spin)));
   }
 }
 

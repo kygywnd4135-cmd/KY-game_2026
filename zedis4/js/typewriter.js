@@ -56,7 +56,7 @@ window.Typewriter = (function () {
       shift += (/[,.!?…]/.test(item.span.textContent) ? step * 2.2 : step) - speed;
     });
 
-    const state = { done: false, finish };
+    const state = { done: false, finish, cancel };
     let index = 0;
     let raf = 0;
     const start = performance.now();
@@ -77,6 +77,12 @@ window.Typewriter = (function () {
       }
       if (index >= queue.length) complete();
       else raf = requestAnimationFrame(frame);
+    }
+
+    // 출력을 그 자리에서 멈춘다(끝났다는 알림 없이). 장면을 떠날 때 쓴다.
+    function cancel() {
+      state.done = true;
+      cancelAnimationFrame(raf);
     }
 
     function finish() {
