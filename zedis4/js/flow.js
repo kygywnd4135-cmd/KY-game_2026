@@ -417,6 +417,12 @@
       else HANDLERS[screenNow()]();
       return;
     }
+    // 대기화면 · 전원(졸다 깨서 인사) · 펜 로딩: Esc 로 한 번에 로비까지 건너뛴다
+    if (e.key === "Escape" && ["standby", "power", "loading"].includes(screenNow())) {
+      if (typer) typer.cancel();
+      go(LOBBY);
+      return;
+    }
     advance();
   });
 
