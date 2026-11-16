@@ -149,6 +149,8 @@
       { who: "boss", name: "김부장", text: "나는 말이야.. 자네같이 열정없고 끈기도 없는 젊은이를 싫어한다네." },
     ];
     const GREETING = "좋아! 이 순간을 어떻게 바꿔볼까? 뭐든 바꿔보자고!";
+    const FAREWELL = "좋아! 이제 시나리오가 마음에들어? 이걸로 연극을 종료하지!";
+    const FAREWELL_HOLD = 1300; // 마무리 인사가 다 나온 뒤 암전까지(ms)
     const START_LINE = 1; // 처음에 골라 둘 대사
 
     const root = document.querySelector('[data-screen="edit"]');
@@ -206,7 +208,7 @@
     const rows = Array.from(root.querySelectorAll(".line"));
     rows.forEach((row, i) => (row.querySelector(".line__text").textContent = LINES[i].text));
 
-    let phase = "off"; // off → intro → select → typing → magic
+    let phase = "off"; // off → intro → select → typing → magic → ending
     let focus = START_LINE;
     let typer = null;
     let timers = [];
@@ -353,7 +355,7 @@
         row.querySelector(".line__text").classList.remove("tw", "is-instant");
       });
       setHints("선택", "뒤로");
-      root.classList.remove("is-greeting");
+      root.classList.remove("is-greeting", "is-farewell");
       root.classList.add("is-intro");
       replay(root, "is-opening");
       wizard.classList.remove("is-casting");
@@ -385,8 +387,38 @@
 
     root.addEventListener("pointerdown", (e) => {
       if (phase === "intro") advanceIntro();
+      else if (phase === "ending") advanceEnding();
       else if (phase === "typing" && !e.target.closest(".line.is-typing")) commit();
     });
+
+    // ── 마무리(Alt): 파랑이 인사하고 → onFinish(암전) ──
+    function finish() {
+      if (phase !== "select") return false; // 고치는 중·마법 중에는 받지 않는다
+      phase = "ending";
+      rows.forEach((row) => row.classList.remove("is-focus"));
+      setHints("선택", "뒤로");
+      Typewriter.clear(sayText);
+      root.classList.add("is-greeting", "is-farewell");
+      replay(sayPop, "is-entering");
+      replay(wizard, "is-casting");
+      later(() => wizard.classList.remove("is-casting"), 1000);
+      typer = Typewriter.run([{ el: sayText, text: FAREWELL }], {
+        onDone: () => later(leaveStage, FAREWELL_HOLD),
+      });
+      return true;
+    }
+
+    function leaveStage() {
+      if (phase !== "ending") return;
+      phase = "off";
+      clearTimers();
+      if (api.onFinish) api.onFinish();
+    }
+
+    function advanceEnding() {
+      if (typer && !typer.done) typer.finish();
+      else leaveStage();
+    }
 
     function advanceIntro() {
       if (!root.classList.contains("is-greeting")) {
@@ -414,6 +446,10 @@
         advanceIntro();
         return true;
       }
+      if (phase === "ending") {
+        advanceEnding();
+        return true;
+      }
       if (phase === "select") {
         if (e.key === "ArrowDown") move(1);
         else if (e.key === "ArrowUp") move(-1);
@@ -424,6 +460,8 @@
       return true;
     }
 
-    return { enter, leave, handleKey, isTyping: () => phase === "typing", lines: LINES };
+    // onFinish: 마무리 인사가 끝나면 불린다. js/flow.js가 연결한다.
+    const api = { enter, leave, handleKey, finish, isTyping: () => phase === "typing", lines: LINES, onFinish: null };
+    return api;
   })();
 })();

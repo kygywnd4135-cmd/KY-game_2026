@@ -1,0 +1,288 @@
+/* ───────── 연극 결과 - 비슷한 시나리오 추천: 별점 + 추천 목록 ───────── */
+
+.screen--rate {
+  background: #fafafa;
+}
+
+.rate svg {
+  overflow: visible;
+}
+
+.rate__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.rate__title,
+.rate__ask,
+.rate__more {
+  position: absolute;
+  left: 967.5px;
+  margin: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.rate__title {
+  top: 103px;
+  color: #363636;
+  font-size: 60px;
+  font-weight: 800;
+  line-height: 74px;
+}
+
+.rate__title span {
+  color: #ff1777;
+}
+
+.rate__ask {
+  top: 205.5px;
+  color: #676767;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 45px;
+}
+
+/* ── 별점 ── */
+.rate__pill {
+  position: absolute;
+  left: 558px;
+  top: 300.5px;
+  width: 821px;
+  height: 129px;
+  border: 3.5px solid #c6c6c6;
+  border-radius: 64.5px;
+  background: #fff;
+}
+
+.rate__star {
+  position: absolute;
+  left: calc(75.5px + var(--i) * 100px);
+  top: 16px;
+  width: 86px;
+  height: 84px;
+  cursor: pointer;
+}
+
+.rate__star svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* 채워진 만큼만 노란 별이 보인다(0 / 반 / 전부) */
+.rate__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--part, 0) * 100%);
+  height: 100%;
+  overflow: hidden;
+  transition: width 0.18s ease-out;
+}
+
+.rate__star.is-popping {
+  animation: rate-pop 0.4s var(--spring) both;
+}
+
+.rate__star.is-saved {
+  animation: rate-wave 0.6s calc(var(--i) * 0.07s) both;
+}
+
+@keyframes rate-pop {
+  0% {
+    transform: scale(0.6) rotate(-18deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes rate-wave {
+  0%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: translateY(-22px) scale(1.18) rotate(12deg);
+  }
+  65% {
+    transform: translateY(4px) scale(0.94);
+  }
+}
+
+.rate__value {
+  position: absolute;
+  left: 596px;
+  top: 5px;
+  color: #ffc61c;
+  font-size: 90px;
+  font-weight: 800;
+  line-height: 112px;
+  transition: color 0.2s;
+}
+
+.rate__pill.is-empty .rate__value {
+  color: #d9d9d9;
+}
+
+.rate__pill.is-bumping {
+  animation: refuse 0.35s both;
+}
+
+.rate__save {
+  color: #4c4c4c;
+  cursor: pointer;
+}
+
+.rate__save.is-saved {
+  animation: lc-picked 0.5s both;
+}
+
+/* ── 추천 목록 ── */
+.rate__band {
+  position: absolute;
+  left: -57px;
+  top: 498px;
+  width: 2148px;
+  height: 549px;
+  border-radius: 20px;
+  background: rgba(87, 86, 86, 0.2);
+}
+
+.rate__more {
+  top: 545.5px;
+  color: #353535;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 45px;
+}
+
+.reco {
+  position: absolute;
+  left: calc(114px + var(--i) * 355.33px);
+  top: 643px;
+  width: 289.3px;
+  cursor: not-allowed; /* 아직 고를 수 없다 */
+}
+
+.reco__pop {
+  width: 289.3px;
+  height: 289.3px;
+}
+
+.reco__disc {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 9.1px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.18);
+  animation: reco-float 3.6s calc(var(--i) * -0.7s) ease-in-out infinite;
+}
+
+.reco__disc svg {
+  position: absolute;
+  left: -9.1px;
+  top: -9.1px;
+}
+
+.reco__title {
+  position: absolute;
+  left: 50%;
+  top: 315.5px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #696868;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 45px;
+  white-space: nowrap;
+}
+
+.reco__pop.is-refusing {
+  animation: refuse 0.45s both;
+}
+
+@keyframes reco-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+/* ── 등장 ── */
+.rate.is-entering .rate__title,
+.rate.is-entering .rate__ask {
+  animation: rate-drop 0.45s both;
+}
+
+.rate.is-entering .rate__ask {
+  animation-delay: 0.1s;
+}
+
+.rate.is-entering .rate__pill {
+  animation: lc-enter 0.6s 0.2s var(--spring) both;
+}
+
+.rate.is-entering .rate__band {
+  animation: band-in 0.5s 0.25s both;
+}
+
+.rate.is-entering .rate__more {
+  animation: rate-rise 0.5s 0.3s both;
+}
+
+.rate.is-entering .reco__pop {
+  animation: lc-enter 0.6s calc(0.45s + var(--i) * 0.08s) var(--spring) both;
+}
+
+.rate.is-entering .reco__title {
+  animation: rate-fade 0.4s calc(0.7s + var(--i) * 0.08s) both;
+}
+
+/* translate 속성만 움직여서, 가운데 정렬에 쓰는 transform 은 그대로 둔다 */
+@keyframes rate-drop {
+  from {
+    opacity: 0;
+    translate: 0 -26px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes rate-rise {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes rate-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rate * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}

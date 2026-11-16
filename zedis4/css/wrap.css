@@ -1,0 +1,272 @@
+/* ───────── 연극 결과 - 루틴 추천: 마무리하고 기록하는 중(로딩) ─────────
+   무대 뒤의 배우들. 부장·후임은 연극의 배우를 그대로 가져와 자세만 바꾼다. */
+
+.screen--wrap {
+  background: #242424;
+}
+
+.wrap svg {
+  overflow: visible;
+}
+
+.wrap__title {
+  position: absolute;
+  left: 967.5px;
+  top: 159px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 65px;
+  font-weight: 800;
+  line-height: 80px;
+  white-space: nowrap;
+}
+
+.wrap__title .loading__dot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.wrap__title .loading__dot:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+/* ── 배우들의 자세 ── */
+.wrap .pa {
+  transition: none;
+}
+
+/* 부장: 수염을 머리 위로 올려 쓰고 멍하니 */
+.wrap .pa--boss {
+  --x: 1333.1px;
+  --y: 826.1px;
+  --s: 0.7734;
+}
+
+.wrap .pa--boss .pa__eye--l {
+  transform: translate(-84.2px, -0.3px);
+  --px: 6.2px;
+}
+
+.wrap .pa--boss .pa__eye--r {
+  transform: translate(46.2px, -0.3px);
+  --px: -7.8px;
+}
+
+.wrap .pa--boss .pa__eye-clip,
+.wrap .pa--junior .pa__eye--r .pa__eye-clip {
+  clip-path: inset(-6px);
+}
+
+.wrap .pa--boss .pa__foot--l {
+  transform: translate(-76.7px, 193.8px) scale(1.281);
+}
+
+.wrap .pa--boss .pa__foot--r {
+  transform: translate(67.6px, 193.8px) scale(1.263);
+}
+
+.wrap .pa--boss .pa__art {
+  transform-origin: 804px 781px;
+  transform: translate(-64.6px, -209px) scale(1.17);
+}
+
+.wrap .pa--boss .pa__art path[stroke] {
+  opacity: 0;
+}
+
+/* 후임: 안경을 벗어 손에 들고 한쪽 눈을 동그랗게 */
+.wrap .pa--junior {
+  --x: 1026.1px;
+  --y: 825.4px;
+}
+
+.wrap .pa--junior .pa__eye--r {
+  transform: translate(24.4px, 7.6px);
+}
+
+.wrap .pa--junior .pa__foot--l {
+  transform: translate(-149.6px, 92.2px) rotate(-131.1deg) scale(0.979);
+}
+
+.wrap .pa--junior .pa__glasses {
+  transform: translate(-103px, 64px) rotate(27deg);
+  animation: wrap-glasses 1.8s ease-in-out infinite;
+}
+
+.wrap .pa--junior .pa__art:not(.pa__glasses) {
+  opacity: 0;
+}
+
+.wrap .pa--junior .pa__foot--l .pa__foot-idle {
+  animation: wrap-hand 1.8s ease-in-out infinite;
+}
+
+/* 안경을 든 손을 까딱까딱 */
+@keyframes wrap-glasses {
+  0%,
+  100% {
+    rotate: -5deg;
+    translate: 0 4px;
+  }
+  50% {
+    rotate: 7deg;
+    translate: 0 -8px;
+  }
+}
+
+@keyframes wrap-hand {
+  0%,
+  100% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+/* 말하는 후임은 통통 */
+.wrap .pa--junior .pa__idle {
+  animation: actor-talk 0.42s ease-in-out infinite;
+}
+
+/* ── 동료 ── */
+.wrap__pal {
+  position: absolute;
+  inset: 0;
+  transform-origin: 602px 965px;
+  animation: actor-bob 3.1s ease-in-out infinite;
+}
+
+.wrap__pal svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.wrap__hand,
+.wrap__tie,
+.wrap__pal-pupils {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* 풀어 쥔 넥타이를 만지작 */
+.wrap__hand--l {
+  animation: wrap-fidget 1.5s ease-in-out infinite;
+}
+
+.wrap__hand--r {
+  animation: wrap-fidget 1.5s -0.75s ease-in-out infinite;
+}
+
+.wrap__tie {
+  animation: wrap-tie 1.5s ease-in-out infinite;
+}
+
+.wrap__pal-pupils {
+  animation: wrap-look 4.2s ease-in-out infinite;
+}
+
+@keyframes wrap-fidget {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 5px -7px;
+  }
+}
+
+@keyframes wrap-tie {
+  0%,
+  100% {
+    rotate: -3deg;
+  }
+  50% {
+    rotate: 4deg;
+  }
+}
+
+@keyframes wrap-look {
+  0%,
+  45%,
+  100% {
+    translate: 0 0;
+  }
+  55%,
+  85% {
+    translate: -20px 2px;
+  }
+}
+
+/* ── 말풍선 ── */
+.wrap__bubble,
+.wrap__bubble-pop {
+  position: absolute;
+  inset: 0;
+}
+
+.wrap__bubble svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.wrap__bubble-pop {
+  transform-origin: 1000px 640px;
+  transform: scale(0);
+}
+
+.wrap.is-on .wrap__bubble-pop {
+  animation: bubble-enter 0.6s 0.5s both;
+}
+
+.wrap__text {
+  position: absolute;
+  left: 960px;
+  top: 398px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #ff1777;
+  font-size: 53px;
+  font-weight: 800;
+  line-height: 66px;
+  text-align: center;
+}
+
+/* ── 등장: 셋이 차례로 폴짝 ── */
+.wrap.is-on .wrap__pal,
+.wrap.is-on .pa__mood {
+  animation: wrap-in 0.6s var(--spring) both;
+}
+
+.wrap.is-on .wrap__pal {
+  animation: wrap-in 0.6s var(--spring) both, actor-bob 3.1s 0.6s ease-in-out infinite;
+}
+
+.wrap.is-on .pa--junior .pa__mood {
+  animation-delay: 0.1s;
+  transform-origin: 0 150px;
+}
+
+.wrap.is-on .pa--boss .pa__mood {
+  animation-delay: 0.2s;
+  transform-origin: 0 194px;
+}
+
+@keyframes wrap-in {
+  from {
+    transform: translateY(260px) scale(0.6);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}

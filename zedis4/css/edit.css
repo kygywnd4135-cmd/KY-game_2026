@@ -807,6 +807,11 @@
   line-height: 74px;
 }
 
+/* 마무리 인사는 조금 길어서 글자를 줄인다 */
+.edit.is-farewell .say__text {
+  font-size: 46px;
+}
+
 /* ── 등장: 판이 내려오고 대본이 한 줄씩 펼쳐진다 ── */
 .edit.is-opening .edit__panel {
   animation: panel-unfold 0.5s both;

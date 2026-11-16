@@ -247,6 +247,11 @@
   text-align: center;
 }
 
+/* 작별 인사는 글이 길어서 조금 작게 쓴다 */
+.bridge[data-mode="outro"] .bubble__text {
+  font-size: 51px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bridge *,
   .bridge *::before {

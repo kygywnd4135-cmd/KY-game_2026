@@ -1,4 +1,4 @@
-// 화면 흐름: 대기화면 → 전원 1~3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리 → 연극 1~5 → 연극 결과 연결 → 수정할 장면 고르기 → 대본 고치기
+// 화면 흐름: 대기화면 → 전원 1~3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리 → 연극 1~5 → 연극 결과 연결 → 수정할 장면 고르기 → 대본 고치기 → 작별 인사 → 마무리(기록 중) → 별점·추천 → 로비
 // 터치(클릭)하거나 아무 키나 누르면 진행한다.
 // 글자가 출력되는 중이면 먼저 남은 글자를 전부 보여 주고, 한 번 더 누르면 다음으로 넘어간다.
 (function () {
@@ -23,6 +23,8 @@
     { screen: "bridge" },
     { screen: "pick" },
     { screen: "edit" },
+    { screen: "wrap" },
+    { screen: "rate" },
   ];
   const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
@@ -31,6 +33,8 @@
   const BRIDGE = STEPS.findIndex((s) => s.screen === "bridge");
   const PICK = STEPS.findIndex((s) => s.screen === "pick");
   const EDIT = STEPS.findIndex((s) => s.screen === "edit");
+  const WRAP = STEPS.findIndex((s) => s.screen === "wrap");
+  const RATE = STEPS.findIndex((s) => s.screen === "rate");
 
   const screens = {};
   document.querySelectorAll("[data-screen]").forEach((el) => (screens[el.dataset.screen] = el));
@@ -47,6 +51,7 @@
   let index = 0;
   let typer = null;
   let busy = false; // 암전 전환 중에는 입력을 받지 않는다
+  let bridgeMode = "intro"; // 연결 연출의 대사: intro(연극 직후) | outro(시나리오를 다 고친 뒤)
 
   // 같은 애니메이션 클래스를 다시 붙여 처음부터 재생한다
   function replay(el, className, others) {
@@ -100,6 +105,8 @@
     if (prev.screen === "bridge" && cur.screen !== "bridge") Bridge.leave();
     if (prev.screen === "pick" && cur.screen !== "pick") Pick.leave();
     if (prev.screen === "edit" && cur.screen !== "edit") Edit.leave();
+    if (prev.screen === "wrap" && cur.screen !== "wrap") Wrap.leave();
+    if (prev.screen === "rate" && cur.screen !== "rate") Rate.leave();
 
     if (cur.screen === "lobby") {
       Lobby.enter();
@@ -110,7 +117,11 @@
     } else if (cur.screen === "play") {
       Play.enter();
     } else if (cur.screen === "bridge") {
-      Bridge.enter();
+      Bridge.enter(bridgeMode);
+    } else if (cur.screen === "wrap") {
+      Wrap.enter();
+    } else if (cur.screen === "rate") {
+      Rate.enter();
     } else if (cur.screen === "pick") {
       Pick.enter();
     } else if (cur.screen === "edit") {
@@ -166,18 +177,33 @@
 
   function advancePlay() {
     // END! 다음: 암전 → 연극 결과 연결 연출
-    if (Play.advance() === "done") blackout(BRIDGE);
+    if (Play.advance() === "done") toBridge("intro");
+  }
+
+  function toBridge(mode) {
+    bridgeMode = mode;
+    blackout(BRIDGE);
   }
 
   // END! 가 나오고 잠시 뒤에는 누르지 않아도 자연스럽게 암전된다
   Play.onEnd = () => {
-    if (!busy && screenNow() === "play") blackout(BRIDGE);
+    if (!busy && screenNow() === "play") toBridge("intro");
   };
 
   function advanceBridge() {
-    // 연결 연출 다음: 수정할 장면 고르기
-    if (Bridge.advance() === "done") go(PICK);
+    // 연결 연출 다음: 처음엔 수정할 장면 고르기, 다 고친 뒤에는 마무리(기록 중) 화면
+    if (Bridge.advance() === "done") go(bridgeMode === "outro" ? WRAP : PICK);
   }
+
+  // 대본을 다 고치고 Alt → 마무리 인사가 끝나면: 암전 → 작별 인사
+  Edit.onFinish = () => {
+    if (!busy && screenNow() === "edit") toBridge("outro");
+  };
+
+  // 마무리(기록 중) 화면이 끝나면: 별점과 비슷한 시나리오 추천
+  Wrap.onDone = () => {
+    if (!busy && screenNow() === "wrap") go(RATE);
+  };
 
   // 장면을 고르면(지금은 첫 장면만) 그 장면의 대본을 고치는 화면으로
   Pick.onPick = () => {
@@ -195,18 +221,31 @@
     scenario: advanceScenario,
     play: advancePlay,
     bridge: advanceBridge,
+    wrap: () => Wrap.advance(),
   };
 
   // ── 입력: 터치/클릭, 아무 키 ──
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     if (busy) return;
-    if (["lobby", "pick", "edit"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
+    if (["lobby", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
     if (HANDLERS[screenNow()]) return HANDLERS[screenNow()]();
     advance();
   });
 
   document.addEventListener("keydown", (e) => {
+    // 대본 고치기 화면에서 Alt: 수정을 마치고 연극을 종료한다
+    if (e.key === "Alt" && screenNow() === "edit") {
+      e.preventDefault(); // 브라우저 메뉴로 초점이 넘어가지 않게
+      if (!busy && !e.repeat) Edit.finish();
+      return;
+    }
+    // 별점 화면에서 Alt: 로비로 돌아간다
+    if (e.key === "Alt" && screenNow() === "rate") {
+      e.preventDefault();
+      if (!busy && !e.repeat) blackout(LOBBY);
+      return;
+    }
     // 대사를 고쳐 쓰는 중에는 모든 글쇠가 입력 칸으로 가야 한다
     if (screenNow() === "edit" && Edit.isTyping()) {
       if (!busy) Edit.handleKey(e);
@@ -223,6 +262,12 @@
       // 로비: ←/→ 로 다이얼을 돌리고 Enter로 고른다. Esc는 대기화면으로.
       if (e.key === "Escape") go(0);
       else Lobby.handleKey(e);
+      return;
+    }
+    if (screenNow() === "rate") {
+      // 별점: ←/→ 로 반 칸씩, Enter로 저장. (Alt 는 위에서 처리)
+      if (e.key === "Escape") blackout(LOBBY);
+      else Rate.handleKey(e);
       return;
     }
     if (screenNow() === "pick") {

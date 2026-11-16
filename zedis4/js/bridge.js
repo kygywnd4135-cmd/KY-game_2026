@@ -1,7 +1,11 @@
 // 연극 종료 → 연극 결과 연결 연출.
 // 캄캄한 화면에서 베레모 쓴 파랑이 뿅! 튀어나오고, 대사를 한 글자씩 말한다.
 window.Bridge = (function () {
-  const LINE = "후후.. 오늘 연극은 어땠어?\n이제 내가 시나리오를 화려하게 바꿔주지!";
+  // intro: 연극이 끝난 직후 / outro: 시나리오를 다 고친 뒤 작별 인사
+  const LINES = {
+    intro: "후후.. 오늘 연극은 어땠어?\n이제 내가 시나리오를 화려하게 바꿔주지!",
+    outro: "오늘 하루도 정말 수고 많았어. 다음엔\n김부장의 이야기가 나오지 않았으면 좋겠는걸..",
+  };
   const DARK_TIME = 650; // 캄캄한 채로 머무는 시간(ms)
   const SPEAK_AFTER = 1050; // 튀어나온 뒤 말하기까지(ms)
 
@@ -13,6 +17,7 @@ window.Bridge = (function () {
   let phase = "off"; // off → dark → popping → line → waiting
   let typer = null;
   let timer = 0;
+  let line = LINES.intro;
 
   function replay(el, className) {
     el.classList.remove(className);
@@ -25,7 +30,7 @@ window.Bridge = (function () {
     phase = "line";
     root.classList.add("is-speaking", "is-talking");
     replay(bubblePop, "is-entering");
-    typer = Typewriter.run([{ el: text, text: LINE }], {
+    typer = Typewriter.run([{ el: text, text: line }], {
       onDone: () => {
         root.classList.remove("is-talking");
         bubble.classList.add("is-ready");
@@ -41,7 +46,9 @@ window.Bridge = (function () {
     timer = setTimeout(speak, SPEAK_AFTER);
   }
 
-  function enter() {
+  function enter(mode) {
+    line = LINES[mode] || LINES.intro;
+    root.dataset.mode = LINES[mode] ? mode : "intro";
     clearTimeout(timer);
     if (typer) typer.cancel();
     typer = null;

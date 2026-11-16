@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="css/play.css" />
     <link rel="stylesheet" href="css/bridge.css" />
     <link rel="stylesheet" href="css/edit.css" />
+    <link rel="stylesheet" href="css/wrap.css" />
+    <link rel="stylesheet" href="css/rate.css" />
   </head>
   <body>
     <div class="viewport">
@@ -410,6 +412,12 @@
         <section class="screen screen--pick pick" data-screen="pick"></section>
         <section class="screen screen--edit edit" data-screen="edit"></section>
 
+        <!-- ───────── 연극 결과 - 루틴 추천(마무리 로딩): 내용은 js/wrap.js가 채운다 ───────── -->
+        <section class="screen screen--wrap wrap" data-screen="wrap"></section>
+
+        <!-- ───────── 연극 결과 - 비슷한 시나리오 추천(별점): 내용은 js/rate.js가 채운다 ───────── -->
+        <section class="screen screen--rate rate" data-screen="rate"></section>
+
         <!-- 화면 전환용 암전 막 -->
         <div class="blackout" aria-hidden="true"></div>
       </main>
@@ -425,6 +433,8 @@
     <script src="js/play.js"></script>
     <script src="js/bridge.js"></script>
     <script src="js/edit.js"></script>
+    <script src="js/wrap.js"></script>
+    <script src="js/rate.js"></script>
     <script src="js/flow.js"></script>
   </body>
 </html>
