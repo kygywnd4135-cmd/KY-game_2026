@@ -17,6 +17,7 @@
     { screen: "power", step: 3 },
     { screen: "loading" },
     { screen: "lobby" },
+    { screen: "keywords" },
     { screen: "talk" },
     { screen: "scenario" },
     { screen: "play" },
@@ -27,6 +28,7 @@
     { screen: "rate" },
   ];
   const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
+  const KEYWORDS = STEPS.findIndex((s) => s.screen === "keywords");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
   const SCENARIO = STEPS.findIndex((s) => s.screen === "scenario");
   const PLAY = STEPS.findIndex((s) => s.screen === "play");
@@ -99,6 +101,7 @@
 
     showScreen(cur.screen);
     if (prev.screen === "lobby" && cur.screen !== "lobby") Lobby.leave();
+    if (prev.screen === "keywords" && cur.screen !== "keywords") Keywords.leave();
     if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
     if (prev.screen === "scenario" && cur.screen !== "scenario") Scenario.leave();
     if (prev.screen === "play" && cur.screen !== "play") Play.leave();
@@ -110,6 +113,8 @@
 
     if (cur.screen === "lobby") {
       Lobby.enter();
+    } else if (cur.screen === "keywords") {
+      Keywords.enter();
     } else if (cur.screen === "talk") {
       Talk.enter();
     } else if (cur.screen === "scenario") {
@@ -158,11 +163,22 @@
 
   const screenNow = () => STEPS[index].screen;
 
-  // 로비에서 캐릭터를 골랐을 때: 파랑("오늘의 기록 준비 완료!")이면 극장으로
+  // 로비에서 캐릭터를 골랐을 때
+  //   파랑("오늘의 기록 준비 완료!")  → 암전 후 극장
+  //   보라("오늘의 키워드를 확인하기") → 오늘의 키워드
   Lobby.onPick = (id) => {
-    if (busy || id !== "blue") return;
+    if (busy || (id !== "blue" && id !== "violet")) return;
     busy = true;
-    setTimeout(() => blackout(TALK), 380); // 고른 캐릭터가 통! 튀는 걸 잠깐 보여 주고
+    // 고른 캐릭터가 통! 튀는 걸 잠깐 보여 주고
+    setTimeout(() => {
+      if (id === "blue") return blackout(TALK);
+      busy = false;
+      go(KEYWORDS);
+    }, 380);
+  };
+
+  Keywords.onBack = () => {
+    if (!busy && screenNow() === "keywords") go(LOBBY);
   };
 
   function advanceTalk() {
@@ -233,7 +249,7 @@
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     if (busy) return;
-    if (["lobby", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
+    if (["lobby", "keywords", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
     if (HANDLERS[screenNow()]) return HANDLERS[screenNow()]();
     advance();
   });
@@ -267,6 +283,11 @@
       // 로비: ←/→ 로 다이얼을 돌리고 Enter로 고른다. Esc는 대기화면으로.
       if (e.key === "Escape") go(0);
       else Lobby.handleKey(e);
+      return;
+    }
+    if (screenNow() === "keywords") {
+      // 오늘의 키워드: ←/→ 로 메모를 돌려 보고, −(또는 Esc)로 로비에 돌아간다
+      if (Keywords.handleKey(e) === "back") go(LOBBY);
       return;
     }
     if (screenNow() === "rate") {

@@ -51,8 +51,16 @@ window.Lobby = (function () {
   </svg>`;
 
   const CHARACTERS = [
-    { id: "blue", vivid: "#1871ed", vividDeep: "#1949ab", pastel: "#b4d2ff", pastelDeep: "#6f9de6", face: "" },
-    { id: "violet", vivid: "#8a4dff", vividDeep: "#4b1fb3", pastel: "#bea9ff", pastelDeep: "#a369ff", face: lid(-58.5, 25.5) + lid(23.5, 25.5) + ZZZ },
+    {
+      id: "blue", vivid: "#1871ed", vividDeep: "#1949ab", pastel: "#b4d2ff", pastelDeep: "#6f9de6", face: "",
+      title: "오늘의 기록 준비 완료!",
+      desc: ["가장 사용 시간이 많았던 시간은 11시 50분이네요.", "무슨 일이 있었는지, 함께 확인하러 가볼까요?"],
+    },
+    {
+      id: "violet", vivid: "#a555fb", vividDeep: "#661fa4", pastel: "#bea9ff", pastelDeep: "#a369ff", face: lid(-58.5, 25.5) + lid(23.5, 25.5) + ZZZ,
+      title: "오늘의 키워드를 확인하기",
+      desc: ["오늘은 5개의 키워드를 작성했어요.", "정리해둔 내용을 확인하러 가볼까요?"],
+    },
     {
       id: "pink", vivid: "#ff1a75", vividDeep: "#a30f55", pastel: "#ffacce", pastelDeep: "#e18abb",
       face: white(-58.5, 9.5, 40.5) + white(40.5, 9.5, 40.5) + dot(-52.5, -2.5, 29) + dot(37.5, 21, 29) + spiral("lc__spin--a", -53, -4) + spiral("lc__spin--b", 36, 21),
@@ -66,6 +74,8 @@ window.Lobby = (function () {
     { id: "peach", vivid: "#ff8a2b", vividDeep: "#b5540f", pastel: "#ffd3af", pastelDeep: "#dd9765", face: arch(-35.35, 26) + arch(61.4, 26) },
   ];
   const COUNT = CHARACTERS.length;
+  const titleEl = root.querySelector(".lobby__title");
+  const descEl = root.querySelector(".lobby__desc");
 
   const AWAKE_FACE =
     `<span class="lc__eye">${white(-48, 6.5, 43.3)}${dot(-48, 6.5, 30.9)}</span>` +
@@ -177,9 +187,27 @@ window.Lobby = (function () {
     dial.style.setProperty("--gy", gaze.y.toFixed(2) + "px");
   }
 
+  // 가운데 글: 고른 캐릭터의 제목·설명을 그 캐릭터 색으로 보여 준다.
+  // (아직 정해지지 않은 캐릭터는 첫 번째 캐릭터의 글을 빌려 쓴다)
+  function showInfo(animate) {
+    const c = CHARACTERS[selected];
+    const info = c.title ? c : CHARACTERS[0];
+    titleEl.textContent = info.title;
+    descEl.innerHTML = info.desc.join("<br>");
+    titleEl.style.color = c.vivid;
+    if (animate) {
+      [titleEl, descEl].forEach((el) => {
+        el.classList.remove("is-changing");
+        void el.offsetWidth;
+        el.classList.add("is-changing");
+      });
+    }
+  }
+
   function setSelected(next) {
     if (next === selected) return;
     selected = next;
+    showInfo(true);
     marker.style.color = CHARACTERS[selected].vivid;
     marker.classList.remove("is-ticking");
     void marker.offsetWidth;
@@ -306,6 +334,7 @@ window.Lobby = (function () {
     const s = mod(i + COUNT / 2, COUNT) - COUNT / 2;
     n.el.style.setProperty("--order", String(Math.abs(s)));
   });
+  showInfo(false);
   render(performance.now());
 
   // onPick(캐릭터 id): 결정(Enter·탭)했을 때 불린다. js/flow.js가 연결한다.

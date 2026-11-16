@@ -1,0 +1,344 @@
+/* ───────── 로비 - 펜으로 작성한 키워드 ─────────
+   메모(동그란 종이)의 위치·크기·선택 정도(--sel)는 js/keywords.js가 매 프레임 넣는다. */
+
+.screen--keywords {
+  background: #fff;
+}
+
+.keywords svg {
+  overflow: visible;
+}
+
+.kw__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+/* ── 고리 뒤에서 내다보는 보라 ── */
+.kw__peeker {
+  position: absolute;
+  inset: 0;
+  transform-origin: 1620px 560px;
+  animation: kw-peek 3.2s ease-in-out infinite;
+}
+
+.kw__peeker svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* 눈동자는 포인터를 따라간다 */
+.kw__pupils {
+  transform: translate(var(--kx, -6px), var(--ky, 4px));
+  transition: transform 0.18s ease-out;
+}
+
+/* 비스듬히 기운 방향 그대로 들썩 */
+@keyframes kw-peek {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-9px, -8px) rotate(-1.5deg);
+  }
+}
+
+.kw__peeker.is-noticing {
+  animation: kw-notice 0.55s both, kw-peek 3.2s 0.55s ease-in-out infinite;
+}
+
+@keyframes kw-notice {
+  0% {
+    transform: none;
+  }
+  30% {
+    transform: translate(-22px, -20px) scale(1.06, 0.95);
+  }
+  60% {
+    transform: translate(6px, 6px) scale(0.97, 1.03);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* ── 고리와 가운데 판 ── */
+.kw__ring,
+.kw__plate {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.kw__ring {
+  left: 250px;
+  top: 242px;
+  width: 1432px;
+  height: 1432px;
+  background: rgba(153, 153, 153, 0.2);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.kw__plate {
+  left: 353px;
+  top: 344px;
+  width: 1228px;
+  height: 1228px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* ── 메모 ── */
+.kw__notes {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  --sel: 0;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.note__pop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.note__disc {
+  position: absolute;
+  left: -159.5px;
+  top: -159.5px;
+  width: 319px;
+  height: 319px;
+  overflow: hidden;
+  border: 13px solid #fff;
+  border-radius: 50%;
+  /* 고른 메모는 종이가 더 짙어진다 */
+  background: color-mix(in oklab, #252525 calc(var(--sel) * 100%), #696969);
+  box-shadow: 0 6px 34px rgba(0, 0, 0, 0.22);
+}
+
+.note__disc svg {
+  position: absolute;
+  left: -13px;
+  top: -13px;
+}
+
+.note__text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  font-size: 54px;
+  font-weight: 500;
+  line-height: 66px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 가운데로 온 메모는 펜으로 다시 쓰듯 획이 차례로 그어진다 */
+.note path {
+  stroke-dasharray: 1;
+}
+
+.note.is-writing path {
+  animation: kw-ink 0.24s calc(0.22s + var(--n) * var(--gap, 0.04s)) both;
+}
+
+.note.is-writing .note__text {
+  animation: kw-wipe 0.7s 0.22s both;
+}
+
+@keyframes kw-ink {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes kw-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 -10% 0 0);
+  }
+}
+
+.note__pop.is-picked {
+  animation: lc-picked 0.55s both;
+}
+
+/* ── 가운데 글 ── */
+.kw__title,
+.kw__time {
+  position: absolute;
+  margin: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.kw__title {
+  left: 966px;
+  top: 557px;
+  color: #9533ff;
+  font-size: 65px;
+  font-weight: 800;
+  line-height: 80px;
+}
+
+.kw__chip {
+  position: absolute;
+  width: 239px;
+  height: 70px;
+  padding: 0;
+  border: 1.3px solid #c188ff;
+  border-radius: 35px;
+  background: #fff;
+  color: #b878fd;
+  font: inherit;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 67px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* 지금 보고 있는 메모의 키워드 */
+.kw__chip.is-on {
+  border-color: #a555fb;
+  background: #a555fb;
+  color: #fff;
+}
+
+.kw__chip.is-popping {
+  animation: kw-chip 0.45s var(--spring) both;
+}
+
+@keyframes kw-chip {
+  from {
+    transform: scale(0.82);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.kw__time {
+  left: 955px;
+  top: 843px;
+  color: #707070;
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 44px;
+}
+
+.kw__rule {
+  position: absolute;
+  left: 440px;
+  top: 917px;
+  width: 1052px;
+  height: 1px;
+  background: #818181;
+}
+
+.kw__ask {
+  position: absolute;
+  left: 463.2px;
+  top: 954px;
+  margin: 0;
+  color: #4c4c4c;
+  font-size: 43px;
+  font-weight: 600;
+  line-height: 54px;
+  white-space: nowrap;
+}
+
+.keywords .kw__hint {
+  color: #4c4c4c;
+  cursor: pointer;
+}
+
+/* ── 등장 ── */
+.keywords.is-entering .kw__ring,
+.keywords.is-entering .kw__plate {
+  animation: kw-rise 0.6s var(--spring-soft) both;
+}
+
+.keywords.is-entering .kw__plate {
+  animation-delay: 0.06s;
+}
+
+.keywords.is-entering .note__pop {
+  animation: lc-enter 0.6s 0.25s var(--spring) both;
+}
+
+.keywords.is-entering .kw__title,
+.keywords.is-entering .kw__time,
+.keywords.is-entering .kw__ask {
+  animation: rate-drop 0.45s 0.3s both;
+}
+
+.keywords.is-entering .kw__chip {
+  animation: kw-chip-in 0.45s 0.4s var(--spring) both;
+}
+
+.keywords.is-entering .kw__peeker {
+  animation: kw-peek-in 0.7s 0.45s var(--spring) both, kw-peek 3.2s 1.15s ease-in-out infinite;
+}
+
+@keyframes kw-rise {
+  from {
+    opacity: 0;
+    transform: translateY(160px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kw-chip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kw-peek-in {
+  from {
+    transform: translate(260px, 240px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keywords * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
