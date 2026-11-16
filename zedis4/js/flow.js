@@ -16,6 +16,7 @@
     { screen: "power", step: 2 },
     { screen: "power", step: 3 },
     { screen: "loading" },
+    { screen: "lobby" },
   ];
 
   const screens = {};
@@ -77,8 +78,11 @@
     typer = null;
 
     showScreen(cur.screen);
+    if (prev.screen === "lobby" && cur.screen !== "lobby") Lobby.leave();
 
-    if (cur.screen === "power") {
+    if (cur.screen === "lobby") {
+      Lobby.enter();
+    } else if (cur.screen === "power") {
       enterPower(cur.step, prev.screen !== "power");
     } else if (cur.screen === "loading") {
       enterLoading();
@@ -94,13 +98,15 @@
       typer.finish();
       return;
     }
-    // 마지막(펜 로딩) 다음 화면은 아직 없어서, 일단 대기화면으로 돌아간다
     go((index + 1) % STEPS.length);
   }
+
+  const inLobby = () => STEPS[index].screen === "lobby";
 
   // ── 입력: 터치/클릭, 아무 키 ──
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (inLobby()) return; // 로비의 터치·밀기는 js/lobby.js가 처리
     advance();
   });
 
@@ -110,6 +116,12 @@
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(e.key)) return;
     if (e.key === " " || e.key.startsWith("Arrow") || e.key.startsWith("Page")) e.preventDefault();
+    if (inLobby()) {
+      // 로비: ←/→ 로 다이얼을 돌린다. 로비 다음 화면은 아직 없어서 Esc는 대기화면으로 돌아간다.
+      if (e.key === "Escape") go(0);
+      else Lobby.handleKey(e);
+      return;
+    }
     advance();
   });
 

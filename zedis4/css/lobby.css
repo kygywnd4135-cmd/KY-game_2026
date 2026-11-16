@@ -1,0 +1,654 @@
+/* ───────── 로비: 캐릭터 다이얼 ─────────
+   위치·크기·선택 정도(--sel)는 js/lobby.js가 매 프레임 계산해서 넣는다.
+   여기서는 생김새와 각자 알아서 노는 반복 모션을 맡는다. */
+
+.screen--lobby {
+  background: #fff;
+}
+
+.screen--lobby .stamp {
+  color: #000;
+}
+
+.lobby__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.lobby__plate {
+  position: absolute;
+  left: 421px;
+  top: 417px;
+  width: 1104px;
+  height: 1104px;
+  border-radius: 50%;
+  background: #f0f0f0;
+}
+
+.lobby__title {
+  position: absolute;
+  left: 589px;
+  top: 654px;
+  margin: 0;
+  color: var(--c-blue);
+  font-size: 85px;
+  font-weight: 800;
+  line-height: 106px;
+  white-space: nowrap;
+}
+
+.lobby__desc {
+  position: absolute;
+  left: 969px;
+  top: 788px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #323232;
+  font-size: 43px;
+  font-weight: 600;
+  line-height: 66px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 맨 위 눈물 모양 표시: 위치 고정 */
+.lobby__marker {
+  position: absolute;
+  left: 936px;
+  top: 18px;
+  color: var(--c-blue);
+  transform-origin: 50% 0%;
+  transition: color 0.3s;
+}
+
+.lobby__marker.is-ticking {
+  animation: marker-tick 0.45s both;
+}
+
+@keyframes marker-tick {
+  0% {
+    transform: none;
+  }
+  30% {
+    transform: translateY(10px) scale(1.12, 0.84);
+  }
+  60% {
+    transform: translateY(-3px) scale(0.95, 1.08);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* 오른쪽 아래 조작 안내 */
+.lobby__hint {
+  position: absolute;
+  left: 1533px;
+  top: 937px;
+  width: 357px;
+  height: 88px;
+}
+
+.lobby__hint-icon {
+  position: absolute;
+  left: 0;
+  top: 14px;
+}
+
+.lobby__hint-text {
+  position: absolute;
+  left: 221px;
+  top: 0;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #4c4c4c;
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 88px;
+  white-space: nowrap;
+}
+
+/* ── 다이얼 ── */
+.dial {
+  position: absolute;
+  inset: 0;
+  isolation: isolate; /* 캐릭터끼리의 앞뒤 순서가 글자 위로 넘어오지 않게 */
+}
+
+/* 캐릭터 한 명: 중심점(0×0)을 기준으로 모든 부품을 배치한다 */
+.lc {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  --sel: 0;
+  --body: color-mix(in oklab, var(--vivid) calc(var(--sel) * 100%), var(--pastel));
+  --deep: color-mix(in oklab, var(--vivid-deep) calc(var(--sel) * 100%), var(--pastel-deep));
+  will-change: transform;
+}
+
+.lc__pop,
+.lc__idle,
+.lc__face {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.lc__shadow,
+.lc__body {
+  position: absolute;
+  left: -124px;
+  top: -127px;
+  width: 248px;
+  height: 254px;
+  border-radius: 50%;
+}
+
+.lc__shadow {
+  background: #d5d5d5;
+  transform: translate(var(--sx, 0px), var(--sy, 0px));
+}
+
+.lc__body {
+  background: var(--body);
+}
+
+.lc__idle {
+  transform-origin: 0 127px;
+}
+
+/* 부품 공통 */
+.lc__lid,
+.lc__white,
+.lc__dot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+}
+
+/* 감은 눈: 아래쪽 반달 */
+.lc__lid {
+  width: var(--w, 69px);
+  height: 17.5px;
+  margin-left: calc(var(--w, 69px) / -2);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: var(--deep);
+  transform-origin: 50% 0%;
+}
+
+/* 흰자·눈동자: 중심 기준 원 */
+.lc__white,
+.lc__dot {
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  margin: calc(var(--r) * -1) 0 0 calc(var(--r) * -1);
+  border-radius: 50%;
+}
+
+.lc__white {
+  background: #fff;
+}
+
+.lc__dot {
+  background: var(--deep);
+}
+
+/* 웃는 눈(∩): 원의 위쪽 절반만 보인다 */
+.lc__arch {
+  position: absolute;
+  left: calc(var(--x) - 40px);
+  top: calc(var(--y) - 41px);
+  width: 80px;
+  height: 41px;
+  overflow: hidden;
+  transform-origin: 50% 100%;
+}
+
+.lc__arch .lc__white {
+  --x: 40px;
+  --y: 41px;
+  --r: 39.6px;
+}
+
+.lc__arch .lc__dot {
+  --x: 40px;
+  --y: 41px;
+  --r: 26.6px;
+}
+
+/* 소품(Zzz, 별, 느낌표) */
+.lc__prop {
+  position: absolute;
+  overflow: visible;
+}
+
+/* ── 두 가지 얼굴: 혼자 놀 때 / 선택됐을 때 ── */
+.lc__face--idle {
+  transition: opacity 0.12s, transform 0.2s;
+}
+
+.lc.is-awake .lc__face--idle {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.lc__face--awake {
+  opacity: 0;
+  transform: scaleY(0.05);
+  transition: opacity 0.1s, transform 0.15s;
+}
+
+.lc.is-awake .lc__face--awake {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.1s 0.08s, transform 0.5s 0.08s var(--spring);
+}
+
+/* 선택된 캐릭터의 눈동자는 시선(포인터)을 따라간다 */
+.lc__face--awake .lc__dot {
+  transform: translate(var(--gx, 8.7px), var(--gy, -8.7px));
+}
+
+.lc__face--awake .lc__white {
+  animation: lc-blink 4.6s infinite;
+}
+
+/* 파랑은 선택되지 않아도 눈을 뜨고 두리번거린다 */
+.lc--blue .lc__face--awake {
+  opacity: 1;
+  transform: none;
+}
+
+.lc--blue:not(.is-awake) .lc__face--awake .lc__dot {
+  animation: lc-wander 6s ease-in-out infinite;
+}
+
+.lc__eye {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 느낌표: 선택된 캐릭터 옆에 톡 */
+.lc__bang {
+  left: 123px;
+  top: -154px;
+  color: var(--deep);
+  transform-origin: 20% 100%;
+  transform: scale(0) rotate(-25deg);
+  transition: transform 0.15s var(--back-in);
+}
+
+.lc.is-awake .lc__bang {
+  transform: none;
+  transition: transform 0.55s 0.12s var(--spring);
+}
+
+.lc.is-awake .lc__bang path {
+  transform-box: fill-box;
+  transform-origin: 20% 100%;
+  animation: lc-bang 1.6s ease-in-out infinite;
+}
+
+/* 선택되면 Zzz·별 같은 소품은 사라진다 */
+.lc__face--idle .lc__prop {
+  transition: opacity 0.15s;
+}
+
+/* ── 선택됐을 때의 몸짓 ── */
+.lc.is-awake .lc__idle {
+  animation: lc-attentive 2.2s ease-in-out infinite;
+}
+
+.lc__pop.is-picked {
+  animation: lc-picked 0.6s both;
+}
+
+.lobby.is-entering .lc__pop {
+  animation: lc-enter 0.7s var(--spring) both;
+  animation-delay: calc(var(--order) * 55ms + 80ms);
+}
+
+/* ── 선택되지 않았을 때: 각자 알아서 ── */
+
+/* 보라: 쿨쿨 — 느리게 숨 쉬고 Zzz가 차례로 떠오른다 */
+.lc--violet:not(.is-awake) .lc__idle {
+  animation: lc-breathe 3.6s ease-in-out infinite;
+}
+
+.lc--violet .lc__z {
+  animation: lc-zzz 3.6s infinite both;
+}
+
+.lc--violet .lc__z:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.lc--violet .lc__z:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.lc--violet .lc__z:nth-child(4) {
+  animation-delay: 0.75s;
+}
+
+.lc--violet .lc__z:nth-child(5) {
+  animation-delay: 1.1s;
+}
+
+/* 연보라: 자면서 좌우로 천천히 흔들 */
+.lc--lilac:not(.is-awake) .lc__idle {
+  animation: lc-sway 5s ease-in-out infinite;
+}
+
+/* 초록: 꾸벅꾸벅 졸다가 움찔 */
+.lc--green:not(.is-awake) .lc__idle {
+  animation: lc-doze 5.4s infinite;
+}
+
+/* 분홍: 눈이 빙글빙글, 몸도 휘청 */
+.lc--pink:not(.is-awake) .lc__idle {
+  animation: lc-dizzy 2.8s ease-in-out infinite;
+}
+
+.lc--pink .lc__spin {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 0;
+  height: 0;
+  animation: lc-orbit 2.8s linear infinite;
+}
+
+.lc--pink .lc__spin svg {
+  position: absolute;
+  left: -20px;
+  top: -20px;
+  animation: lc-spin 1.1s linear infinite;
+}
+
+.lc--pink .lc__spin--b,
+.lc--pink .lc__spin--b svg {
+  animation-direction: reverse;
+}
+
+/* 민트: 윙크하면서 별을 반짝 */
+.lc--mint:not(.is-awake) .lc__idle {
+  animation: lc-tilt 3.2s ease-in-out infinite;
+}
+
+.lc--mint .lc__face--idle .lc__dot {
+  animation: lc-peek 3.2s ease-in-out infinite;
+}
+
+.lc--mint .lc__star path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: lc-twinkle 3.2s infinite;
+}
+
+/* 살구: 기분 좋아서 키득키득 통통 */
+.lc--peach:not(.is-awake) .lc__idle {
+  animation: lc-giggle 2.4s infinite;
+}
+
+.lc--peach .lc__arch {
+  animation: lc-smile 2.4s infinite;
+}
+
+@keyframes lc-enter {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes lc-picked {
+  0% {
+    transform: none;
+  }
+  20% {
+    transform: scale(1.12, 0.86);
+  }
+  45% {
+    transform: translateY(-16px) scale(0.93, 1.1);
+  }
+  70% {
+    transform: scale(1.05, 0.95);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes lc-attentive {
+  0%,
+  100% {
+    transform: scale(1.02, 0.98);
+  }
+  50% {
+    transform: translateY(-5px) scale(0.99, 1.015);
+  }
+}
+
+@keyframes lc-blink {
+  0%,
+  46%,
+  52%,
+  100% {
+    scale: 1 1;
+  }
+  49% {
+    scale: 1 0.08;
+  }
+}
+
+@keyframes lc-wander {
+  0%,
+  100% {
+    transform: translate(-8px, -6px);
+  }
+  30% {
+    transform: translate(8px, -8px);
+  }
+  55% {
+    transform: translate(6px, 7px);
+  }
+  78% {
+    transform: translate(-7px, 5px);
+  }
+}
+
+@keyframes lc-bang {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(5deg) translateY(-5px);
+  }
+}
+
+@keyframes lc-breathe {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.025, 1.035);
+  }
+}
+
+@keyframes lc-zzz {
+  0%,
+  8% {
+    opacity: 0;
+    transform: translate(-6px, 8px);
+  }
+  22%,
+  68% {
+    opacity: 1;
+    transform: none;
+  }
+  88%,
+  100% {
+    opacity: 0;
+    transform: translate(6px, -10px);
+  }
+}
+
+@keyframes lc-sway {
+  0%,
+  100% {
+    transform: rotate(-3.5deg) scale(1, 1);
+  }
+  50% {
+    transform: rotate(3.5deg) scale(1.015, 1.02);
+  }
+}
+
+@keyframes lc-doze {
+  0% {
+    transform: rotate(0deg) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.75, 0.6);
+  }
+  55% {
+    transform: rotate(-9deg) scale(1.03, 0.96);
+    animation-timing-function: ease-in-out;
+  }
+  62% {
+    transform: rotate(-9.5deg) scale(1.03, 0.955);
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  69% {
+    transform: rotate(2.5deg) scale(0.98, 1.03);
+    animation-timing-function: ease-in-out;
+  }
+  80%,
+  100% {
+    transform: rotate(0deg) scale(1, 1);
+  }
+}
+
+@keyframes lc-dizzy {
+  0%,
+  100% {
+    transform: rotate(-5deg) translateX(-3px);
+  }
+  50% {
+    transform: rotate(5deg) translateX(3px);
+  }
+}
+
+@keyframes lc-orbit {
+  from {
+    transform: rotate(0deg) translateX(4px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(4px) rotate(-360deg);
+  }
+}
+
+@keyframes lc-spin {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes lc-tilt {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(4deg) scale(1.015, 0.99);
+  }
+}
+
+@keyframes lc-peek {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  60% {
+    transform: translate(-14px, 3px);
+  }
+}
+
+@keyframes lc-twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  12% {
+    transform: scale(0) rotate(-60deg);
+  }
+  26% {
+    transform: scale(1.5) rotate(20deg);
+  }
+  36% {
+    transform: scale(0.85) rotate(-6deg);
+  }
+  46% {
+    transform: scale(1.08) rotate(0deg);
+  }
+  56% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes lc-giggle {
+  0%,
+  46%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  8% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+  16% {
+    transform: translateY(-12px) scale(0.97, 1.04);
+  }
+  24% {
+    transform: translateY(0) scale(1.05, 0.95);
+  }
+  32% {
+    transform: translateY(-8px) scale(0.98, 1.03);
+  }
+  40% {
+    transform: translateY(0) scale(1.03, 0.97);
+  }
+}
+
+@keyframes lc-smile {
+  0%,
+  46%,
+  100% {
+    transform: scaleY(1);
+  }
+  16%,
+  32% {
+    transform: scaleY(1.14);
+  }
+  24% {
+    transform: scaleY(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lobby *,
+  .lobby *::before {
+    animation: none !important;
+  }
+}

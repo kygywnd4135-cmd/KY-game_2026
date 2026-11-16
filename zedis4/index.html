@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/standby.css" />
     <link rel="stylesheet" href="css/power.css" />
     <link rel="stylesheet" href="css/loading.css" />
+    <link rel="stylesheet" href="css/lobby.css" />
   </head>
   <body>
     <div class="viewport">
@@ -152,6 +153,33 @@
 
           <p class="stamp" data-clock-short>11/17 Tue. 9:41</p>
         </section>
+
+        <!-- ───────── 로비 ───────── -->
+        <section class="screen screen--lobby lobby" data-screen="lobby">
+          <div class="lobby__plate"></div>
+          <p class="lobby__desc">가장 사용 시간이 많았던 시간은 11시 50분이네요.<br />무슨 일이 있었는지, 함께 확인하러 가볼까요?</p>
+          <svg class="lobby__grid" width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+
+          <!-- 캐릭터들은 js/lobby.js가 채운다 -->
+          <div class="dial"></div>
+
+          <p class="lobby__title">오늘의 기록 준비 완료!</p>
+
+          <!-- 맨 위 눈물 모양: 위치 고정 -->
+          <svg class="lobby__marker" width="62.74" height="82.9" viewBox="936 18 62.74 82.9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M969.137 99.8916C968.15 101.232 966.144 101.223 965.17 99.874L942.502 68.4961L942.506 68.4961C938.427 63.2019 936 56.5699 936 49.3701C936 32.045 950.045 18 967.37 18C984.695 18.0001 998.74 32.0451 998.74 49.3701C998.74 56.57 996.312 63.2019 992.233 68.4961L992.237 68.4961L969.137 99.8916Z" fill="currentColor" />
+          </svg>
+
+          <div class="lobby__hint">
+            <svg class="lobby__hint-icon" width="59" height="59" viewBox="1533 951 59 59" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="1533" y="951" width="59" height="59" rx="29.5" fill="#4C4C4C" />
+              <path d="M1564.52 979.477H1579V982.523H1564.52V997H1561.48V982.523H1547V979.477H1561.48V965H1564.52V979.477Z" fill="#F0F0F0" />
+            </svg>
+            <p class="lobby__hint-text">슬라이드 / 결정</p>
+          </div>
+
+          <p class="stamp" data-clock-short>11/17 Tue. 9:41</p>
+        </section>
       </main>
       </div>
     </div>
@@ -159,6 +187,7 @@
     <script src="js/stage.js"></script>
     <script src="js/clock.js"></script>
     <script src="js/typewriter.js"></script>
+    <script src="js/lobby.js"></script>
     <script src="js/flow.js"></script>
   </body>
 </html>
