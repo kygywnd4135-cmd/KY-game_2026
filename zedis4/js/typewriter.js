@@ -34,17 +34,26 @@ window.Typewriter = (function () {
     const gap = (options && options.gap) || 260; // 문장 사이 쉬는 시간
     const onDone = options && options.onDone;
     const onChar = options && options.onChar; // 글자가 나올 때마다 (원문 기준 위치)를 알려 준다
+    const decorate = options && options.decorate; // (span, 몇 번째 글자, 전체 글자 수): 글자별 꾸밈
+    const pace = options && options.pace; // (몇 번째 글자, 전체 글자 수) → 속도 배수(클수록 느림)
 
     // 각 글자에 "몇 ms 뒤에 나올지"를 미리 매긴다
     const queue = [];
     let at = 0;
+    let shift = 0;
     parts.forEach((part, i) => {
       if (i > 0) at += gap;
       fill(part.el, part.text).forEach((span) => {
         queue.push({ span, at });
-        // 문장부호 뒤에서는 아주 살짝 숨을 고른다
-        at += /[,.!?…]/.test(span.textContent) ? speed * 2.2 : speed;
+        at += speed;
       });
+    });
+    queue.forEach((item, k) => {
+      if (decorate) decorate(item.span, k, queue.length);
+      const step = speed * (pace ? pace(k, queue.length) : 1);
+      item.at += shift;
+      // 문장부호 뒤에서는 아주 살짝 숨을 고른다
+      shift += (/[,.!?…]/.test(item.span.textContent) ? step * 2.2 : step) - speed;
     });
 
     const state = { done: false, finish };

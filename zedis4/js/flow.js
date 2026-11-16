@@ -1,4 +1,4 @@
-// 화면 흐름: 대기화면 → 전원 1 → 전원 2 → 전원 3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리
+// 화면 흐름: 대기화면 → 전원 1~3 → 펜 로딩 → 로비 → 대화(극장) → 시나리오 두루마리 → 커튼 → 연극 1~5
 // 터치(클릭)하거나 아무 키나 누르면 진행한다.
 // 글자가 출력되는 중이면 먼저 남은 글자를 전부 보여 주고, 한 번 더 누르면 다음으로 넘어간다.
 (function () {
@@ -19,10 +19,14 @@
     { screen: "lobby" },
     { screen: "talk" },
     { screen: "scenario" },
+    { screen: "curtain" },
+    { screen: "play" },
   ];
   const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
   const SCENARIO = STEPS.findIndex((s) => s.screen === "scenario");
+  const CURTAIN = STEPS.findIndex((s) => s.screen === "curtain");
+  const PLAY = STEPS.findIndex((s) => s.screen === "play");
 
   const screens = {};
   document.querySelectorAll("[data-screen]").forEach((el) => (screens[el.dataset.screen] = el));
@@ -88,6 +92,8 @@
     if (prev.screen === "lobby" && cur.screen !== "lobby") Lobby.leave();
     if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
     if (prev.screen === "scenario" && cur.screen !== "scenario") Scenario.leave();
+    if (prev.screen === "curtain" && cur.screen !== "curtain") Curtain.leave();
+    if (prev.screen === "play" && cur.screen !== "play") Play.leave();
 
     if (cur.screen === "lobby") {
       Lobby.enter();
@@ -95,6 +101,10 @@
       Talk.enter();
     } else if (cur.screen === "scenario") {
       Scenario.enter();
+    } else if (cur.screen === "curtain") {
+      Curtain.enter();
+    } else if (cur.screen === "play") {
+      Play.enter();
     } else if (cur.screen === "power") {
       enterPower(cur.step, prev.screen !== "power");
     } else if (cur.screen === "loading") {
@@ -140,17 +150,34 @@
   }
 
   function advanceScenario() {
-    // 두루마리 다음 화면은 아직 없어서, 끝나면 일단 로비로 돌아간다
-    if (Scenario.advance() === "done") blackout(LOBBY);
+    // 두루마리 다음: 암전 → 커튼이 닫히는 화면전환
+    if (Scenario.advance() === "done") blackout(CURTAIN);
   }
+
+  // 커튼이 다 닫히면: 다시 암전 → 연극 시작
+  Curtain.onDone = () => {
+    if (!busy) blackout(PLAY);
+  };
+
+  function advancePlay() {
+    // 연극이 END! 까지 끝나면 일단 로비로 돌아간다
+    if (Play.advance() === "done") blackout(LOBBY);
+  }
+
+  // 장면마다 터치/아무 키를 처리하는 방법
+  const HANDLERS = {
+    talk: advanceTalk,
+    scenario: advanceScenario,
+    curtain: () => Curtain.advance(),
+    play: advancePlay,
+  };
 
   // ── 입력: 터치/클릭, 아무 키 ──
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     if (busy) return;
     if (screenNow() === "lobby") return; // 로비의 터치·밀기는 js/lobby.js가 처리
-    if (screenNow() === "talk") return advanceTalk();
-    if (screenNow() === "scenario") return advanceScenario();
+    if (HANDLERS[screenNow()]) return HANDLERS[screenNow()]();
     advance();
   });
 
@@ -168,10 +195,9 @@
       else Lobby.handleKey(e);
       return;
     }
-    if (screenNow() === "talk" || screenNow() === "scenario") {
+    if (HANDLERS[screenNow()]) {
       if (e.key === "Escape") blackout(LOBBY);
-      else if (screenNow() === "talk") advanceTalk();
-      else advanceScenario();
+      else HANDLERS[screenNow()]();
       return;
     }
     advance();

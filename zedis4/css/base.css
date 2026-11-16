@@ -136,7 +136,7 @@ body {
 }
 
 .tw__ch.is-on {
-  opacity: 1;
+  opacity: var(--o, 1);
   animation: tw-pop 0.16s var(--spring-soft) both;
 }
 

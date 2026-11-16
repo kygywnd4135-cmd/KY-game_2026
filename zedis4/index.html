@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="css/lobby.css" />
     <link rel="stylesheet" href="css/talk.css" />
     <link rel="stylesheet" href="css/scenario.css" />
+    <link rel="stylesheet" href="css/curtain.css" />
+    <link rel="stylesheet" href="css/play.css" />
   </head>
   <body>
     <div class="viewport">
@@ -356,6 +358,10 @@
           </div>
         </section>
 
+        <!-- ───────── 화면전환(커튼) · 연극 1~5: 내용은 js/curtain.js, js/play.js가 채운다 ───────── -->
+        <section class="screen screen--curtain curtain" data-screen="curtain"></section>
+        <section class="screen screen--play play" data-screen="play" data-scene="1" data-speaker="boss"></section>
+
         <!-- 화면 전환용 암전 막 -->
         <div class="blackout" aria-hidden="true"></div>
       </main>
@@ -368,6 +374,8 @@
     <script src="js/lobby.js"></script>
     <script src="js/talk.js"></script>
     <script src="js/scenario.js"></script>
+    <script src="js/curtain.js"></script>
+    <script src="js/play.js"></script>
     <script src="js/flow.js"></script>
   </body>
 </html>
