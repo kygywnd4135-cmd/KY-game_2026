@@ -11,12 +11,12 @@ window.Custom = (function () {
   // ── 장식(위 줄). icon: 원 안의 회색 그림, wear: 캐릭터에 입힌 모습(무대 좌표) ──
   const ITEMS = [
     {
-      id: "tie", name: "넥타이",
+      id: "tie", name: "눈물젖은 넥타이",
       icon: `<svg width="64" height="154" viewBox="0 0 64 154" style="left:92px;top:47px"><path d="M63 23.8L36.6 38L54.4 124.2L34.9 153.2L1.7 124.2L24.8 38.7L0 23.8L11.9 5.1L51 0L63 23.8Z" fill="#6E6E6E"/></svg>`,
       wear: `<g transform="translate(931 838) scale(0.9)"><path d="M63 23.8L36.6 38L54.4 124.2L34.9 153.2L1.7 124.2L24.8 38.7L0 23.8L11.9 5.1L51 0L63 23.8Z" fill="#FF5A5A"/><path d="M11.9 5.1L51 0L63 23.8L36.6 38L24.8 38.7L0 23.8Z" fill="#D83A3A"/></g>`,
     },
     {
-      id: "beret", name: "베레모",
+      id: "beret", name: "파리의 예술가",
       icon: `<svg width="172" height="111" viewBox="0 0 172 111" style="left:38px;top:69px"><path d="${"M37.9 0.3C40.9 -0.8 44.2 1.1 44.6 4.3L45.6 11.5C87 6.8 133.2 34.6 146.7 36.5C159.4 38.2 162.3 51.9 162.2 58.6L169.7 56.6L171.9 64.6L2.1 110.1L0.3 103.2L8.5 96.1C-0.7 76.2 -10.3 32.5 25.8 16.7C29.9 14.9 34.1 13.6 38.4 12.7L35.3 7.5C33.7 4.8 35 1.4 37.9 0.3Z"}" fill="#6E6E6E"/></svg>`,
       wear: `<g transform="translate(962 652) rotate(8) scale(1.4) translate(-86 -80)"><path d="M37.9 0.3C40.9 -0.8 44.2 1.1 44.6 4.3L45.6 11.5C87 6.8 133.2 34.6 146.7 36.5C159.4 38.2 162.3 51.9 162.2 58.6L169.7 56.6L171.9 64.6L2.1 110.1L0.3 103.2L8.5 96.1C-0.7 76.2 -10.3 32.5 25.8 16.7C29.9 14.9 34.1 13.6 38.4 12.7L35.3 7.5C33.7 4.8 35 1.4 37.9 0.3Z" fill="#FF3D3D"/><path d="M2.1 110.1L0.3 103.2L8.5 96.1L162.2 58.6L169.7 56.6L171.9 64.6Z" fill="#B82424"/></g>`,
     },
@@ -26,12 +26,12 @@ window.Custom = (function () {
       wear: "",
     },
     {
-      id: "mustache", name: "콧수염",
+      id: "mustache", name: "김부장의 콧수염",
       icon: `<svg width="213" height="73" viewBox="0 0 213 73" style="left:17px;top:101px"><path d="M163.1 14.6C136.8 -14.1 108.4 6 97.4 19.8C108.4 33.9 135.8 63.5 157.8 68.7C179.9 73.8 203.8 56.2 213 46.8C207.3 48.1 189.3 43.4 163.1 14.6Z" fill="#5B5B5B"/><path d="M50.2 15.1C76.6 -14.6 105.3 6.2 116.3 20.5C105.3 35.1 77.7 65.8 55.5 71.1C33.3 76.4 9.2 58.2 0 48.4C5.7 49.8 23.7 45 50.2 15.1Z" fill="#5B5B5B"/></svg>`,
       wear: `<g transform="translate(830 836) scale(1.08)"><path d="M163.1 14.6C136.8 -14.1 108.4 6 97.4 19.8C108.4 33.9 135.8 63.5 157.8 68.7C179.9 73.8 203.8 56.2 213 46.8C207.3 48.1 189.3 43.4 163.1 14.6Z" fill="#111"/><path d="M50.2 15.1C76.6 -14.6 105.3 6.2 116.3 20.5C105.3 35.1 77.7 65.8 55.5 71.1C33.3 76.4 9.2 58.2 0 48.4C5.7 49.8 23.7 45 50.2 15.1Z" fill="#111"/></g>`,
     },
     {
-      id: "glasses", name: "선글라스",
+      id: "glasses", name: "NO AI 선글라스",
       icon: `<svg width="275" height="65" viewBox="0 0 275 65" style="left:22px;top:102px"><rect x="-1.2" y="1.2" width="102.5" height="41.5" rx="2.2" transform="matrix(-1 0 0 1 213.5 0)" fill="black" fill-opacity="0.7" stroke="black" stroke-width="2.4"/><rect x="-1.2" y="1.2" width="83.5" height="41.5" rx="2.2" transform="matrix(-1 0 0 1 83.5 0)" fill="black" fill-opacity="0.7" stroke="black" stroke-width="2.4"/><path d="M113 24C108.8 17.9 97.2 9.5 84 24" stroke="black" stroke-width="2.4" stroke-linecap="round"/><path d="M214 20L265.5 43.1L272 62" stroke="black" stroke-width="4.2" stroke-linecap="round"/></svg>`,
       wear: `<g transform="translate(803 737) scale(1.32)"><rect x="-1.2" y="1.2" width="102.5" height="41.5" rx="3" transform="matrix(-1 0 0 1 213.5 0)" fill="black" fill-opacity="0.78" stroke="black" stroke-width="3"/><rect x="-1.2" y="1.2" width="83.5" height="41.5" rx="3" transform="matrix(-1 0 0 1 83.5 0)" fill="black" fill-opacity="0.78" stroke="black" stroke-width="3"/><path d="M113 24C108.8 17.9 97.2 9.5 84 24" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M214 20L248 35" stroke="black" stroke-width="5" stroke-linecap="round"/><path class="cu__shine" d="M30 8L14 34M48 8L32 34M150 8L132 34" stroke="white" stroke-opacity="0.5" stroke-width="5" stroke-linecap="round"/></g>`,
     },
@@ -56,7 +56,7 @@ window.Custom = (function () {
     (sign === "+" ? `<path d="M31.5 28.4H46V31.5H31.5V46H28.4V31.5H14V28.4H28.4V14H31.5V28.4Z" fill="#F0F0F0"/>` : `<path d="M46 31.5H14V28.4H46V31.5Z" fill="#F0F0F0"/>`) +
     `</svg><span class="hint__label">${label}</span></div>`;
 
-  // 초록이: 평소 얼굴(두 눈) / 반응 얼굴(윙크 + 별)
+  // 초록이: 평소 얼굴(두 눈) / 반응 얼굴(윙크). 별은 늘 꽂고 있는 머리핀
   const BUDDY =
     `<svg class="cu__buddy-art" width="245" height="237" viewBox="0 0 245 237" fill="none">` +
     `<path class="cu__foot" d="M67 236H8C15.4 221.9 15.4 213.6 39.5 211.1C58.8 209.1 65.8 226.8 67 236Z" fill="#299F78"/>` +
@@ -64,8 +64,8 @@ window.Custom = (function () {
     `<g class="cu__buddy-body"><circle cx="122" cy="113" r="113" fill="#97EA73"/>` +
     `<g class="cu__eye"><ellipse cx="69.2" cy="124.1" rx="42.5" ry="41" transform="rotate(-14.1 69.2 124.1)" fill="white"/><ellipse cx="82.2" cy="126.5" rx="30.5" ry="28.5" transform="rotate(-14.1 82.2 126.5)" fill="#299F78"/></g>` +
     `<g class="cu__eye cu__eye--open"><ellipse cx="160" cy="118" rx="38" ry="37" fill="white"/><ellipse cx="171" cy="121" rx="27" ry="26" fill="#299F78"/></g>` +
-    `<path class="cu__wink" d="M190.1 90.5L136.8 125.9C135.4 126.8 135.7 128.8 137.2 129.4L182.8 147" stroke="#299F78" stroke-width="6" stroke-linecap="round"/></g>` +
-    `<path class="cu__star" d="M17.9 11.2C17.8 8.8 20.4 7.3 22.4 8.5L41.2 19.7C42 20.1 42.9 20.2 43.8 19.9L64.3 12.4C66.5 11.6 68.7 13.6 68.2 15.9L63.4 37.2C63.2 38.1 63.4 39 64 39.7L77.4 56.9C78.9 58.8 77.7 61.5 75.3 61.7L53.6 63.7C52.7 63.8 51.9 64.3 51.4 65L39.2 83.1C37.9 85.1 34.9 84.8 34 82.7L25.3 62.6C25 61.8 24.3 61.2 23.4 60.9L2.4 54.9C0.1 54.3 -0.4 51.3 1.3 49.8L17.7 35.4C18.4 34.8 18.7 33.9 18.7 33L17.9 11.2Z" fill="#299F78"/>` +
+    `<path class="cu__wink" d="M190.1 90.5L136.8 125.9C135.4 126.8 135.7 128.8 137.2 129.4L182.8 147" stroke="#299F78" stroke-width="6" stroke-linecap="round"/>` +
+    `<path class="cu__star" d="M17.9 11.2C17.8 8.8 20.4 7.3 22.4 8.5L41.2 19.7C42 20.1 42.9 20.2 43.8 19.9L64.3 12.4C66.5 11.6 68.7 13.6 68.2 15.9L63.4 37.2C63.2 38.1 63.4 39 64 39.7L77.4 56.9C78.9 58.8 77.7 61.5 75.3 61.7L53.6 63.7C52.7 63.8 51.9 64.3 51.4 65L39.2 83.1C37.9 85.1 34.9 84.8 34 82.7L25.3 62.6C25 61.8 24.3 61.2 23.4 60.9L2.4 54.9C0.1 54.3 -0.4 51.3 1.3 49.8L17.7 35.4C18.4 34.8 18.7 33.9 18.7 33L17.9 11.2Z" fill="#299F78"/></g>` +
     `</svg>`;
 
   root.innerHTML =
