@@ -17,7 +17,6 @@
   overflow: visible;
 }
 
-.play__cups,
 .play__bang,
 .play__star,
 .yell svg {
@@ -250,12 +249,29 @@
   clip-path: inset(-6px);
 }
 
+/* 소리치는 동안은 펄쩍 뛰어올라 발이 뜨고(피그마의 자세), 다 지르고 나면 쿵 내려와 무대를 딛는다 */
 .play[data-scene="3"] .pa--boss .pa__foot--l {
-  transform: translate(-204.3px, 121.6px) rotate(25.5deg) scale(1.082);
+  transform: translate(-112px, 196.2px) scale(1.082);
 }
 
 .play[data-scene="3"] .pa--boss .pa__foot--r {
+  transform: translate(124px, 196.2px) scale(1.067);
+}
+
+.play[data-scene="3"].is-talking .pa--boss .pa__foot--l {
+  transform: translate(-204.3px, 121.6px) rotate(25.5deg) scale(1.082);
+}
+
+.play[data-scene="3"].is-talking .pa--boss .pa__foot--r {
   transform: translate(181.4px, 168px) rotate(-18deg) scale(1.067);
+}
+
+.play[data-scene="3"].is-talking .pa--boss .pa__mood {
+  transform: translateY(-34px);
+}
+
+.play[data-scene="3"] .pa--boss .pa__mood {
+  transition: transform 0.45s var(--spring);
 }
 
 /* 연극 4~5: 왼쪽으로 퇴장 */
@@ -304,7 +320,7 @@
 
 /* 목소리가 기어들어갈수록 작아지고 뒤로 물러난다 */
 .play[data-scene="2"] .pa--junior .pa__mood {
-  transform: translate(calc(var(--cower) * 26px), calc(var(--cower) * 18px)) scale(calc(1 - var(--cower) * 0.2));
+  transform: translateX(calc(var(--cower) * 26px)) scale(calc(1 - var(--cower) * 0.2)); /* 발은 무대에 붙인 채로 */
   transform-origin: 0 150px;
   transition: transform 0.25s ease-out;
 }
@@ -312,6 +328,10 @@
 /* 연극 3: 화들짝! 뒤로 튕겨 나가며 안경이 삐뚤어진다 */
 .play[data-scene="3"] .pa--junior {
   --x: 1410.19px;
+}
+
+/* 버럭 소리에 붕 떴다가, 소리가 그치면 무대에 내려앉는다 */
+.play[data-scene="3"].is-talking .pa--junior {
   --y: 679.47px;
 }
 
@@ -319,11 +339,11 @@
   clip-path: inset(-6px);
 }
 
-.play[data-scene="3"] .pa--junior .pa__foot--l {
+.play[data-scene="3"].is-talking .pa--junior .pa__foot--l {
   transform: translate(-90.4px, 147.7px) rotate(-33.8deg) scale(0.979);
 }
 
-.play[data-scene="3"] .pa--junior .pa__foot--r {
+.play[data-scene="3"].is-talking .pa--junior .pa__foot--r {
   transform: translate(-46.1px, 192.3px) rotate(4.36deg) scale(0.979);
 }
 
@@ -479,62 +499,142 @@
   transform-origin: 0 150px;
 }
 
-/* ── 술잔 ── */
-.play__cups {
+/* ── 술잔: 손에 쥐고 있어서 손과 함께 움직인다 ── */
+.pa__cup {
+  position: absolute;
+  transform: scale(0);
+  transition: transform 0.2s var(--back-in);
+}
+
+.play[data-scene="4"] .pa__cup {
+  transform: scale(var(--k));
+  transition: transform 0.45s 0.45s var(--spring);
+}
+
+/* 짠! — 손을 살짝 뒤로 뺐다가 서로 내밀어 잔을 부딪치고, 한 번 더 톡 */
+.play[data-scene="4"] .pa--pal .pa__foot--r .pa__foot-idle {
+  animation: clink-reach-r 3.6s 1.1s infinite;
+}
+
+.play[data-scene="4"] .pa--junior .pa__foot--l .pa__foot-idle {
+  animation: clink-reach-l 3.6s 1.1s infinite;
+}
+
+@keyframes clink-reach-r {
+  0%,
+  30%,
+  100% {
+    transform: none;
+  }
+  7% {
+    transform: translate(-14px, 6px) rotate(-9deg);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+  }
+  13% {
+    transform: translate(35px, -30px) rotate(13deg);
+  }
+  17% {
+    transform: translate(24px, -22px) rotate(6deg);
+  }
+  21% {
+    transform: translate(34px, -27px) rotate(11deg);
+  }
+}
+
+@keyframes clink-reach-l {
+  0%,
+  30%,
+  100% {
+    transform: none;
+  }
+  7% {
+    transform: translate(14px, 6px) rotate(9deg);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+  }
+  13% {
+    transform: translate(-35px, -30px) rotate(-13deg);
+  }
+  17% {
+    transform: translate(-24px, -22px) rotate(-6deg);
+  }
+  21% {
+    transform: translate(-34px, -27px) rotate(-11deg);
+  }
+}
+
+/* 몸도 잔을 따라 서로에게 기울인다 */
+.play[data-scene="4"] .pa--pal .pa__mood {
+  transform-origin: 0 150px;
+  animation: clink-lean-r 3.6s 1.1s infinite;
+}
+
+.play[data-scene="4"] .pa--junior .pa__mood {
+  transform-origin: 0 150px;
+  animation: clink-lean-l 3.6s 1.1s infinite;
+}
+
+@keyframes clink-lean-r {
+  0%,
+  32%,
+  100% {
+    transform: none;
+  }
+  7% {
+    transform: rotate(-3deg);
+  }
+  13%,
+  21% {
+    transform: rotate(6deg) translateX(8px);
+  }
+}
+
+@keyframes clink-lean-l {
+  0%,
+  32%,
+  100% {
+    transform: none;
+  }
+  7% {
+    transform: rotate(3deg);
+  }
+  13%,
+  21% {
+    transform: rotate(-6deg) translateX(-8px);
+  }
+}
+
+/* 부딪히는 순간 반짝 */
+.play__clink {
+  position: absolute;
+  left: 0;
+  top: 0;
   opacity: 0;
-  transition: opacity 0.2s;
+  transform-origin: 963px 760px;
 }
 
-.play[data-scene="4"] .play__cups {
-  opacity: 1;
-  transition: opacity 0.2s 0.35s;
+.play[data-scene="4"] .play__clink {
+  animation: clink-spark 3.6s 1.1s infinite;
 }
 
-.play__cup {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-}
-
-/* 짠! 하고 부딪힌 뒤 가끔 한 번씩 */
-.play[data-scene="4"] .play__cup--l {
-  animation: clink-l 3.4s 0.9s infinite;
-}
-
-.play[data-scene="4"] .play__cup--r {
-  animation: clink-r 3.4s 0.9s infinite;
-}
-
-@keyframes clink-l {
+@keyframes clink-spark {
   0%,
-  22%,
+  12%,
+  24%,
   100% {
-    transform: none;
+    opacity: 0;
+    transform: scale(0.4);
   }
-  7% {
-    transform: translate(-16px, -6px) rotate(-12deg);
+  14% {
+    opacity: 1;
+    transform: scale(1);
   }
-  12% {
-    transform: translate(44px, -22px) rotate(16deg);
+  19% {
+    opacity: 0;
+    transform: scale(1.5);
   }
-  16% {
-    transform: translate(30px, -14px) rotate(8deg);
-  }
-}
-
-@keyframes clink-r {
-  0%,
-  22%,
-  100% {
-    transform: none;
-  }
-  7% {
-    transform: translate(16px, -6px) rotate(12deg);
-  }
-  12% {
-    transform: translate(-44px, -22px) rotate(-16deg);
-  }
-  16% {
-    transform: translate(-30px, -14px) rotate(-8deg);
+  21.5% {
+    opacity: 0.8;
+    transform: scale(0.8);
   }
 }
 
@@ -597,7 +697,8 @@
 
 /* 연극 2: 부장이 슬금슬금 다가오고, 후임은 덜덜 떨며 땀을 흘린다 */
 .play[data-scene="2"] .pa--boss .pa__mood {
-  transform: translateX(calc(var(--cower) * 70px)) rotate(calc(var(--cower) * 7deg)) scale(calc(1 + var(--cower) * 0.07));
+  /* 회전 대신 기울이기(skew): 발바닥 높이는 그대로 두고 윗몸만 후임 쪽으로 쏠린다 */
+  transform: translateX(calc(var(--cower) * 70px)) skewX(calc(var(--cower) * -6deg)) scale(calc(1 + var(--cower) * 0.07));
   transform-origin: 0 194px;
   transition: transform 0.3s ease-out;
 }
@@ -642,12 +743,6 @@
 /* 화면 전체가 쿵! */
 .play__world.is-quaking {
   animation: quake 0.6s both;
-}
-
-/* 연극 4: 둘이 나란히 끄덕끄덕 */
-.play[data-scene="4"] .pa--junior .pa__mood {
-  animation: droop 3.6s 0.4s ease-in-out infinite;
-  transform-origin: 0 150px;
 }
 
 /* 연극 5: 신나서 통통 */

@@ -66,8 +66,13 @@ window.Play = (function () {
   // ── 화면 요소 만들기 ──
   const FOOT_R = "M-38 0H38C28.37 -18.585 28.37 -29.517 -2.68 -32.796C-27.51 -35.42 -36.57 -12.025 -38 0Z";
   const FOOT_L = "M37.46 0H-37.46C-27.96 -18.177 -27.96 -28.868 2.64 -32.076C27.12 -34.642 36.06 -11.761 37.46 0Z";
-  const foot = (side, color) =>
-    `<div class="pa__foot pa__foot--${side}"><div class="pa__foot-idle"><svg width="76" height="34" viewBox="-38 -33.5 76 34"><path d="${side === "r" ? FOOT_R : FOOT_L}" fill="${color}"/></svg></div></div>`;
+  // held: 손에 쥔 물건(술잔). 손과 한 덩어리로 움직인다.
+  const foot = (side, color, held) =>
+    `<div class="pa__foot pa__foot--${side}"><div class="pa__foot-idle"><svg width="76" height="34" viewBox="-38 -33.5 76 34"><path d="${side === "r" ? FOOT_R : FOOT_L}" fill="${color}"/></svg>${held || ""}</div></div>`;
+  // 술잔: 손의 기준점(밑변 가운데)에서 (x, y)만큼 떨어진 자리에 놓는다. k = 손의 배율
+  const CUP = "M1056.62 791H1010.93C1007.83 791 1005.48 793.78 1006 796.84L1014.29 845.34C1014.7 847.74 1016.78 849.5 1019.22 849.5H1048.75C1051.2 849.5 1053.29 847.72 1053.68 845.3L1061.56 796.8C1062.05 793.76 1059.7 791 1056.62 791Z";
+  const cup = (x, y, k) =>
+    `<svg class="pa__cup" style="left:${x}px;top:${y}px;transform-origin:${-x}px ${-y}px;--k:${(1 / k).toFixed(4)}" width="59.6" height="62.5" viewBox="1004 789 59.6 62.5" fill="none"><path d="${CUP}" fill="#D9D9D9" fill-opacity="0.2" stroke="#838383" stroke-width="2"/></svg>`;
   const eye = (side) =>
     `<div class="pa__eye pa__eye--${side}"><div class="pa__eye-clip"><i class="pa__white"></i><i class="pa__pupil"></i></div><i class="pa__lid"></i></div>`;
   // 피그마 좌표로 그린 그림을 배우의 중심(cx, cy)에 맞춰 얹는다
@@ -90,7 +95,7 @@ window.Play = (function () {
 
   const JUNIOR = actor(
     "junior",
-    foot("l", "#8A024F") + foot("r", "#8A024F") + `<i class="pa__body"></i>` + eye("l") + eye("r") +
+    foot("l", "#8A024F", cup(-51.7, -52.07, 0.979)) + foot("r", "#8A024F") + `<i class="pa__body"></i>` + eye("l") + eye("r") +
       art(
         1252.19, 744.47,
         `<rect x="1227.96" y="765.83" width="75.46" height="29.61" rx="3.25" fill="white" fill-opacity="0.45" stroke="black" stroke-width="3.5"/>
@@ -104,7 +109,7 @@ window.Play = (function () {
 
   const PAL = actor(
     "pal",
-    foot("l", "#019185") + foot("r", "#019185") + `<i class="pa__body"></i>` + eye("l") + eye("r") +
+    foot("l", "#019185") + foot("r", "#019185", cup(-0.7, -52.07, 0.965)) + `<i class="pa__body"></i>` + eye("l") + eye("r") +
       art(708.22, 744.47, `<path d="M684.27 730.97C691.85 729.92 709.49 724.08 719.42 709.06" stroke="#019185" stroke-width="3.5"/>`, "pa__brow") +
       art(708.22, 744.47, `<path d="M621.92 740.51L601.43 751.54L615.31 818.52L600.1 841L574.32 818.52L592.27 752.07L573 740.51L582.25 725.96L612.66 722L621.92 740.51Z" fill="#FF6C6C"/>`, "pa__tie") +
       `<i class="pa__blush"></i>`
@@ -113,7 +118,6 @@ window.Play = (function () {
   const seat = (id, x, y, r, c, tempo, offset) =>
     `<div class="crowd__seat" data-seat="${id}" style="--x:${x}px;--y:${y}px;--r:${r}px;--c:${c};--tempo:${tempo}s;--offset:${offset}s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>`;
 
-  const CUP = "M1056.62 791H1010.93C1007.83 791 1005.48 793.78 1006 796.84L1014.29 845.34C1014.7 847.74 1016.78 849.5 1019.22 849.5H1048.75C1051.2 849.5 1053.29 847.72 1053.68 845.3L1061.56 796.8C1062.05 793.76 1059.7 791 1056.62 791Z";
   const stageSvg = (cls, inner) =>
     `<svg class="${cls}" width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${inner}</svg>`;
 
@@ -121,8 +125,8 @@ window.Play = (function () {
     `<div class="play__world">` +
     `<div class="play__light"></div><div class="play__floor"></div>` +
     BOSS + JUNIOR + PAL +
-    // 술잔 두 개(연극 4)
-    stageSvg("play__cups", `<path class="play__cup play__cup--l" d="${CUP}" transform="translate(-141 0)" fill="#D9D9D9" fill-opacity="0.2" stroke="#838383" stroke-width="2"/><path class="play__cup play__cup--r" d="${CUP}" fill="#D9D9D9" fill-opacity="0.2" stroke="#838383" stroke-width="2"/>`) +
+    // 잔이 부딪히는 순간의 반짝임(연극 4)
+    stageSvg("play__clink", `<g stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"><path d="M963 742V716"/><path d="M938 752L920 734"/><path d="M988 752L1006 734"/></g>`) +
     // 느낌표: 부장 머리 위(연극 2), 후임 옆(연극 3)
     stageSvg("play__bang play__bang--boss", `<path d="M964.85 524.24L947.49 596.88L965.89 601.81L987.23 530.23L964.85 524.24ZM948.07 631.53C951.38 632.42 954.55 632.01 957.56 630.3C960.58 628.55 962.51 626.02 963.37 622.69C964.28 619.42 963.86 616.28 962.11 613.3C960.36 610.32 957.83 608.38 954.51 607.49C951.32 606.64 948.21 607.06 945.16 608.76C942.12 610.46 940.14 612.95 939.23 616.22C938.67 618.45 938.71 620.63 939.36 622.78C939.98 624.89 941.05 626.74 942.56 628.33C944.09 629.89 945.92 630.95 948.07 631.53Z" fill="#3A65FF"/>`) +
     stageSvg("play__bang play__bang--junior", `<path d="M1597.85 599.24L1580.49 671.88L1598.9 676.81L1620.23 605.23L1597.85 599.24ZM1581.07 706.53C1584.39 707.42 1587.55 707.01 1590.56 705.3C1593.58 703.56 1595.52 701.02 1596.37 697.69C1597.29 694.42 1596.87 691.28 1595.12 688.3C1593.36 685.32 1590.83 683.38 1587.51 682.49C1584.33 681.64 1581.21 682.06 1578.17 683.76C1575.13 685.46 1573.15 687.95 1572.23 691.22C1571.67 693.45 1571.72 695.63 1572.36 697.78C1572.98 699.89 1574.05 701.74 1575.57 703.33C1577.09 704.89 1578.92 705.95 1581.07 706.53Z" fill="#FF1777"/>`) +
