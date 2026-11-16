@@ -776,6 +776,11 @@
   pointer-events: none;
 }
 
+/* 말풍선은 왼쪽의 선택·뒤로 버튼보다 앞에 놓인다 */
+.say {
+  z-index: 2;
+}
+
 .say svg {
   position: absolute;
   left: 0;
@@ -796,11 +801,15 @@
   animation: bubble-enter 0.6s both;
 }
 
+/* 글은 말풍선 몸통(꼬리 제외)의 한가운데에 둔다 */
 .say__text {
   position: absolute;
-  left: 224.3px;
-  top: 830px;
+  left: 737px;
+  top: 829px;
   margin: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
   color: var(--c-blue);
   font-size: 50px;
   font-weight: 800;
