@@ -293,6 +293,8 @@
     // 새로고침(Ctrl+R) 같은 브라우저 단축키와 보조키 단독 입력은 무시
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(e.key)) return;
+    // F1~F12(전체 화면 F11 등)는 브라우저 기능이라 장면을 넘기지 않는다
+    if (/^F\d{1,2}$/.test(e.key)) return;
     if (e.key === " " || e.key.startsWith("Arrow") || e.key.startsWith("Page")) e.preventDefault();
     if (busy) return;
 

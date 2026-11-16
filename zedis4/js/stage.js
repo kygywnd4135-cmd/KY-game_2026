@@ -1,6 +1,6 @@
 // 1935×1047 스테이지를 화면 크기에 맞게 축소/확대한다.
-// 일반 브라우저 창에서는 가로·세로 모두에 맞추고,
-// 다른 페이지 안에 끼워진 경우(iframe)는 높이를 믿을 수 없으므로 가로에만 맞춘다.
+// 가로·세로 모두에 맞춰서(남는 쪽은 검은 여백) 화면이 잘리지 않게 한다.
+// 단, 다른 페이지 안에 끼워져 높이가 아직 정해지지 않은 경우(높이 0 등)에는 가로에만 맞춘다.
 //
 // 축소는 CSS zoom 으로 한다(css/base.css). transform: scale 로 줄이면 아이폰 사파리 같은
 // 브라우저가 그림을 줄이기 전 크기(1935×1047 × 기기 배율)로 그려 두느라 메모리가 크게 들고,
@@ -16,19 +16,17 @@
   const frame = document.querySelector(".frame");
   const stage = document.querySelector(".stage");
   let scale = 1;
-  let embedded = false;
-  try {
-    embedded = window.self !== window.top;
-  } catch (e) {
-    embedded = true;
-  }
+  // 이보다 낮은 높이는 "아직 정해지지 않은 높이"로 보고 무시한다
+  const MIN_USABLE_HEIGHT = 160;
 
   function fit() {
+    // 휴대폰 앱에서 위아래 시스템 막대만큼 들어가는 여백은 빼고 잰다
+    const cs = getComputedStyle(root);
+    const padY = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
     const vw = root.clientWidth || window.innerWidth;
+    const vh = (root.clientHeight || window.innerHeight) - padY;
     scale = vw / W;
-    if (!embedded && window.innerHeight > 0) {
-      scale = Math.min(scale, window.innerHeight / H);
-    }
+    if (vh >= MIN_USABLE_HEIGHT) scale = Math.min(scale, vh / H);
     root.style.setProperty("--scale", scale.toFixed(5));
   }
 
