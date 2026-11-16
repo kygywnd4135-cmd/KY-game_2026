@@ -19,6 +19,7 @@
     { screen: "lobby" },
     { screen: "keywords" },
     { screen: "settings" },
+    { screen: "recommend" },
     { screen: "talk" },
     { screen: "scenario" },
     { screen: "play" },
@@ -31,6 +32,7 @@
   const LOBBY = STEPS.findIndex((s) => s.screen === "lobby");
   const KEYWORDS = STEPS.findIndex((s) => s.screen === "keywords");
   const SETTINGS = STEPS.findIndex((s) => s.screen === "settings");
+  const RECOMMEND = STEPS.findIndex((s) => s.screen === "recommend");
   const TALK = STEPS.findIndex((s) => s.screen === "talk");
   const SCENARIO = STEPS.findIndex((s) => s.screen === "scenario");
   const PLAY = STEPS.findIndex((s) => s.screen === "play");
@@ -122,6 +124,7 @@
     if (prev.screen === "lobby" && cur.screen !== "lobby") Lobby.leave();
     if (prev.screen === "keywords" && cur.screen !== "keywords") Keywords.leave();
     if (prev.screen === "settings" && cur.screen !== "settings") Settings.leave();
+    if (prev.screen === "recommend" && cur.screen !== "recommend") Recommend.leave();
     if (prev.screen === "talk" && cur.screen !== "talk") Talk.leave();
     if (prev.screen === "scenario" && cur.screen !== "scenario") Scenario.leave();
     if (prev.screen === "play" && cur.screen !== "play") Play.leave();
@@ -137,6 +140,8 @@
       Keywords.enter();
     } else if (cur.screen === "settings") {
       Settings.enter();
+    } else if (cur.screen === "recommend") {
+      Recommend.enter();
     } else if (cur.screen === "talk") {
       Talk.enter();
     } else if (cur.screen === "scenario") {
@@ -189,7 +194,8 @@
   //   파랑("오늘의 기록 준비 완료!")  → 암전 후 극장
   //   보라("오늘의 키워드를 확인하기") → 오늘의 키워드
   //   청록("세부 설정")                → 세부 설정
-  const LOBBY_TARGETS = { violet: () => KEYWORDS, mint: () => SETTINGS };
+  //   빨강("오늘의 추천 시나리오")      → 오늘의 추천 시나리오
+  const LOBBY_TARGETS = { violet: () => KEYWORDS, mint: () => SETTINGS, pink: () => RECOMMEND };
   Lobby.onPick = (id) => {
     if (busy || (id !== "blue" && !LOBBY_TARGETS[id])) return;
     busy = true;
@@ -203,6 +209,10 @@
 
   Settings.onBack = () => {
     if (!busy && screenNow() === "settings") go(LOBBY);
+  };
+
+  Recommend.onBack = () => {
+    if (!busy && screenNow() === "recommend") go(LOBBY);
   };
 
   Keywords.onBack = () => {
@@ -277,7 +287,7 @@
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     if (busy) return;
-    if (["lobby", "keywords", "settings", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
+    if (["lobby", "keywords", "settings", "recommend", "pick", "edit", "rate"].includes(screenNow())) return; // 이 화면들은 터치를 각자 처리한다
     if (HANDLERS[screenNow()]) return HANDLERS[screenNow()]();
     advance();
   });
@@ -313,6 +323,11 @@
       // 로비: ←/→ 로 다이얼을 돌리고 Enter로 고른다. Esc는 대기화면으로.
       if (e.key === "Escape") go(0);
       else Lobby.handleKey(e);
+      return;
+    }
+    if (screenNow() === "recommend") {
+      // 오늘의 추천 시나리오: ←/→ 로 다이얼을 돌린다. −(또는 Esc)는 로비로.
+      if (Recommend.handleKey(e) === "back") go(LOBBY);
       return;
     }
     if (screenNow() === "settings") {
