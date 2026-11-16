@@ -62,8 +62,25 @@
     el.classList.add(className);
   }
 
+  // 보여 줄 장면만 켠다. 꺼진 장면은 사라지는 연출(0.22초)이 끝나면 아예 그리지 않는다.
+  const parkTimers = {};
   function showScreen(name) {
-    Object.keys(screens).forEach((key) => screens[key].classList.toggle("is-active", key === name));
+    Object.keys(screens).forEach((key) => {
+      const el = screens[key];
+      clearTimeout(parkTimers[key]);
+      if (key === name) {
+        if (el.classList.contains("is-parked")) {
+          el.classList.remove("is-parked");
+          void el.offsetWidth; // 다시 그린 다음에 켜야 나타나는 연출이 보인다
+        }
+        el.classList.add("is-active");
+      } else if (el.classList.contains("is-active")) {
+        el.classList.remove("is-active");
+        parkTimers[key] = setTimeout(() => el.classList.add("is-parked"), 260);
+      } else {
+        el.classList.add("is-parked");
+      }
+    });
   }
 
   function enterPower(step, fromOtherScreen) {
@@ -314,6 +331,9 @@
     }
     advance();
   });
+
+  // 처음에는 대기화면만 그린다
+  showScreen(STEPS[0].screen);
 
   // 확인·디버깅용: 원하는 장면으로 바로 이동
   window.__flow = { go, advance, steps: STEPS };

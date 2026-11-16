@@ -154,8 +154,9 @@ window.Rate = (function () {
   stars.forEach((star, i) =>
     star.addEventListener("pointerdown", (e) => {
       if (!active) return;
-      const r = star.getBoundingClientRect();
-      setRating(i + ((e.clientX - r.left) / r.width < 0.5 ? 0.5 : 1));
+      const box = Stage.box(star);
+      const pt = Stage.point(e.clientX, e.clientY);
+      setRating(i + ((pt.x - box.x) / box.w < 0.5 ? 0.5 : 1));
     })
   );
   root.querySelector(".rate__save").addEventListener("pointerdown", () => active && save());

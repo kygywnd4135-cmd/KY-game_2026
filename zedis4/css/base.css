@@ -61,6 +61,7 @@ body {
   position: relative;
   width: var(--stage-w);
   height: var(--stage-h);
+  /* zoom 을 못 쓰는 오래된 브라우저용 */
   transform: scale(var(--scale, 1));
   transform-origin: 0 0;
   border-radius: 1000px 1000px 0 0;
@@ -71,6 +72,14 @@ body {
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+/* zoom 으로 줄이면 화면을 실제 보이는 크기로만 그려서 메모리를 훨씬 덜 쓴다 */
+@supports (zoom: 0.5) {
+  .stage {
+    transform: none;
+    zoom: var(--scale, 1);
+  }
 }
 
 /* ───────── 쫀득한 움직임용 이징 ───────── */
@@ -99,6 +108,11 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+}
+
+/* 다 사라진 장면은 아예 그리지 않는다(메모리 절약) */
+.screen.is-parked {
+  display: none;
 }
 
 .screen.is-active {

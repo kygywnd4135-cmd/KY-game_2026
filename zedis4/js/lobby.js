@@ -4,7 +4,6 @@
 //  - 가운데(선택된) 캐릭터는 색이 진해지고 눈이 시선(포인터)을 따라온다.
 window.Lobby = (function () {
   const root = document.querySelector('[data-screen="lobby"]');
-  const stage = document.querySelector(".stage");
   const dial = root.querySelector(".dial");
   const marker = root.querySelector(".lobby__marker");
   const gridEl = root.querySelector(".lobby__grid");
@@ -252,9 +251,7 @@ window.Lobby = (function () {
 
   // 화면 좌표 → 스테이지(1935×1047) 좌표
   function toStage(e) {
-    const r = stage.getBoundingClientRect();
-    const k = r.width / 1935 || 1;
-    return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k, k };
+    return Stage.point(e.clientX, e.clientY);
   }
 
   function lookAt(e) {

@@ -204,7 +204,6 @@
     const backLabel = root.querySelector("[data-edit-back]");
     const sparks = root.querySelector(".edit__sparks");
     const wizard = root.querySelector(".wizard");
-    const stage = document.querySelector(".stage");
     const rows = Array.from(root.querySelectorAll(".line"));
     rows.forEach((row, i) => (row.querySelector(".line__text").textContent = LINES[i].text));
 
@@ -271,10 +270,7 @@
 
     // 스테이지 좌표로 바꾼 요소의 위치
     function stageBox(el) {
-      const s = stage.getBoundingClientRect();
-      const k = s.width / 1935 || 1;
-      const r = el.getBoundingClientRect();
-      return { x: (r.left - s.left) / k, y: (r.top - s.top) / k, w: r.width / k, h: r.height / k };
+      return Stage.box(el);
     }
 
     // 붓끝에서 별이 날아가 대사 위에 내려앉는다

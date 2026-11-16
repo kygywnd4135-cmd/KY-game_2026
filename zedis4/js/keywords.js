@@ -3,7 +3,6 @@
 // −(또는 Esc)는 로비로 돌아간다.
 window.Keywords = (function () {
   const root = document.querySelector('[data-screen="keywords"]');
-  const stage = document.querySelector(".stage");
 
   // 손글씨(피그마의 펜 획 그대로). box: 그 메모가 피그마에서 놓여 있던 원의 [x, y, 지름]
   // --n: 몇 번째 획인지(쓰는 순서대로 그어지게 하는 데 쓴다)
@@ -268,10 +267,9 @@ window.Keywords = (function () {
   // 보라의 눈동자가 포인터를 따라간다
   root.addEventListener("pointermove", (e) => {
     if (!active) return;
-    const r = stage.getBoundingClientRect();
-    const k = r.width / 1935 || 1;
-    const dx = (e.clientX - r.left) / k - 1545;
-    const dy = (e.clientY - r.top) / k - 458;
+    const pt = Stage.point(e.clientX, e.clientY);
+    const dx = pt.x - 1545;
+    const dy = pt.y - 458;
     const dist = Math.hypot(dx, dy) || 1;
     const reach = 15 * Math.min(1, dist / 300);
     root.style.setProperty("--kx", ((dx / dist) * reach).toFixed(1) + "px");
