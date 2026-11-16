@@ -39,25 +39,30 @@ body {
 body {
   background: var(--c-outside);
   font-family: var(--font);
-  overflow: hidden;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* 뷰포트 한가운데에 스테이지를 놓고, js/stage.js가 --scale로 맞춘다 */
+/* 화면 한가운데에 스테이지를 놓고, js/stage.js가 --scale로 맞춘다.
+   .frame이 축소된 실제 크기를 차지해서, 높이가 내용에 맞춰지는 환경에서도 보인다. */
 .viewport {
-  position: fixed;
-  inset: 0;
+  min-height: 100%;
   display: grid;
   place-items: center;
 }
 
+.frame {
+  width: calc(var(--stage-w) * var(--scale, 1));
+  height: calc(var(--stage-h) * var(--scale, 1));
+  overflow: hidden;
+}
+
 .stage {
   position: relative;
-  flex: none;
   width: var(--stage-w);
   height: var(--stage-h);
   transform: scale(var(--scale, 1));
-  transform-origin: center;
+  transform-origin: 0 0;
   border-radius: 1000px 1000px 0 0;
   overflow: hidden;
   background: var(--c-dark);
