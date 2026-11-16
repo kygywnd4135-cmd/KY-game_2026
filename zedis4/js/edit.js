@@ -470,7 +470,7 @@
       if (phase === "select") {
         if (e.key === "ArrowDown") move(1);
         else if (e.key === "ArrowUp") move(-1);
-        else if (e.key === "Enter" || e.key === " ") startTyping();
+        else if (e.key === "Enter") startTyping(); // 스페이스바는 Alt처럼 마무리(js/flow.js)
         else if (e.key === "-" || e.key === "Escape" || e.key === "Backspace") return "back"; // − : 뒤로
         else return false;
       }

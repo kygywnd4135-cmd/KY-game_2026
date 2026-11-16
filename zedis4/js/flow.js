@@ -340,6 +340,16 @@
       if (!busy) Edit.handleKey(e);
       return;
     }
+    // 스페이스바도 Alt와 똑같이: 대본 고치기 → 연극 종료, 별점 → 로비
+    // (대본 고치기의 소개·마무리 대사 중에는 평소처럼 대사를 넘긴다)
+    if (e.key === " " && !e.repeat && (screenNow() === "edit" || screenNow() === "rate")) {
+      e.preventDefault();
+      if (screenNow() === "rate") {
+        if (!busy) blackout(LOBBY);
+        return;
+      }
+      if (!busy && Edit.finish()) return;
+    }
     if (e.repeat) return;
     // 새로고침(Ctrl+R) 같은 브라우저 단축키와 보조키 단독 입력은 무시
     if (e.ctrlKey || e.metaKey || e.altKey) return;

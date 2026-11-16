@@ -2,7 +2,7 @@
 // 내 시나리오에 별점을 매기고(← / → 로 반 칸씩, 별을 눌러도 됨),
 // 아래에는 비슷한 상황을 겪은 사람들의 이야기가 추천으로 뜬다(아직 고를 수는 없다).
 // 오른쪽 '나도 이번 스토리를 공개할래!' 칸은 눌러서(또는 ↑ / ↓ 키) 켜고 끈다.
-// Alt 를 누르면 로비로 돌아간다(js/flow.js가 처리).
+// Alt 나 스페이스바를 누르면 로비로 돌아간다(js/flow.js가 처리).
 window.Rate = (function () {
   const root = document.querySelector('[data-screen="rate"]');
   const START = 0; // 처음 별점
@@ -190,7 +190,7 @@ window.Rate = (function () {
     else if (e.key === "ArrowLeft") setRating(rating - 0.5);
     else if (e.key === "ArrowUp" || e.key === "ArrowDown") toggleShare();
     else if (/^[0-5]$/.test(e.key)) setRating(Number(e.key));
-    else if (e.key === "Enter" || e.key === " ") save();
+    else if (e.key === "Enter") save(); // 스페이스바는 Alt처럼 로비로(js/flow.js)
     else return false;
     return true;
   }
