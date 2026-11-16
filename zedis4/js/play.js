@@ -343,6 +343,7 @@ window.Play = (function () {
   }
 
   // onEnd: END! 가 나온 뒤 여운이 지나면 불린다. js/flow.js가 연결한다.
-  const api = { enter, leave, advance, scenes: SCENES, goScene: (i) => enterScene(i, 500), onEnd: null };
+  // actors: 다른 화면(장면 카드)에서 같은 배우를 줄여 쓰도록 내준다.
+  const api = { enter, leave, advance, scenes: SCENES, goScene: (i) => enterScene(i, 500), onEnd: null, actors: { boss: BOSS, junior: JUNIOR } };
   return api;
 })();
