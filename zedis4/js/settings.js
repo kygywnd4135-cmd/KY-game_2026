@@ -53,7 +53,6 @@ window.Settings = (function () {
           read: () => (Theme.get() === "night" ? 1 : 0),
           apply: (i) => {
             Theme.set(i === 1 ? "night" : "day");
-            say(i === 1 ? "야간 모드로 바꿨어요" : "일반 모드로 바꿨어요");
           },
         },
       ],
@@ -336,7 +335,6 @@ window.Settings = (function () {
               replay(other.querySelector(".set__value"), "is-changed");
             }
           });
-          say(`드라이버를 ${r.next}(으)로 업데이트했어요`);
         }, 900);
       }, 140);
     }, 900);
