@@ -7,9 +7,11 @@
 
 .screen--scenario {
   background: #1a1a1a;
-  --start: 0.35s; /* 당기기 시작 */
-  --pull: 2s; /* 당겨서 다 펼치기까지 */
-  --pop: 2.5s; /* 배우가 튀어나오는 시점 */
+  --drop: 0.15s; /* 메모장이 떨어지기 시작 */
+  --land: 0.6s; /* 쿵! 닿는 시점 */
+  --pop: 0.95s; /* 파랑이 뿅 */
+  --pop2: 1.2s; /* 민트 뿅 */
+  --say: 1.45s; /* 말풍선 */
 }
 
 .scenario svg {
@@ -56,666 +58,371 @@
   filter: blur(5px);
 }
 
-/* ── 펼쳐지는 종이 ──
-   오른쪽을 가려 두고(clip) 당기는 만큼 걷어 낸다.
-   unroll 과 pull 은 같은 박자(%)로 움직여서 종이 끝과 민트의 손이 붙어 다닌다. */
-.sheet,
-.sheet-shadow {
+/* ── 대화2(변경): 메모장이 위에서 툭! 떨어지고 캐릭터들이 뿅! ──
+   피그마 '대화2 변경'. 순서는 js/scenario.js가 is-open 을 붙이면 CSS가 맡는다. */
+
+.sc-back,
+.sc-blue,
+.sc-memo,
+.sc-mint,
+.cue {
   position: absolute;
   inset: 0;
-  clip-path: inset(-100px 1640px -100px 0);
 }
 
-.scenario.is-open .sheet,
-.scenario.is-open .sheet-shadow {
-  animation: unroll var(--pull) var(--start) both;
+/* 뒤에 깔린 판: 메모보다 살짝 먼저 비스듬히 떨어진다 */
+.sc-back {
+  transform-origin: 914px 812px;
 }
 
-@keyframes unroll {
+.scenario.is-open .sc-back {
+  animation: sc-back-drop 0.6s calc(var(--drop) - 0.05s) cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+
+@keyframes sc-back-drop {
   0% {
-    clip-path: inset(-100px 1640px -100px 0);
-    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+    opacity: 0;
+    transform: translateY(-1150px) rotate(-6deg);
   }
-  13% {
-    clip-path: inset(-100px 1501px -100px 0);
-    animation-timing-function: ease-in-out;
+  20% {
+    opacity: 1;
   }
-  22% {
-    clip-path: inset(-100px 1543px -100px 0);
-    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  80% {
+    transform: translateY(0) rotate(0);
   }
-  37% {
-    clip-path: inset(-100px 1306px -100px 0);
-    animation-timing-function: ease-in-out;
+  90% {
+    transform: translateY(-14px) rotate(0.6deg);
   }
-  48% {
-    clip-path: inset(-100px 1362px -100px 0);
-    animation-timing-function: cubic-bezier(0.15, 0.6, 0.3, 1);
-  }
-  65% {
-    clip-path: inset(-100px 1112px -100px 0);
-  }
-  68% {
-    clip-path: inset(-100px 1140px -100px 0);
-  }
-  71% {
-    clip-path: inset(-100px 1119px -100px 0);
-    animation-timing-function: ease-in-out;
-  }
-  75% {
-    clip-path: inset(-100px 1147px -100px 0);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
-  }
-  92%,
   100% {
-    clip-path: inset(-100px 250px -100px 0);
-  }
-}
-
-/* 다 펼쳐진 순간 종이가 출렁 */
-.sheet__inner {
-  position: absolute;
-  inset: 0;
-  transform-origin: 400px 650px;
-}
-
-.scenario.is-open .sheet__inner {
-  animation: sheet-flap 0.7s calc(var(--start) + var(--pull) * 0.9) both;
-}
-
-@keyframes sheet-flap {
-  0% {
     transform: none;
   }
-  18% {
-    transform: scale(1.012, 1.05) skewY(-0.6deg);
+}
+
+/* 메모장: 떨어져서 쿵 → 납작 → 통통 */
+.sc-memo {
+  filter: drop-shadow(0 0 30px rgba(26, 26, 26, 0.4));
+  transform-origin: 968px 965px;
+}
+
+.scenario.is-open .sc-memo {
+  animation: sc-memo-drop 0.95s var(--drop) both;
+}
+
+@keyframes sc-memo-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-1200px) rotate(-7deg);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35);
   }
-  40% {
-    transform: scale(0.995, 0.97) skewY(0.5deg);
+  10% {
+    opacity: 1;
   }
-  62% {
-    transform: scale(1.004, 1.02) skewY(-0.25deg);
+  47% {
+    transform: translateY(0) rotate(0) scale(1, 1);
+    animation-timing-function: ease-out;
+  }
+  56% {
+    transform: translateY(6px) scale(1.035, 0.93);
+    animation-timing-function: ease-out;
+  }
+  70% {
+    transform: translateY(-26px) scale(0.985, 1.025) rotate(-0.6deg);
+    animation-timing-function: ease-in;
   }
   82% {
-    transform: scale(1, 0.993);
+    transform: translateY(0) scale(1.012, 0.985);
+  }
+  92% {
+    transform: translateY(-5px) scale(1, 1.004);
   }
   100% {
     transform: none;
   }
 }
 
-.sheet__paper {
+.sc-memo svg {
   position: absolute;
-  left: 347.15px;
-  top: 373.4px;
-  width: 1274.15px;
-  height: 555.9px;
-  border-radius: 17px;
-  background: #fff;
+  left: 0;
+  top: 0;
 }
 
-/* 두루마리 옆에 드리운 그늘 */
-.sheet__shade {
+.sc-memo p {
   position: absolute;
-  left: 295.3px;
-  top: 373.4px;
-  width: 116.45px;
-  height: 555.9px;
-  background: #d0d0d0;
-  filter: blur(4.25px);
-}
-
-.sheet__title {
-  position: absolute;
-  left: 693.8px;
-  top: 421.85px;
   margin: 0;
-  transform: translateX(-50%);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sc-memo__title {
+  left: 332px;
+  top: 313px;
+  width: 440px;
   color: #787878;
   font-size: 48.45px;
-  font-weight: 800;
   line-height: 74.8px;
-  white-space: nowrap;
-}
-
-.sheet__body {
-  position: absolute;
-  left: 1004.8px;
-  top: 583.35px;
-  margin: 0;
-  transform: translateX(-50%);
-  color: #333;
-  font-size: 46.75px;
-  font-weight: 800;
   text-align: center;
-  white-space: nowrap;
+  /* 피그마 회전 -1.7(시계 방향) = CSS +1.7deg */
+  transform: rotate(1.7deg);
+  transform-origin: 0 0;
 }
 
-.sheet__body span {
+.sc-memo__body {
+  left: 377px;
+  top: 543px;
+  width: 1182px;
+  color: #333;
+  font-size: 52px;
+  text-align: center;
+}
+
+.sc-memo__body span {
   display: block;
+}
+
+.sc-memo__body span:nth-child(1) {
+  line-height: 74.8px;
+}
+
+.sc-memo__body span:nth-child(2),
+.sc-memo__body span:nth-child(4) {
   line-height: 68px;
 }
 
-/* 피그마의 줄 간격(74.8 / 68 / 85 / 68)을 글자 기준선에 맞춰 옮긴 값 */
-.sheet__body span:nth-child(1) {
-  margin-top: 3.4px;
+.sc-memo__body span:nth-child(3) {
+  line-height: 85px;
 }
 
-.sheet__body span:nth-child(3) {
-  margin-top: 17px;
-}
-
-/* ── 두루마리(말린 부분) ── */
-.roll {
+/* 쿵 하는 순간 바닥 먼지가 퐁 */
+.sc-dust i {
   position: absolute;
-  inset: 0;
-  transform-origin: 329px 960px;
-}
-
-/* 당길 때마다 끌려가듯 기울고, 풀리는 동안 드르르륵 떨린다 */
-.scenario.is-open .roll {
-  animation: roll-yank var(--pull) var(--start) both, roll-rattle 0.06s var(--start) 33 alternate;
-}
-
-@keyframes roll-yank {
-  0%,
-  22%,
-  48%,
-  100% {
-    transform: none;
-  }
-  13% {
-    transform: rotate(1.6deg) translateX(5px);
-  }
-  37% {
-    transform: rotate(2.4deg) translateX(8px);
-  }
-  65%,
-  71% {
-    transform: rotate(3.4deg) translateX(12px);
-  }
-  75% {
-    transform: rotate(2deg) translateX(6px);
-  }
-  /* 확 풀리면서 반대로 휘청 */
-  86% {
-    transform: rotate(5deg) translateX(16px);
-  }
-  93% {
-    transform: rotate(-3deg) translateX(-8px);
-  }
-  97% {
-    transform: rotate(1.2deg) translateX(3px);
-  }
-}
-
-@keyframes roll-rattle {
-  from {
-    translate: 0 -2.5px;
-  }
-  to {
-    translate: 0 2.5px;
-  }
-}
-
-/* ── 민트: 두루마리 끝을 잡고 끄으응 ── */
-.puller,
-.puller__idle {
-  position: absolute;
-  inset: 0;
-}
-
-.puller {
-  transform: translateX(-1215px);
-}
-
-.scenario.is-open .puller {
-  animation: pull var(--pull) var(--start) both;
-}
-
-@keyframes pull {
-  0% {
-    transform: translateX(-1215px);
-    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
-  }
-  13% {
-    transform: translateX(-1094px);
-    animation-timing-function: ease-in-out;
-  }
-  22% {
-    transform: translateX(-1130px);
-    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
-  }
-  37% {
-    transform: translateX(-923px);
-    animation-timing-function: ease-in-out;
-  }
-  48% {
-    transform: translateX(-972px);
-    animation-timing-function: cubic-bezier(0.15, 0.6, 0.3, 1);
-  }
-  65% {
-    transform: translateX(-753px);
-  }
-  68% {
-    transform: translateX(-778px);
-  }
-  71% {
-    transform: translateX(-759px);
-    animation-timing-function: ease-in-out;
-  }
-  75% {
-    transform: translateX(-784px);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.1, 1);
-  }
-  92% {
-    transform: translateX(46px);
-    animation-timing-function: ease-in-out;
-  }
-  96% {
-    transform: translateX(-10px);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-/* 몸짓: 뒤로 젖혔다가 온몸으로 당기고, 버티며 부들부들, 풀리면 휘청 */
-.puller__idle {
-  transform-origin: 1629px 1030px;
-}
-
-.scenario.is-open .puller__idle {
-  animation: puller-heave var(--pull) var(--start) both, puller-pant 0.56s calc(var(--start) + var(--pull)) ease-in-out infinite;
-}
-
-@keyframes puller-heave {
-  0% {
-    transform: none;
-  }
-  6% {
-    transform: rotate(-12deg) scale(0.94, 1.06);
-  }
-  13% {
-    transform: rotate(24deg) scale(1.14, 0.88);
-  }
-  22% {
-    transform: rotate(3deg) scale(0.97, 1.03);
-  }
-  29% {
-    transform: rotate(-14deg) scale(0.93, 1.07);
-  }
-  37% {
-    transform: rotate(28deg) scale(1.17, 0.86);
-  }
-  48% {
-    transform: rotate(4deg) scale(0.97, 1.03);
-  }
-  56% {
-    transform: rotate(-16deg) scale(0.92, 1.08);
-  }
-  65% {
-    transform: rotate(32deg) scale(1.2, 0.84);
-  }
-  /* 짧게 부들 */
-  67% {
-    transform: rotate(29deg) translateX(-5px) scale(1.18, 0.85);
-  }
-  69% {
-    transform: rotate(34deg) translateX(5px) scale(1.21, 0.83);
-  }
-  71% {
-    transform: rotate(30deg) translateX(-5px) scale(1.19, 0.85);
-  }
-  /* 마지막으로 한껏 젖혔다가 */
-  75% {
-    transform: rotate(-20deg) scale(0.88, 1.13);
-  }
-  /* 풀려 버린 종이에 끌려 날아가듯 */
-  85% {
-    transform: rotate(40deg) translateY(-34px) scale(1.22, 0.84);
-  }
-  /* 끼익— */
-  92% {
-    transform: rotate(-26deg) scale(0.88, 1.14);
-  }
-  96% {
-    transform: rotate(10deg) scale(1.08, 0.93);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-/* 다 펼치고 나서 헉헉 */
-@keyframes puller-pant {
-  0%,
-  100% {
-    transform: scale(1.05, 0.95);
-  }
-  50% {
-    transform: translateY(-5px) scale(0.97, 1.04);
-  }
-}
-
-/* 눈: 힘줄 때 질끈 감고, 풀릴 때 번쩍 */
-.puller__eye,
-.puller__pupil,
-.puller__hand,
-.puller__drop {
-  transform-box: fill-box;
-}
-
-.puller__eye {
-  transform-origin: 50% 50%;
-}
-
-.scenario.is-open .puller__eye {
-  animation: puller-squint var(--pull) var(--start) both;
-}
-
-@keyframes puller-squint {
-  0%,
-  22%,
-  48%,
-  97%,
-  100% {
-    transform: none;
-  }
-  10%,
-  16%,
-  34%,
-  40% {
-    transform: scaleY(0.18);
-  }
-  60%,
-  73% {
-    transform: scaleY(0.12);
-  }
-  80%,
-  92% {
-    transform: scale(1.3);
-  }
-}
-
-.puller__pupil {
-  animation: puller-peek 4.4s ease-in-out infinite;
-}
-
-@keyframes puller-peek {
-  0%,
-  35%,
-  100% {
-    transform: translate(0, 0);
-  }
-  45%,
-  70% {
-    transform: translate(-9px, -5px);
-  }
-}
-
-.puller__hand {
-  transform-origin: 50% 50%;
-}
-
-/* 땀방울: 힘쓰는 동안만 튄다 */
-.puller__sweat {
+  left: var(--x);
+  top: var(--y);
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: #8a8a8a;
   opacity: 0;
 }
 
-.scenario.is-open .puller__sweat {
-  animation: sweat-window var(--pull) var(--start) both;
+.scenario.is-open .sc-dust i {
+  animation: sc-dust 0.6s calc(var(--drop) + 0.42s) ease-out both;
 }
 
-@keyframes sweat-window {
-  0%,
-  8%,
-  82%,
+@keyframes sc-dust {
+  0% {
+    opacity: 0.7;
+    transform: translate(0, 0) scale(0.3);
+  }
   100% {
     opacity: 0;
-  }
-  12%,
-  75% {
-    opacity: 1;
+    transform: translate(var(--dx), -40px) scale(1.4);
   }
 }
 
-.puller__drop {
-  transform-origin: 50% 100%;
-  animation: sweat-fly 0.42s ease-out infinite;
+/* 화면도 쿵! 하고 살짝 울린다 */
+.scenario.is-open .scenario__floor,
+.scenario.is-open .scenario__light {
+  animation: sc-thud 0.35s calc(var(--drop) + 0.44s) both;
 }
 
-.puller__drop:nth-child(2) {
-  animation-delay: -0.14s;
+@keyframes sc-thud {
+  30% {
+    translate: 0 9px;
+  }
+  60% {
+    translate: 0 -4px;
+  }
+  100% {
+    translate: 0 0;
+  }
 }
 
-.puller__drop:nth-child(3) {
-  animation-delay: -0.28s;
+/* ── 파랑: 메모 뒤에서 뾰용! ── */
+.sc-blue {
+  transform-origin: 1337px 320px;
 }
 
-@keyframes sweat-fly {
+.scenario.is-open .sc-blue {
+  animation: sc-blue-pop 0.75s var(--pop) var(--spring) both;
+}
+
+@keyframes sc-blue-pop {
   0% {
     opacity: 0;
-    transform: translate(0, 0) scale(0.3);
+    transform: translateY(190px) scale(0.7, 1.15);
   }
   25% {
     opacity: 1;
-    transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(1);
+  }
+  55% {
+    transform: translateY(-34px) scale(0.92, 1.1);
+  }
+  75% {
+    transform: translateY(6px) scale(1.07, 0.93);
   }
   100% {
-    opacity: 0;
-    transform: translate(var(--dx), var(--dy)) scale(0.6);
+    transform: none;
   }
 }
 
-/* ── 배우: 종이 뒤에서 뾰요용~ ── */
-.peek,
-.peek__idle {
+.sc-blue__bob {
   position: absolute;
   inset: 0;
+  transform-origin: 1337px 315px;
+  animation: actor-bob 3s 2s ease-in-out infinite;
 }
 
-/* 몸통(종이 뒤)과 손(종이 앞)이 같은 움직임을 쓴다 */
-.peek {
-  opacity: 0;
-  transform: translateY(230px);
-  transform-origin: 1340px 400px;
+/* 손 흔들기 */
+.sc-blue__hand {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;
 }
 
-/* forwards: 시작 전에는 숨어 있다가, 차례가 되면 용수철처럼 튀어 오른다 */
-.scenario.is-open .peek {
-  animation: peek-boing 1.2s var(--pop) forwards;
+.scenario.is-open .sc-blue__hand {
+  animation: sc-wave 1.6s calc(var(--pop) + 0.4s) ease-in-out 3 both;
 }
 
-@keyframes peek-boing {
-  0% {
-    opacity: 1;
-    transform: translateY(230px) scale(1.1, 0.8);
-    animation-timing-function: cubic-bezier(0.15, 0.8, 0.3, 1);
-  }
-  /* 뾰— 길쭉하게 솟구침 */
-  20% {
-    opacity: 1;
-    transform: translateY(-125px) rotate(-7deg) scale(0.82, 1.32);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-  }
-  /* 요— 납작하게 주저앉음 */
-  36% {
-    opacity: 1;
-    transform: translateY(38px) rotate(6deg) scale(1.2, 0.8);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-  }
-  /* 용— 점점 잦아드는 출렁임 */
-  50% {
-    opacity: 1;
-    transform: translateY(-58px) rotate(-4deg) scale(0.91, 1.16);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-  }
-  63% {
-    opacity: 1;
-    transform: translateY(20px) rotate(3deg) scale(1.09, 0.91);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-  }
-  75% {
-    opacity: 1;
-    transform: translateY(-22px) rotate(-1.5deg) scale(0.96, 1.07);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-  }
-  86% {
-    opacity: 1;
-    transform: translateY(8px) rotate(0.8deg) scale(1.03, 0.97);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-  }
-  94% {
-    opacity: 1;
-    transform: translateY(-4px) scale(0.99, 1.01);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* 손은 몸이 다 올라온 뒤 종이 위에 척 */
-.scenario.is-open .peek--hand {
-  animation: hand-grab 0.4s calc(var(--pop) + 0.85s) var(--spring) forwards;
-}
-
-@keyframes hand-grab {
-  from {
-    opacity: 1;
-    transform: translateY(-40px) scale(0.4);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* 수염도 따라 펄럭 */
-.scenario.is-open .peek .actor__stache--l {
-  animation: stache-flop-l 1.2s var(--pop) both, stache-l 2.6s calc(var(--pop) + 1.2s) ease-in-out infinite;
-}
-
-.scenario.is-open .peek .actor__stache--r {
-  animation: stache-flop-r 1.2s var(--pop) both, stache-r 2.6s calc(var(--pop) + 1.2s) ease-in-out infinite;
-}
-
-@keyframes stache-flop-l {
+@keyframes sc-wave {
   0%,
   100% {
-    transform: none;
+    transform: rotate(0);
   }
-  20% {
-    transform: rotate(-24deg);
-  }
-  36% {
-    transform: rotate(22deg);
-  }
-  50% {
-    transform: rotate(-15deg);
-  }
-  63% {
-    transform: rotate(11deg);
-  }
-  75% {
-    transform: rotate(-6deg);
-  }
-  86% {
-    transform: rotate(3deg);
-  }
-}
-
-@keyframes stache-flop-r {
-  0%,
-  100% {
-    transform: none;
-  }
-  20% {
-    transform: rotate(24deg);
-  }
-  36% {
+  25% {
     transform: rotate(-22deg);
   }
-  50% {
-    transform: rotate(15deg);
-  }
-  63% {
-    transform: rotate(-11deg);
-  }
   75% {
-    transform: rotate(6deg);
-  }
-  86% {
-    transform: rotate(-3deg);
+    transform: rotate(12deg);
   }
 }
 
-.peek__idle {
-  transform-origin: 1340px 400px;
-}
-
-.scenario.is-open .peek__idle {
-  animation: peek-bob 2.6s calc(var(--pop) + 1.2s) ease-in-out infinite;
-}
-
-.peek__wave {
+/* 수염이 뿅 할 때 같이 출렁 */
+.sc-stache {
   transform-box: fill-box;
-  transform-origin: 90% 90%;
-  animation: peek-wave 0.5s ease-in-out infinite alternate;
 }
 
-.peek .actor__eye {
-  animation: blink 4.2s infinite;
+.sc-stache--l {
+  transform-origin: 100% 20%;
 }
 
-@keyframes peek-bob {
-  0%,
+.sc-stache--r {
+  transform-origin: 0 20%;
+}
+
+.scenario.is-open .sc-stache--l {
+  animation: sc-stache-l 0.8s calc(var(--pop) + 0.3s) ease-out both;
+}
+
+.scenario.is-open .sc-stache--r {
+  animation: sc-stache-r 0.8s calc(var(--pop) + 0.3s) ease-out both;
+}
+
+@keyframes sc-stache-l {
+  30% {
+    transform: rotate(14deg);
+  }
+  60% {
+    transform: rotate(-6deg);
+  }
   100% {
     transform: none;
   }
-  50% {
-    transform: translateY(-7px) rotate(1.5deg);
+}
+
+@keyframes sc-stache-r {
+  30% {
+    transform: rotate(-14deg);
+  }
+  60% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: none;
   }
 }
 
-@keyframes peek-wave {
-  from {
-    transform: rotate(-10deg);
+.sc-eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: blink 4.2s 2.4s infinite;
+}
+
+/* ── 민트: 오른쪽 아래에서 뿅! ── */
+.sc-mint {
+  transform-origin: 1646px 1030px;
+}
+
+.scenario.is-open .sc-mint {
+  animation: sc-mint-pop 0.7s var(--pop2) var(--spring) both;
+}
+
+@keyframes sc-mint-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.1) rotate(-25deg);
   }
-  to {
-    transform: rotate(14deg);
+  30% {
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.18, 0.86) rotate(4deg);
+  }
+  80% {
+    transform: scale(0.94, 1.07);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.sc-mint__bob {
+  position: absolute;
+  inset: 0;
+  transform-origin: 1646px 1030px;
+  animation: actor-bob 2.6s 2.2s ease-in-out infinite;
+}
+
+.sc-mint__hand {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.scenario.is-open .sc-mint__hand {
+  animation: sc-hand 0.5s calc(var(--pop2) + 0.35s) ease-out 2 both;
+}
+
+@keyframes sc-hand {
+  50% {
+    transform: translate(-6px, -14px);
   }
 }
 
 /* ── 말풍선 ── */
 .cue {
-  position: absolute;
-  inset: 0;
-  transform-origin: 1130px 270px;
-  transform: scale(0);
+  opacity: 0;
+  transform-origin: 1100px 230px;
 }
 
 .scenario.is-open .cue {
-  animation: bubble-enter 0.6s calc(var(--pop) + 0.9s) both;
+  animation: bubble-enter 0.55s var(--say) var(--spring) both;
 }
 
 .cue__text {
   position: absolute;
-  left: 886.5px;
-  top: 159px;
+  left: 693px;
+  top: 125px;
+  width: 363px;
   margin: 0;
-  transform: translateX(-50%);
-  color: var(--c-blue);
+  color: #1871ed;
   font-size: 42px;
   font-weight: 800;
   line-height: 52px;
   text-align: center;
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scenario *,
-  .scenario *::before {
+  .scenario * {
     animation-duration: 0.01s !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;

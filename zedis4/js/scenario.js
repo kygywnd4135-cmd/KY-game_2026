@@ -1,8 +1,8 @@
-// 대화2: 두루마리가 촤라라락 펼쳐지며 시나리오가 나오는 장면.
-// 펼쳐지는 연출은 css/scenario.css가 맡고, 여기서는 순서와 말풍선 글자 출력을 맡는다.
+// 대화2(피그마 '대화2 변경'): 메모장이 위에서 툭! 떨어지고 캐릭터들이 뿅! 나온다.
+// 떨어지고 튀어나오는 연출은 css/scenario.css가 맡고, 여기서는 순서와 말풍선 글자 출력을 맡는다.
 window.Scenario = (function () {
   const LINE = "막을 올리러 가보자고!";
-  const SPEAK_AT = 3700; // 다 펼쳐지고 배우가 튀어나온 뒤 말하기 시작(ms)
+  const SPEAK_AT = 1750; // 메모가 떨어지고 캐릭터들이 나온 뒤 말하기 시작(ms)
 
   const root = document.querySelector('[data-screen="scenario"]');
   const text = root.querySelector("[data-scenario-text]");
@@ -18,7 +18,7 @@ window.Scenario = (function () {
     });
   }
 
-  // 펼쳐지는 연출을 건너뛰고 다 펼쳐진 상태로 만든다
+  // 떨어지는 연출을 건너뛰고 다 나온 상태로 만든다
   function skipOpening() {
     clearTimeout(timer);
     root.getAnimations({ subtree: true }).forEach((a) => {
