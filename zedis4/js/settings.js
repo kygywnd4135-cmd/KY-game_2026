@@ -348,7 +348,6 @@ window.Settings = (function () {
   }
 
   function save() {
-    say("설정을 저장했어요");
     replay(root.querySelector(".set__hint--ok"), "is-saved");
   }
 
@@ -359,7 +358,6 @@ window.Settings = (function () {
       e.stopPropagation();
       if (tabEl.classList.contains("is-locked")) {
         replay(tabEl, "is-refusing");
-        say("아직 준비 중인 메뉴예요");
       } else {
         openTab(Number(tabEl.dataset.tab));
         focus = 0;
