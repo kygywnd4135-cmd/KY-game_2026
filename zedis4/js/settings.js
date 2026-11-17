@@ -9,7 +9,7 @@
 //   테마 > 화면 모드: 일반 모드 ↔ 야간 모드(바로 적용, js/theme.js)
 // 기본 설정의 항목과 값은 임시로 채워 둔 것이다(SECTIONS만 고치면 된다).
 window.Settings = (function () {
-  // type: select(목록) | slider(막대 0~100) | toggle(켜짐/꺼짐) | test(다시 검사) | info(보기만)
+  // type: select(목록) | slider(막대 0~100) | toggle(켜짐/꺼짐) | test(다시 검사) | info(보기만) | update(드라이버 업데이트)
   const SECTIONS = [
     {
       title: "오디오 출력",
@@ -66,6 +66,14 @@ window.Settings = (function () {
       rows: [
         { label: "시리얼 넘버", type: "info", value: "SN-7K4P-92MX-1Q8R" },
         { label: "등록일", type: "info", value: "2026.10.17" },
+      ],
+    },
+    {
+      title: "소프트웨어",
+      rows: [
+        { label: "현재 버전", type: "info", value: "v1.0.3", id: "version" },
+        // Enter: 확인 → 내려받기(%) → 설치 → 현재 버전이 올라간다. 다시 누르면 '최신 버전이에요'
+        { label: "드라이버 업데이트", type: "update", value: "업데이트 확인", next: "v1.0.4" },
       ],
     },
   ];
@@ -262,6 +270,10 @@ window.Settings = (function () {
       r.value = next;
     } else if (r.type === "toggle") {
       r.value = !r.value;
+    } else if (r.type === "update") {
+      if (!viaEnter || el.classList.contains("is-testing")) return;
+      runUpdate(el, r);
+      return;
     } else if (r.type === "test") {
       if (!viaEnter || el.classList.contains("is-testing")) return;
       // 잠깐 검사하는 척하고 결과를 보여 준다
@@ -278,6 +290,56 @@ window.Settings = (function () {
     }
     paint(el);
     replay(el.querySelector(".set__value"), "is-changed");
+  }
+
+  // 드라이버 업데이트: 확인 중 → 내려받는 중 % → 설치 중 → 완료(현재 버전 갱신)
+  function runUpdate(el, r) {
+    const valueEl = el.querySelector(".set__value");
+    const show = (t) => {
+      valueEl.textContent = t;
+      replay(valueEl, "is-changed");
+    };
+    if (r.done) {
+      el.classList.add("is-testing");
+      show("확인 중...");
+      setTimeout(() => {
+        el.classList.remove("is-testing");
+        show("최신 버전이에요");
+      }, 800);
+      return;
+    }
+    el.classList.add("is-testing");
+    show("확인 중...");
+    let pct = 0;
+    setTimeout(() => {
+      el.classList.remove("is-testing");
+      show(`${r.next} 내려받는 중 0%`);
+      const tick = setInterval(() => {
+        pct = Math.min(100, pct + 7 + Math.round(Math.random() * 9));
+        valueEl.textContent = `${r.next} 내려받는 중 ${pct}%`;
+        if (pct < 100) return;
+        clearInterval(tick);
+        show("설치 중...");
+        setTimeout(() => {
+          r.done = true;
+          r.value = "최신 버전이에요";
+          show(r.value);
+          // 현재 버전 줄도 새 버전으로
+          TAB_ROWS.forEach((rows) =>
+            rows && rows.forEach((x) => {
+              if (x.id === "version") x.value = r.next;
+            })
+          );
+          rowEls.forEach((other) => {
+            if (other.rowData.id === "version") {
+              paint(other);
+              replay(other.querySelector(".set__value"), "is-changed");
+            }
+          });
+          say(`드라이버를 ${r.next}(으)로 업데이트했어요`);
+        }, 900);
+      }, 140);
+    }, 900);
   }
 
   function say(text) {
