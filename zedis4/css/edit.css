@@ -868,3 +868,64 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+/* 예전 대화2(두루마리) 파일에 있던 것을 이 화면이 같이 쓰고 있어서 옮겨 둠 */
+@keyframes peek-boing {
+  0% {
+    opacity: 1;
+    transform: translateY(230px) scale(1.1, 0.8);
+    animation-timing-function: cubic-bezier(0.15, 0.8, 0.3, 1);
+  }
+  /* 뾰— 길쭉하게 솟구침 */
+  20% {
+    opacity: 1;
+    transform: translateY(-125px) rotate(-7deg) scale(0.82, 1.32);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  /* 요— 납작하게 주저앉음 */
+  36% {
+    opacity: 1;
+    transform: translateY(38px) rotate(6deg) scale(1.2, 0.8);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  /* 용— 점점 잦아드는 출렁임 */
+  50% {
+    opacity: 1;
+    transform: translateY(-58px) rotate(-4deg) scale(0.91, 1.16);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  63% {
+    opacity: 1;
+    transform: translateY(20px) rotate(3deg) scale(1.09, 0.91);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-22px) rotate(-1.5deg) scale(0.96, 1.07);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  86% {
+    opacity: 1;
+    transform: translateY(8px) rotate(0.8deg) scale(1.03, 0.97);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  94% {
+    opacity: 1;
+    transform: translateY(-4px) scale(0.99, 1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hand-grab {
+  from {
+    opacity: 1;
+    transform: translateY(-40px) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
