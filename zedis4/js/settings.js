@@ -4,7 +4,7 @@
 //   Enter      값 바꾸기(목록은 다음 값으로, 켜고 끄기, '접속 테스트'는 다시 검사)
 //   ＋ 버튼 / + 키   저장
 //   − 버튼 / − 키 / Esc   로비로 돌아가기
-// 탭은 '기본 설정'과 '테마'가 열려 있고, 나머지(데이터 관리·유저)는 아직 고를 수 없다.
+// 탭은 '기본 설정' · '데이터 관리' · '테마'가 열려 있고, '유저'는 아직 고를 수 없다.
 //   맨 위 줄에서 ↑ 를 누르면 탭 줄로 올라가고, 거기서 ← / → 로 탭을 바꾼다(↓ 로 다시 목록).
 //   테마 > 화면 모드: 일반 모드 ↔ 야간 모드(바로 적용, js/theme.js)
 // 기본 설정의 항목과 값은 임시로 채워 둔 것이다(SECTIONS만 고치면 된다).
@@ -59,9 +59,19 @@ window.Settings = (function () {
       ],
     },
   ];
+  // 데이터 관리 탭(피그마 '로비 - 기타 설정2'): 보기만 하는 제품 정보
+  const DATA_SECTIONS = [
+    {
+      title: "제품 정보",
+      rows: [
+        { label: "시리얼 넘버", type: "info", value: "SN-7K4P-92MX-1Q8R" },
+        { label: "등록일", type: "info", value: "2026.10.17" },
+      ],
+    },
+  ];
   const TABS = [
     { label: "기본 설정", sections: SECTIONS },
-    { label: "데이터 관리" },
+    { label: "데이터 관리", sections: DATA_SECTIONS },
     { label: "유저" },
     { label: "테마", sections: THEME_SECTIONS },
   ];
@@ -215,6 +225,7 @@ window.Settings = (function () {
     top = Math.max(0, Math.min(max, top));
     list.dataset.scroll = top;
     list.style.transform = `translateY(${-top}px)`;
+    thumb.style.visibility = max > 0 ? "" : "hidden"; // 내용이 짧으면 스크롤 막대는 숨긴다
     const track = 520; // 막대가 움직일 수 있는 길이
     thumb.style.transform = `translateY(${max ? (top / max) * track : 0}px)`;
   }

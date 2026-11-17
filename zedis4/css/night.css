@@ -289,3 +289,7 @@
 .is-night .rate__share-label {
   color: var(--n-text);
 }
+
+.is-night .set__row:last-child:not(.is-focus) {
+  border-bottom-color: var(--n-line);
+}

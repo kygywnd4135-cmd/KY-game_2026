@@ -358,3 +358,8 @@
     transition-duration: 0.01s !important;
   }
 }
+
+/* 마지막 줄 아래에도 구분선(피그마 '기타 설정2') */
+.set__row:last-child:not(.is-focus) {
+  border-bottom: 1px solid #b4b4b4;
+}
