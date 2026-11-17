@@ -11,7 +11,7 @@ window.Alert = (function () {
     lilac: ["#d4a2ff", "#bc7ffe", "#c480ff", "#b462fb"],
     peach: ["#ffb578", "#ff9d4c", "#ff9c4a", "#ff7c10"],
     green: ["#a6eda0", "#6fdc6a", "#6fdc6a", "#35c94f"],
-    blue: ["#a5c8ff", "#77a8f7", "#7fb0f8", "#1871ed"],
+    blue: ["#81b2ff", "#897ffe", "#70a2ff", "#4189ff"], // 피그마 알림창3
     violet: ["#c9adff", "#a985ff", "#b08cff", "#9446f0"],
     pink: ["#ff9cc3", "#ff6fa6", "#ff7fb0", "#ff2f82"],
     mint: ["#93ece2", "#5fd8cb", "#6adfd2", "#14c3b0"],
@@ -19,7 +19,8 @@ window.Alert = (function () {
 
   let cur = null; // { dim, box, buttons, focus, onChoose }
 
-  function open(container, { theme = "lilac", text, buttons, onChoose }) {
+  // dots: 구분선 위 점 위치(생략하면 버튼 가운데마다). 피그마 알림창3은 버튼 1개에 점 2개.
+  function open(container, { theme = "lilac", text, buttons, onChoose, dots }) {
     close();
     let dim = container.querySelector(":scope > .al__dim");
     if (!dim) {
@@ -36,7 +37,7 @@ window.Alert = (function () {
       `<div class="al__head">알림</div>` +
       `<p class="al__text">${text}</p>` +
       // 구분선 위의 점: 버튼 가운데마다 하나씩
-      `<div class="al__line">${buttons.map((_, i) => `<i style="left:${n === 2 ? 221.5 + i * 386 : 414.5}px"></i>`).join("")}</div>` +
+      `<div class="al__line">${(dots || buttons.map((_, i) => (n === 2 ? 221.5 + i * 386 : 414.5))).map((x) => `<i style="left:${x}px"></i>`).join("")}</div>` +
       `<div class="al__btns">${buttons.map((b, i) => `<button type="button" class="al__btn is-${b.kind}" data-i="${i}">${b.label}</button>`).join("")}</div>`;
     cur = { dim, box, buttons, focus: 0, onChoose };
     box.querySelectorAll(".al__btn").forEach((btn) =>

@@ -186,14 +186,34 @@
     }
   }
 
+  // 별점 화면 → 로비. 별점을 저장했으면(연극을 끝까지 마친 것) 로비에서 알림창3을 띄운다.
+  function rateToLobby() {
+    const done = Rate.saved;
+    blackout(LOBBY, () => {
+      if (!done) return;
+      setTimeout(() => {
+        if (screenNow() !== "lobby") return;
+        Alert.open(screens.lobby, {
+          theme: "blue",
+          text: "오늘 하루도 고생했어!<br>시나리오의 데이터가 모두 정상적으로 저장되었어.",
+          buttons: [{ id: "ok", label: "확인", kind: "main" }],
+          dots: [221.5, 607.5],
+        });
+      }, 450);
+    });
+  }
+
   // 스르륵 암전 → 화면 교체 → 다시 밝아짐
-  function blackout(next) {
+  function blackout(next, after) {
     busy = true;
     blackoutEl.classList.add("is-on");
     setTimeout(() => {
       go(next);
       blackoutEl.classList.remove("is-on");
-      setTimeout(() => (busy = false), 350);
+      setTimeout(() => {
+        busy = false;
+        if (after) after();
+      }, 350);
     }, 850);
   }
 
@@ -351,7 +371,7 @@
     // 별점 화면에서 Alt: 로비로 돌아간다
     if (e.key === "Alt" && screenNow() === "rate") {
       e.preventDefault();
-      if (!busy && !e.repeat) blackout(LOBBY);
+      if (!busy && !e.repeat) rateToLobby();
       return;
     }
     // 대사를 고쳐 쓰는 중에는 모든 글쇠가 입력 칸으로 가야 한다
@@ -364,7 +384,7 @@
     if (e.key === " " && !e.repeat && (screenNow() === "edit" || screenNow() === "rate")) {
       e.preventDefault();
       if (screenNow() === "rate") {
-        if (!busy) blackout(LOBBY);
+        if (!busy) rateToLobby();
         return;
       }
       if (!busy && Edit.finish()) return;
@@ -379,6 +399,8 @@
     if (busy) return;
 
     if (screenNow() === "lobby") {
+      // 연극을 마치고 돌아왔을 때 뜨는 알림창3이 있으면 그것부터
+      if (Alert.handleKey(e)) return;
       // 로비: ←/→ 로 다이얼을 돌리고 Enter로 고른다. Esc는 대기화면으로.
       if (e.key === "Escape") go(0);
       else Lobby.handleKey(e);
@@ -416,7 +438,7 @@
     }
     if (screenNow() === "rate") {
       // 별점: ←/→ 로 반 칸씩, Enter로 저장. (Alt 는 위에서 처리)
-      if (e.key === "Escape") blackout(LOBBY);
+      if (e.key === "Escape") rateToLobby();
       else Rate.handleKey(e);
       return;
     }
