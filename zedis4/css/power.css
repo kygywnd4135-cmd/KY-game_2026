@@ -1,0 +1,719 @@
+/* ───────── 전원 1~3: 말풍선 + 캐릭터 ─────────
+   한 캐릭터가 data-step(1·2·3)에 따라 포즈를 바꾼다.
+   포즈 변화는 transition(스프링), 반복 모션은 안쪽 요소의 animation으로 분리했다. */
+
+/* ── 말풍선 ── */
+.bubble {
+  position: absolute;
+  left: 443px;
+  top: 173px;
+  width: 1049px;
+  height: 359px;
+  transition: transform 0.6s var(--spring);
+}
+
+/* 전원 1은 말풍선 위치가 살짝 다르다 */
+.power[data-step="1"] .bubble {
+  transform: translate(10.52px, -14px);
+}
+
+.bubble__pop {
+  position: absolute;
+  inset: 0;
+  transform-origin: 54% 100%;
+}
+
+.bubble__pop.is-popping {
+  animation: bubble-pop 0.55s both;
+}
+
+.bubble__pop.is-entering {
+  animation: bubble-enter 0.6s 0.12s both;
+}
+
+.bubble__shape {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+.bubble__text {
+  position: absolute;
+  margin: 0;
+  color: var(--c-blue);
+  font-size: 62.04px;
+  font-weight: 800;
+  line-height: 77px;
+}
+
+.power[data-step="1"] .bubble__text {
+  left: 95.92px;
+  top: 130.24px;
+}
+
+.power[data-step="2"] .bubble__text {
+  left: 76px;
+  top: 122px;
+}
+
+.power[data-step="3"] .bubble__text {
+  left: 512.5px;
+  top: 91px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+/* 다음으로 넘어갈 수 있음을 알리는 화살표 */
+.bubble__next {
+  position: absolute;
+  left: 974.38px;
+  top: 206.699px;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.1s, transform 0.1s;
+}
+
+.bubble.is-ready .bubble__next {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.15s, transform 0.4s var(--spring);
+  animation: next-nudge 0.9s 0.4s ease-in-out infinite;
+}
+
+@keyframes bubble-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.3, 0.2) rotate(-4deg);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.06, 1.1) rotate(1.2deg);
+  }
+  65% {
+    transform: scale(0.97, 0.95) rotate(-0.5deg);
+  }
+  82% {
+    transform: scale(1.015, 1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bubble-pop {
+  0% {
+    transform: none;
+  }
+  18% {
+    transform: scale(1.05, 0.86);
+  }
+  45% {
+    transform: scale(0.96, 1.08);
+  }
+  68% {
+    transform: scale(1.02, 0.97);
+  }
+  85% {
+    transform: scale(0.995, 1.01);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes next-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(9px);
+  }
+}
+
+/* ── 캐릭터 ── */
+.pc,
+.pc__bounce,
+.pc__idle {
+  position: absolute;
+  inset: 0;
+}
+
+/* 몸통 바닥 가운데를 축으로 찌그러지고 늘어난다 */
+.pc__bounce,
+.pc__idle {
+  transform-origin: 994px 930px;
+}
+
+.pc__body {
+  position: absolute;
+  left: 852px;
+  top: 645.04px;
+  width: 284px;
+  height: 283px;
+  border-radius: 50%;
+  background: var(--c-blue);
+}
+
+/* 그림자 */
+.pc__shadow {
+  position: absolute;
+  left: 810px;
+  top: 953.04px;
+  width: 384px;
+  height: 22px;
+  transition: transform 0.7s var(--spring);
+}
+
+.power[data-step="1"] .pc__shadow {
+  transform: translateX(-61px);
+}
+
+.pc__shadow-pulse {
+  position: absolute;
+  inset: 0;
+  transform-origin: 48% 50%;
+}
+
+.pc__shadow-light,
+.pc__shadow-dark {
+  position: absolute;
+  top: 0;
+  width: 309px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.pc__shadow-light {
+  left: 75px;
+  background: #474747;
+}
+
+.pc__shadow-dark {
+  left: 0;
+  background: #0d0d0d;
+}
+
+/* 눈 */
+.pc__eye {
+  position: absolute;
+  top: 741.04px;
+  width: 95px;
+  height: 94px;
+  clip-path: inset(-10% -10% -10% -10%);
+  transition: transform 0.55s var(--spring), clip-path 0.3s var(--spring-soft);
+}
+
+.pc__eye--l {
+  left: 897px;
+}
+
+.pc__eye--r {
+  left: 995px;
+}
+
+.pc__eye-blink {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+
+.pc__white,
+.pc__pupil {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform 0.45s var(--spring-soft);
+}
+
+.pc__white {
+  inset: 0;
+  background: #fff;
+}
+
+.pc__pupil {
+  top: 13px;
+  height: 66px;
+  background: var(--c-blue-deep);
+}
+
+.pc__eye--l .pc__pupil {
+  left: 13px;
+  width: 68px;
+}
+
+.pc__eye--r .pc__pupil {
+  left: 15px;
+  width: 67px;
+}
+
+/* 전원 3: 눈이 반달(∩) 모양으로 웃는다 — 아래 절반을 잘라 낸다 */
+.power[data-step="3"] .pc__eye {
+  clip-path: inset(-10% -10% 50% -10%);
+}
+
+.power[data-step="3"] .pc__eye--l {
+  transform: translate(-6.65px, 16.56px);
+}
+
+.power[data-step="3"] .pc__eye--r {
+  transform: translate(7.65px, 16.56px);
+}
+
+.power[data-step="3"] .pc__white {
+  transform: scale(0.966, 1.0085);
+}
+
+.power[data-step="3"] .pc__eye--l .pc__pupil {
+  transform: translate(0.5px, 1px) scale(0.903, 0.964);
+}
+
+.power[data-step="3"] .pc__eye--r .pc__pupil {
+  transform: translate(-1px, 1px) scale(0.916, 0.964);
+}
+
+/* 눈썹 (전원 1의 놀란 표정) */
+.pc__brow {
+  position: absolute;
+  left: 913px;
+  top: 704px;
+  opacity: 0;
+  transform: translateY(14px) scale(0.6);
+  transform-origin: 50% 100%;
+  transition: opacity 0.15s, transform 0.3s var(--back-in);
+}
+
+.power[data-step="1"] .pc__brow {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.15s 0.2s, transform 0.5s 0.2s var(--spring);
+}
+
+/* 팔다리: 바닥 가운데가 기준점인 0×0 상자를 포즈마다 옮기고 돌린다 */
+.pc__limb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transition: transform 0.7s var(--spring);
+}
+
+.pc__limb-idle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.pc__limb svg {
+  position: absolute;
+  left: -38px;
+  top: -33.5px;
+  overflow: visible;
+}
+
+.pc__limb--l {
+  transform: translate(947.46px, 965.275px) rotate(0deg);
+}
+
+.pc__limb--r {
+  transform: translate(1052px, 965.037px) rotate(0deg);
+}
+
+.power[data-step="1"] .pc__limb--l {
+  transform: translate(799.75px, 821.235px) rotate(56.7deg);
+}
+
+.power[data-step="2"] .pc__limb--r {
+  transform: translate(1141.485px, 907.06px) rotate(-19.42deg);
+}
+
+.power[data-step="3"] .pc__limb--r {
+  transform: translate(1062.385px, 962.61px) rotate(-2.47deg);
+}
+
+/* 느낌표 */
+.pc__bang {
+  position: absolute;
+  left: 1115.76px;
+  top: 597px;
+  width: 68.24px;
+  height: 96.03px;
+  transform-origin: 14% 96%;
+  transform: scale(0) rotate(-30deg);
+  transition: transform 0.2s var(--back-in);
+}
+
+.power[data-step="1"] .pc__bang {
+  transform: none;
+  transition: transform 0.6s 0.25s var(--spring);
+}
+
+.pc__bang-idle {
+  display: block;
+  transform-origin: 14% 96%;
+}
+
+/* 별 */
+.pc__star {
+  position: absolute;
+  left: 1112px;
+  top: 596px;
+  width: 98.986px;
+  height: 98.986px;
+}
+
+.pc__star-shape {
+  display: block;
+  transform: scale(0);
+  transform-origin: 52% 49%;
+}
+
+.pc__spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 22px;
+  margin: -11px 0 0 -3px;
+  border-radius: 3px;
+  background: #fff;
+  opacity: 0;
+}
+
+.pc__spark--1 {
+  --a: -62deg;
+}
+
+.pc__spark--2 {
+  --a: 8deg;
+}
+
+.pc__spark--3 {
+  --a: 74deg;
+}
+
+.pc__spark--4 {
+  --a: 150deg;
+}
+
+/* ── 반복 모션 ── */
+
+/* 전원 1: 놀라서 통통 튀고, 왼손을 흔들며 인사 */
+.power[data-step="1"] .pc__idle {
+  animation: idle-startled 0.95s ease-in-out infinite;
+}
+
+.power[data-step="1"] .pc__limb--l .pc__limb-idle {
+  animation: wave 0.48s ease-in-out infinite alternate;
+}
+
+.power[data-step="1"] .pc__bang-idle {
+  animation: bang-wobble 0.95s ease-in-out infinite;
+}
+
+.power[data-step="1"] .pc__shadow-pulse {
+  animation: shadow-pulse 0.95s ease-in-out infinite;
+}
+
+/* 전원 2: 좌우로 말랑하게 흔들리고, 오른발을 까딱까딱 */
+.power[data-step="2"] .pc__idle {
+  animation: idle-sway 2.6s ease-in-out infinite;
+}
+
+.power[data-step="2"] .pc__limb--r .pc__limb-idle {
+  animation: tap 1.3s ease-in-out infinite;
+}
+
+.power[data-step="2"] .pc__pupil {
+  animation: look 5.2s ease-in-out infinite;
+}
+
+/* 전원 1·2: 눈 깜빡임 */
+.power[data-step="1"] .pc__eye-blink,
+.power[data-step="2"] .pc__eye-blink {
+  animation: blink 3.8s infinite;
+}
+
+/* 전원 3: 기분 좋게 통통, 별이 뿅! 나타났다 사라짐 */
+.power[data-step="3"] .pc__idle {
+  animation: idle-happy 1.3s infinite;
+}
+
+.power[data-step="3"] .pc__shadow-pulse {
+  animation: shadow-pulse 1.3s ease-in-out infinite;
+}
+
+.power[data-step="3"] .pc__star-shape {
+  animation: star-pop 3.9s 0.12s infinite both;
+}
+
+.power[data-step="3"] .pc__spark {
+  animation: spark 3.9s 0.12s infinite both;
+}
+
+/* 장면이 바뀔 때 한 번 출렁 */
+.pc__bounce.is-jelly {
+  animation: jelly 0.7s both;
+}
+
+.pc__bounce.is-waking {
+  animation: wake 0.8s both;
+}
+
+@keyframes idle-startled {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.035, 0.965);
+  }
+  50% {
+    transform: translateY(-13px) scale(0.975, 1.03);
+  }
+}
+
+@keyframes idle-sway {
+  0%,
+  100% {
+    transform: rotate(-2.6deg) scale(1, 1);
+  }
+  25% {
+    transform: rotate(0deg) scale(1.025, 0.975);
+  }
+  50% {
+    transform: rotate(2.6deg) scale(1, 1);
+  }
+  75% {
+    transform: rotate(0deg) scale(1.025, 0.975);
+  }
+}
+
+@keyframes idle-happy {
+  0% {
+    transform: translateY(0) scale(1.06, 0.94);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  38% {
+    transform: translateY(-24px) scale(0.96, 1.05);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4);
+  }
+  66% {
+    transform: translateY(0) scale(1.07, 0.93);
+    animation-timing-function: ease-out;
+  }
+  82% {
+    transform: translateY(-3px) scale(0.99, 1.012);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+}
+
+@keyframes shadow-pulse {
+  0%,
+  100% {
+    transform: scaleX(1.03);
+  }
+  45% {
+    transform: scaleX(0.93);
+  }
+}
+
+@keyframes wave {
+  from {
+    transform: translate(4px, 6px) rotate(-16deg);
+  }
+  to {
+    transform: translate(-4px, -8px) rotate(14deg);
+  }
+}
+
+@keyframes tap {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: translate(-3px, 10px) rotate(14deg);
+  }
+  45% {
+    transform: translate(2px, -6px) rotate(-9deg);
+  }
+  60% {
+    transform: translate(-2px, 6px) rotate(8deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes bang-wobble {
+  0%,
+  100% {
+    transform: rotate(-5deg) scale(1.04, 0.96);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-8px) scale(0.97, 1.05);
+  }
+}
+
+@keyframes blink {
+  0%,
+  44%,
+  50%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  47% {
+    transform: scaleY(0.08);
+  }
+  /* 가끔 두 번 깜빡 */
+  94% {
+    transform: scaleY(0.08);
+  }
+  96% {
+    transform: scaleY(1);
+  }
+  98% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes look {
+  0%,
+  18%,
+  100% {
+    translate: 0 0;
+  }
+  26%,
+  48% {
+    translate: 7px -3px;
+  }
+  58%,
+  82% {
+    translate: -7px 2px;
+  }
+  90% {
+    translate: 0 0;
+  }
+}
+
+/* 별: 뿅! → 잠깐 반짝 → 쏙 */
+@keyframes star-pop {
+  0% {
+    transform: scale(0) rotate(-70deg);
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  6% {
+    transform: scale(1.45) rotate(14deg);
+    animation-timing-function: ease-in-out;
+  }
+  11% {
+    transform: scale(0.82) rotate(-6deg);
+  }
+  16% {
+    transform: scale(1.12) rotate(3deg);
+  }
+  21% {
+    transform: scale(0.97) rotate(0deg);
+  }
+  26%,
+  40% {
+    transform: scale(1) rotate(0deg);
+    animation-timing-function: ease-in-out;
+  }
+  46% {
+    transform: scale(1.22) rotate(24deg);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5);
+  }
+  54%,
+  100% {
+    transform: scale(0) rotate(110deg);
+  }
+}
+
+/* 별이 터질 때 사방으로 튀는 작은 반짝이 */
+@keyframes spark {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-28px) scaleY(0.3);
+  }
+  3% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(-52px) scaleY(1);
+  }
+  12% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(-78px) scaleY(0.7);
+  }
+  18%,
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-88px) scaleY(0);
+  }
+}
+
+@keyframes jelly {
+  0% {
+    transform: none;
+  }
+  16% {
+    transform: scale(1.14, 0.84);
+  }
+  38% {
+    transform: translateY(-20px) scale(0.9, 1.12);
+  }
+  58% {
+    transform: scale(1.07, 0.93);
+  }
+  76% {
+    transform: scale(0.975, 1.03);
+  }
+  90% {
+    transform: scale(1.01, 0.99);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* 대기화면에서 깨어나며 폴짝 */
+@keyframes wake {
+  0% {
+    transform: translate(-26px, -40px) scale(0.9, 0.92);
+  }
+  18% {
+    transform: translate(-10px, 0) scale(1.16, 0.8);
+  }
+  42% {
+    transform: translateY(-46px) scale(0.9, 1.13);
+  }
+  62% {
+    transform: scale(1.09, 0.91);
+  }
+  78% {
+    transform: scale(0.97, 1.03);
+  }
+  90% {
+    transform: scale(1.01, 0.99);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .power *,
+  .power *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .power[data-step="3"] .pc__star-shape {
+    transform: none;
+  }
+}

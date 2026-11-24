@@ -1,0 +1,381 @@
+/* ───────── 로비 - 커스터마이징 ─────────
+   장식 줄의 위치·선택 정도(--sel), 초록이 위치는 js/custom.js가 매 프레임 넣는다. */
+
+.screen--custom {
+  background: #fff;
+}
+
+.custom svg {
+  overflow: visible;
+}
+
+.cu__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.cu__marker {
+  position: absolute;
+  left: 936px;
+  top: 18px;
+}
+
+/* ── 장식 줄 ── */
+.cu__row {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cu__item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  --sel: 0;
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+.cu__disc {
+  position: absolute;
+  left: -123.5px;
+  top: -123.5px;
+  width: 247px;
+  height: 247px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: color-mix(in srgb, #dedede calc(var(--sel) * 100%), #ebebeb);
+  /* 가운데 원은 초록 테두리 */
+  box-shadow: inset 0 0 0 calc(var(--sel) * 13px) #35d271;
+  cursor: pointer;
+}
+
+.cu__disc svg {
+  position: absolute;
+}
+
+/* 아래 줄(색)을 고르는 중이면 위 줄은 살짝 물러난다 */
+.cu__row,
+.cu__marker,
+.cu__name {
+  transition: opacity 0.2s;
+}
+
+.custom.is-color-row .cu__row,
+.custom.is-color-row .cu__marker {
+  opacity: 0.45;
+}
+
+.cu__name {
+  position: absolute;
+  left: 966px;
+  top: 439px;
+  width: 1000px;
+  margin: 0 0 0 -500px;
+  white-space: nowrap;
+  color: #000;
+  font-size: 65px;
+  font-weight: 800;
+  line-height: 88px;
+  text-align: center;
+}
+
+.cu__name.is-changing {
+  animation: lobby-info 0.35s var(--spring-soft) both;
+}
+
+/* ── 메인 캐릭터 ── */
+.cu__shadow {
+  position: absolute;
+  left: 760px;
+  top: 967px;
+  width: 400px;
+  height: 27px;
+  border-radius: 50%;
+  background: #c4c4c4;
+}
+
+.cu__hero {
+  position: absolute;
+  left: 700px;
+  top: 440px;
+  --body: #1871ed;
+  --deep: #1949ab;
+}
+
+.cu__skin {
+  fill: var(--body);
+  transition: fill 0.25s;
+}
+
+.cu__pupil,
+.cu__feet path {
+  fill: var(--deep);
+  transition: fill 0.25s;
+}
+
+.cu__body {
+  transform-box: view-box;
+  transform-origin: 959px 940px;
+  animation: actor-bob 3s ease-in-out infinite;
+}
+
+.cu__body.is-boing {
+  animation: jelly 0.6s both;
+}
+
+.cu__eyes {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: blink 4.2s infinite;
+}
+
+.cu__wear {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.cu__wear.is-popping {
+  animation: cu-wear 0.5s var(--spring) both;
+}
+
+@keyframes cu-wear {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* 색 바꾸기 화살표 */
+.cu__arrow {
+  position: absolute;
+  top: 718px;
+  width: 55px;
+  height: 95px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.cu__arrow svg {
+  display: block;
+}
+
+.cu__arrow--left {
+  left: 592px;
+}
+
+.cu__arrow--right {
+  left: 1285px;
+}
+
+.custom.is-color-row .cu__arrow {
+  opacity: 1;
+}
+
+/* 고른 줄이 색 줄이면 화살표가 바깥으로 콕콕 */
+.custom.is-color-row .cu__arrow--left {
+  animation: cu-nudge-l 1.2s ease-in-out infinite;
+}
+
+.custom.is-color-row .cu__arrow--right {
+  animation: cu-nudge-r 1.2s ease-in-out infinite;
+}
+
+@keyframes cu-nudge-l {
+  50% {
+    transform: translateX(-8px);
+  }
+}
+
+@keyframes cu-nudge-r {
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.custom .cu__arrow--left.is-pushed {
+  animation: cu-push-l 0.3s both;
+}
+
+.custom .cu__arrow--right.is-pushed {
+  animation: cu-push-r 0.3s both;
+}
+
+@keyframes cu-push-l {
+  40% {
+    transform: translateX(-18px) scale(0.85, 1.1);
+  }
+}
+
+@keyframes cu-push-r {
+  40% {
+    transform: translateX(18px) scale(0.85, 1.1);
+  }
+}
+
+/* ── 뒤에서 지켜보는 초록이 ── */
+.cu__buddy {
+  position: absolute;
+  left: 253px;
+  top: 675px;
+  width: 245px;
+  height: 237px;
+  will-change: transform;
+}
+
+.cu__buddy-shadow {
+  position: absolute;
+  left: -57px;
+  top: 224px;
+  width: 278px;
+  height: 27px;
+  border-radius: 50%;
+  background: #d9d9d9;
+}
+
+.cu__buddy-flip {
+  position: absolute;
+  inset: 0;
+  transform-origin: 122px 50%;
+}
+
+.cu__buddy-art {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.cu__buddy-body {
+  transform-box: view-box;
+  transform-origin: 122px 236px;
+  animation: actor-bob 2.6s ease-in-out infinite;
+}
+
+/* 평소: 두 눈 뜨고, 가끔 깜빡 */
+.cu__eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: blink 3.8s infinite;
+}
+
+.cu__wink {
+  opacity: 0;
+}
+
+.cu__star {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* 반응: 폴짝 + 윙크 + 별 뿅 */
+.cu__buddy.is-reacting .cu__buddy-body {
+  animation: jelly 0.6s both;
+}
+
+.cu__buddy.is-reacting .cu__eye--open {
+  opacity: 0;
+}
+
+.cu__buddy.is-reacting .cu__wink {
+  opacity: 1;
+}
+
+/* 별 머리핀은 늘 꽂혀 있고, 반응할 때 같이 살짝 흔들린다 */
+.cu__buddy.is-reacting .cu__star {
+  animation: cu-pin 0.6s ease-out both;
+}
+
+@keyframes cu-pin {
+  30% {
+    transform: rotate(-14deg) scale(1.08);
+  }
+  60% {
+    transform: rotate(8deg);
+  }
+}
+
+/* 말풍선 */
+.cu__say {
+  position: absolute;
+  left: 337px;
+  top: 512px;
+  z-index: 5;
+  width: 260px;
+  height: 165px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cu__say svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 50% 50%;
+}
+
+.cu__say b {
+  position: absolute;
+  left: 0;
+  top: 22px;
+  width: 257px;
+  color: #299f78;
+  font-size: 35px;
+  font-weight: 800;
+  line-height: 88px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.cu__say.is-on {
+  animation: cu-say 0.45s var(--spring) both;
+}
+
+@keyframes cu-say {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.custom .cu__hint {
+  color: #4c4c4c;
+  cursor: pointer;
+}
+
+.cu__hint.is-saved {
+  animation: lc-picked 0.45s both;
+}
+
+/* ── 등장 ── */
+.custom.is-entering .cu__disc {
+  animation: lc-enter 0.5s 0.1s var(--spring) both;
+}
+
+.custom.is-entering .cu__hero {
+  animation: lc-enter 0.55s 0.15s var(--spring) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+}

@@ -1,0 +1,276 @@
+/* ───────── 로비 - 지난 기록 확인하기 ─────────
+   날짜 원의 위치·기울기·크기·선택 정도(--sel)는 js/history.js가 매 프레임 넣는다.
+   --accent: 가운데 날짜의 진한 색 */
+
+.screen--history {
+  background: #3c3c3c;
+  --accent: #ff7c0f;
+}
+
+.history svg {
+  overflow: visible;
+}
+
+.hs__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.hs__ring,
+.hs__plate {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.hs__ring {
+  left: 200px;
+  top: 215px;
+  width: 1538px;
+  height: 1538px;
+  background: #ebebeb;
+}
+
+.hs__plate {
+  left: 274px;
+  top: 289px;
+  width: 1390px;
+  height: 1390px;
+  background: #fff;
+}
+
+/* ── 날짜 다이얼 ── */
+.hs__dial {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  /* 빈 곳은 아래 버튼들이 눌리도록 통과시키고, 원만 잡는다 */
+  pointer-events: none;
+}
+
+.hs {
+  pointer-events: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  --sel: 0;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.hs.is-future {
+  cursor: not-allowed;
+}
+
+.hs__pop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.hs__disc {
+  position: absolute;
+  left: calc(var(--size) / -2);
+  top: calc(var(--size) / -2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--size);
+  height: var(--size);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--pastel);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 0 calc(var(--sel) * 44px) rgba(45, 47, 51, calc(var(--sel) * 0.28));
+}
+
+/* 가운데로 올수록 진한 색이 차오른다 */
+.hs__vivid {
+  position: absolute;
+  inset: 0;
+  background: var(--vivid);
+  opacity: var(--sel);
+}
+
+.hs__day,
+.hs__date {
+  position: relative;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.hs__day {
+  font-size: 48px;
+}
+
+.hs__date {
+  margin-top: 6px;
+  font-size: 53px;
+  letter-spacing: -0.5px;
+}
+
+/* 날짜 옆 작은 물방울: 끝이 날짜를 가리킨다 */
+.hs__pin {
+  position: absolute;
+  left: -25px;
+  top: -192px;
+  color: var(--pastel);
+  transform: rotate(-12deg);
+  transform-origin: 50% 100%;
+}
+
+.hs__pop.is-refusing {
+  animation: refuse 0.4s both;
+}
+
+/* 가운데 날짜를 가리키는 위쪽 눈물 모양 */
+.hs__marker {
+  position: absolute;
+  left: 936px;
+  top: 18px;
+  color: var(--accent);
+  transition: color 0.25s;
+  transform-origin: 50% 0;
+}
+
+.hs__marker.is-ticking {
+  animation: hs-marker 0.45s both;
+}
+
+@keyframes hs-marker {
+  35% {
+    transform: translateY(8px) scale(1.12, 0.86);
+  }
+  65% {
+    transform: translateY(-3px) scale(0.95, 1.06);
+  }
+}
+
+/* ── 기록 정보 ── */
+.hs__info {
+  position: absolute;
+  left: 414px;
+  top: 477px;
+  width: 1103px;
+  text-align: center;
+}
+
+.hs__info p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.hs__title {
+  color: var(--accent);
+  font-size: 75px;
+  font-weight: 800;
+  line-height: 94px;
+  transition: color 0.25s;
+}
+
+.hs__desc {
+  margin-top: 36px !important;
+  color: #424242;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 62px;
+}
+
+.hs__chips {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+}
+
+.hs__chip {
+  width: 239px;
+  height: 70px;
+  border: 1.3px solid color-mix(in srgb, var(--accent) 75%, #fff);
+  border-radius: 35px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 67px;
+  white-space: nowrap;
+}
+
+.hs__line {
+  position: absolute;
+  left: 364px;
+  top: 887px;
+  width: 1208px;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent) 70%, #fff);
+}
+
+.hs__more {
+  position: absolute;
+  left: 726px;
+  top: 937px;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  height: 62px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #333;
+  font: inherit;
+  font-size: 45px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hs__more svg {
+  margin-top: 3px;
+}
+
+.hs__more.is-pressed {
+  animation: lc-picked 0.45s both;
+}
+
+/* 날짜가 바뀌면 글이 톡, 키워드는 하나씩 퐁퐁 */
+.hs__info.is-changing {
+  animation: lobby-info 0.4s var(--spring-soft) both;
+}
+
+.hs__info.is-changing .hs__chip {
+  animation: kw-chip-in 0.4s calc(0.08s + var(--i) * 0.05s) var(--spring) both;
+}
+
+.history .hs__hint {
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ── 등장 ── */
+.history.is-entering .hs__ring,
+.history.is-entering .hs__plate {
+  animation: kw-rise 0.55s var(--spring-soft) both;
+}
+
+.history.is-entering .hs__pop {
+  animation: lc-enter 0.55s 0.2s var(--spring) both;
+}
+
+.history.is-entering .hs__info,
+.history.is-entering .hs__line,
+.history.is-entering .hs__more {
+  animation: rate-drop 0.45s 0.25s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+}

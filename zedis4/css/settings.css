@@ -1,0 +1,365 @@
+/* ───────── 로비 - 세부 설정 ─────────
+   피그마 '로비 - 기타 설정'. 등장은 판이 위에서 아래로 한 번에 촤락 펼쳐지는 것만. */
+
+.screen--settings {
+  background: #fff;
+}
+
+.settings svg {
+  overflow: visible;
+}
+
+.set__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.set__marker {
+  position: absolute;
+  left: 936px;
+  top: 18px;
+}
+
+/* 판 뒤에서 내다보는 청록: 조용히 숨만 쉰다 */
+.set__buddy {
+  position: absolute;
+  inset: 0;
+  transform-origin: 262px 1040px;
+  animation: actor-bob 3.2s ease-in-out infinite;
+}
+
+.set__buddy svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.set__eyes,
+.set__pupils {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.set__eyes {
+  animation: blink 4.4s infinite;
+}
+
+.set__pupils {
+  animation: blink 4.4s infinite;
+}
+
+/* ── 설정 판 ── */
+.set__panel {
+  position: absolute;
+  left: 304px;
+  top: 115px;
+  width: 1323px;
+  height: 966px;
+  overflow: hidden;
+  border: 0.5px solid #989898;
+  background: #f0f0f0;
+  box-shadow: 0 0 59px rgba(45, 47, 51, 0.16);
+  transform-origin: 50% 0;
+}
+
+/* 촤락: 위에서 아래로 빠르게 펼쳐진다 */
+.settings.is-opening .set__panel {
+  animation: set-unfold 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes set-unfold {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 -2% 0);
+  }
+}
+
+/* 탭 */
+.set__head {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 121px;
+  background: #fff;
+}
+
+.set__tab {
+  position: absolute;
+  top: 15px;
+  height: 88px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #707070;
+  font: inherit;
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 88px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.set__tab:nth-child(1) {
+  left: 272px;
+}
+
+.set__tab:nth-child(2) {
+  left: 513px;
+}
+
+.set__tab:nth-child(3) {
+  left: 793px;
+}
+
+.set__tab:nth-child(4) {
+  left: 947px;
+}
+
+.set__tab.is-on {
+  color: #29bd8b;
+}
+
+/* 아직 고를 수 없는 탭 */
+.set__tab.is-locked {
+  cursor: not-allowed;
+}
+
+.set__tab.is-refusing {
+  animation: refuse 0.4s both;
+}
+
+.set__underline {
+  position: absolute;
+  left: 236px;
+  top: 114px;
+  width: 238px;
+  height: 7px;
+  background: #29bd8b;
+  transition: transform 0.3s var(--spring-soft), width 0.3s var(--spring-soft);
+}
+
+/* ↑ 로 탭 줄에 올라오면 지금 탭이 살짝 떠오르고 밑줄이 두꺼워진다 */
+.set__head.is-focus .set__tab.is-on {
+  animation: set-tab-focus 1.2s ease-in-out infinite;
+}
+
+.set__head.is-focus .set__underline {
+  height: 11px;
+  margin-top: -4px;
+}
+
+@keyframes set-tab-focus {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.set__list.is-switching {
+  animation: lobby-info 0.3s var(--spring-soft) both;
+}
+
+/* 목록 */
+.set__view {
+  position: absolute;
+  left: 0;
+  top: 118px;
+  width: 100%;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.set__list {
+  padding: 0 0 260px 49px;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.set__section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 1223px;
+  height: 85px;
+  padding-left: 33px;
+  color: #717171;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.set__section + .set__row,
+.set__row + .set__section {
+  border-top: 1px solid #b4b4b4;
+}
+
+.set__section i {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  width: 5px;
+  height: 42px;
+  margin-top: -21px;
+  background: #7e7e7e;
+}
+
+.set__section:first-child + .set__row {
+  border-top-color: transparent;
+}
+
+.set__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  width: 1223px;
+  height: 118px;
+  padding: 0 38px 0 33px;
+  border: 0 solid transparent;
+  border-radius: 16px;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.set__row + .set__row {
+  border-top: 1px solid #b4b4b4;
+  border-radius: 0;
+}
+
+/* 고른 줄: 흰 칸 + 초록 그라데이션 테두리. 위아래 구분선은 감춘다 */
+.set__row.is-focus {
+  z-index: 1;
+  margin: -1px 0;
+  height: 120px;
+  border: 5px solid transparent;
+  border-radius: 16px;
+  padding: 0 33px 0 28px;
+  background: linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(90deg, #3ce1aa 0%, #13b25f 45%, #8affc4 100%) border-box;
+}
+
+.set__row.is-focus + .set__row {
+  border-top-color: transparent;
+}
+
+.set__label {
+  flex: 1;
+  min-width: 0;
+  color: #3e3e3e;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.set__value {
+  color: #29b687;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.set__value--num {
+  min-width: 66px;
+  text-align: right;
+}
+
+.set__row.is-off .set__value {
+  color: #a3a3a3;
+}
+
+.set__row.is-testing .set__value {
+  color: #a3a3a3;
+}
+
+.set__value.is-changed {
+  animation: set-pop 0.25s ease-out both;
+}
+
+.set__row.is-bumping {
+  animation: refuse 0.3s both;
+}
+
+@keyframes set-pop {
+  from {
+    transform: scale(1.18);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* 막대 */
+.set__bar {
+  position: relative;
+  width: 387px;
+  height: 20px;
+  border-radius: 10px;
+  background: #c4c4c4;
+}
+
+.set__bar i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 10px;
+  background: #29b686;
+  transition: width 0.15s ease-out;
+}
+
+.set__scroll {
+  position: absolute;
+  left: 1298px;
+  top: 142px;
+  width: 9px;
+  height: 405px;
+  border-radius: 5px;
+  background: #cfcfcf;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 알림 한 줄 */
+.set__toast {
+  position: absolute;
+  left: 967px;
+  top: 760px;
+  margin: 0;
+  padding: 18px 40px;
+  border-radius: 40px;
+  background: rgba(40, 40, 40, 0.88);
+  color: #fff;
+  font-size: 36px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.set__toast.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.settings .set__hint {
+  color: #4c4c4c;
+  cursor: pointer;
+}
+
+.set__hint.is-saved {
+  animation: lc-picked 0.45s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings * {
+    animation-duration: 0.01s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01s !important;
+  }
+}
+
+/* 마지막 줄 아래에도 구분선(피그마 '기타 설정2') */
+.set__row:last-child:not(.is-focus) {
+  border-bottom: 1px solid #b4b4b4;
+}

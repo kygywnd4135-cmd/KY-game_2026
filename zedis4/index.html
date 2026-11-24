@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>제디스4 화면 흐름</title>
+    <link rel="preload" href="fonts/SUITE-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/standby.css" />
+    <link rel="stylesheet" href="css/power.css" />
+    <link rel="stylesheet" href="css/loading.css" />
+    <link rel="stylesheet" href="css/lobby.css" />
+    <link rel="stylesheet" href="css/keywords.css" />
+    <link rel="stylesheet" href="css/settings.css" />
+    <link rel="stylesheet" href="css/recommend.css" />
+    <link rel="stylesheet" href="css/history.css" />
+    <link rel="stylesheet" href="css/replay.css" />
+    <link rel="stylesheet" href="css/custom.css" />
+    <link rel="stylesheet" href="css/alert.css" />
+    <link rel="stylesheet" href="css/night.css" />
+    <link rel="stylesheet" href="css/talk.css" />
+    <link rel="stylesheet" href="css/scenario.css" />
+    <link rel="stylesheet" href="css/play.css" />
+    <link rel="stylesheet" href="css/bridge.css" />
+    <link rel="stylesheet" href="css/edit.css" />
+    <link rel="stylesheet" href="css/wrap.css" />
+    <link rel="stylesheet" href="css/rate.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="frame">
+      <main class="stage">
+        <!-- ───────── 대기화면 (AOD) ───────── -->
+        <section class="screen screen--standby is-active" data-screen="standby">
+          <p class="clock">
+            <span class="clock__date" data-clock-date>11/17 TUE</span>
+            <span class="clock__time" data-clock-time>09:41</span>
+          </p>
+
+          <div class="sleeper__shadow" aria-hidden="true"></div>
+
+          <svg class="sleeper" viewBox="0 0 282 280" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="꾸벅꾸벅 졸고 있는 캐릭터">
+            <g class="sleeper__breath">
+              <g class="sleeper__nod">
+                <ellipse cx="154" cy="131" rx="128" ry="131" fill="#1871ED" />
+                <g class="sleeper__eyes">
+                  <path d="M118 158.5C118 160.798 117.082 163.074 115.298 165.197C113.514 167.32 110.899 169.249 107.602 170.874C104.306 172.499 100.392 173.788 96.0853 174.668C91.7782 175.547 87.1619 176 82.5 176C77.8381 176 73.2218 175.547 68.9147 174.668C64.6077 173.788 60.6942 172.499 57.3977 170.874C54.1012 169.249 51.4863 167.32 49.7023 165.197C47.9182 163.074 47 160.798 47 158.5L82.5 158.5H118Z" fill="#1949AB" />
+                  <path d="M214 158.5C214 160.798 213.056 163.074 211.222 165.197C209.387 167.32 206.699 169.249 203.309 170.874C199.92 172.499 195.896 173.788 191.468 174.668C187.04 175.547 182.293 176 177.5 176C172.707 176 167.96 175.547 163.532 174.668C159.104 173.788 155.08 172.499 151.691 170.874C148.301 169.249 145.613 167.32 143.778 165.197C141.944 163.074 141 160.798 141 158.5L177.5 158.5H214Z" fill="#1949AB" />
+                </g>
+              </g>
+            </g>
+            <!-- 발은 바닥에 붙어 있다 -->
+            <ellipse cx="42.5037" cy="233.612" rx="28" ry="36.5" transform="rotate(-30.0162 42.5037 233.612)" fill="#1949AB" />
+            <ellipse cx="28" cy="36.5" rx="28" ry="36.5" transform="matrix(-0.865884 -0.500244 -0.500244 0.865884 251.007 216.014)" fill="#1949AB" />
+          </svg>
+        </section>
+
+        <!-- ───────── 전원 1~3 ───────── -->
+        <section class="screen screen--power power" data-screen="power" data-step="1">
+          <!-- 말풍선 -->
+          <div class="bubble">
+            <div class="bubble__pop">
+              <svg class="bubble__shape" width="1049" height="359" viewBox="0 0 1049 359" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M58.988 326.482L14.08 73.178L527.887 18.48L1048.96 73.178L1025.84 282.854L664.59 359.04L58.988 326.482Z" fill="#6B6B6B" />
+                <path d="M44.87 308.001L0 54.698L513.371 0L1034 54.698L1010.9 264.373L649.96 340.56L44.87 308.001Z" fill="#F4F4F4" />
+              </svg>
+              <p class="bubble__text" data-bubble-text></p>
+              <svg class="bubble__next" width="24.42" height="44.202" viewBox="974.38 206.699 24.42 44.202" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M998.8 228.8L974.38 250.901L974.38 206.699L998.8 228.8Z" fill="#1871ED" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- 캐릭터 -->
+          <div class="pc" role="img" aria-label="파란 캐릭터">
+            <div class="pc__shadow">
+              <div class="pc__shadow-pulse">
+                <span class="pc__shadow-light"></span>
+                <span class="pc__shadow-dark"></span>
+              </div>
+            </div>
+
+            <div class="pc__bounce">
+              <div class="pc__idle">
+                <div class="pc__body"></div>
+
+                <svg class="pc__brow" width="45" height="36" viewBox="913 704 45 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M916 737.037C917.411 723.444 927.185 700.336 955 716.647" stroke="#1949AB" stroke-width="3" />
+                </svg>
+
+                <div class="pc__eye pc__eye--l">
+                  <div class="pc__eye-blink">
+                    <span class="pc__white"></span>
+                    <span class="pc__pupil"></span>
+                  </div>
+                </div>
+                <div class="pc__eye pc__eye--r">
+                  <div class="pc__eye-blink">
+                    <span class="pc__white"></span>
+                    <span class="pc__pupil"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pc__limb pc__limb--l">
+              <div class="pc__limb-idle">
+                <svg width="76" height="34" viewBox="-38 -33.5 76 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M37.46 0H-37.46C-27.96 -18.177 -27.96 -28.868 2.64 -32.076C27.12 -34.642 36.06 -11.761 37.46 0Z" fill="#1949AB" />
+                </svg>
+              </div>
+            </div>
+            <div class="pc__limb pc__limb--r">
+              <div class="pc__limb-idle">
+                <svg width="76" height="34" viewBox="-38 -33.5 76 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M-38 0H38C28.37 -18.585 28.37 -29.517 -2.68 -32.796C-27.51 -35.42 -36.57 -12.025 -38 0Z" fill="#1949AB" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- 느낌표 (전원 1) -->
+            <div class="pc__bang">
+              <svg class="pc__bang-idle" width="68.24" height="96.03" viewBox="1115.76 597 68.24 96.03" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M1183.26 607.83L1148.06 665.534L1133.09 656.954L1165.07 597.399L1183.26 607.83ZM1125.57 687.405C1122.87 685.858 1121.1 683.576 1120.26 680.559C1119.44 677.514 1119.81 674.651 1121.39 671.969C1122.89 669.282 1125.16 667.54 1128.19 666.742C1131.22 665.944 1134.08 666.319 1136.78 667.866C1139.37 669.351 1141.09 671.609 1141.96 674.642C1142.83 677.675 1142.51 680.534 1141.01 683.221C1139.95 685.004 1138.53 686.379 1136.74 687.346C1135 688.302 1133.13 688.808 1131.15 688.863C1129.17 688.891 1127.32 688.405 1125.57 687.405Z" fill="white" />
+              </svg>
+            </div>
+
+            <!-- 별 (전원 3) -->
+            <div class="pc__star">
+              <span class="pc__spark pc__spark--1"></span>
+              <span class="pc__spark pc__spark--2"></span>
+              <span class="pc__spark pc__spark--3"></span>
+              <span class="pc__spark pc__spark--4"></span>
+              <svg class="pc__star-shape" width="98.986" height="98.986" viewBox="1112 596 98.986 98.986" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M1165.12 610.646C1167.17 608.101 1171.24 608.949 1172.09 612.1L1176.76 629.192C1177.09 630.425 1178 631.424 1179.2 631.878L1195.76 638.173C1198.81 639.334 1199.26 643.466 1196.53 645.257L1181.71 654.973C1180.64 655.674 1179.97 656.844 1179.91 658.122L1179.04 675.816C1178.88 679.078 1175.09 680.784 1172.54 678.74L1158.73 667.653C1157.73 666.853 1156.41 666.578 1155.17 666.913L1138.08 671.554C1134.93 672.41 1132.13 669.331 1133.29 666.277L1139.56 649.709C1140.02 648.513 1139.87 647.173 1139.17 646.103L1129.47 631.276C1127.68 628.543 1129.75 624.935 1133.01 625.092L1150.71 625.938C1151.98 626 1153.21 625.446 1154.01 624.45L1165.12 610.646Z" fill="white" />
+              </svg>
+            </div>
+          </div>
+
+          <p class="stamp" data-clock-short>11/17 Tue. 9:41</p>
+        </section>
+
+        <!-- ───────── 펜 로딩 ───────── -->
+        <section class="screen screen--loading loading" data-screen="loading">
+          <p class="loading__title">펜의 기록을 확인중입니다<span class="loading__dot">.</span><span class="loading__dot">.</span></p>
+          <p class="loading__lead" data-loading-lead></p>
+          <p class="loading__sub" data-loading-sub></p>
+
+          <div class="runner" role="img" aria-label="총총 뛰어가는 캐릭터">
+            <div class="runner__hop">
+              <div class="runner__body"></div>
+              <div class="runner__eye">
+                <span class="runner__white"></span>
+                <span class="runner__pupil"></span>
+              </div>
+              <div class="runner__foot runner__foot--a">
+                <svg width="40.35" height="18.05" viewBox="-38 -33.5 76 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M-38 0H38C28.37 -18.585 28.37 -29.517 -2.68 -32.796C-27.51 -35.42 -36.57 -12.025 -38 0Z" fill="#1949AB" />
+                </svg>
+              </div>
+              <div class="runner__foot runner__foot--b">
+                <svg width="40.35" height="18.05" viewBox="-38 -33.5 76 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M-38 0H38C28.37 -18.585 28.37 -29.517 -2.68 -32.796C-27.51 -35.42 -36.57 -12.025 -38 0Z" fill="#1949AB" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <p class="stamp" data-clock-short>11/17 Tue. 9:41</p>
+        </section>
+
+        <!-- ───────── 로비 ───────── -->
+        <section class="screen screen--lobby lobby" data-screen="lobby">
+          <div class="lobby__plate"></div>
+          <p class="lobby__desc">가장 사용 시간이 많았던 시간은 11시 50분이네요.<br />무슨 일이 있었는지, 함께 확인하러 가볼까요?</p>
+          <svg class="lobby__grid" width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+
+          <!-- 캐릭터들은 js/lobby.js가 채운다 -->
+          <div class="dial"></div>
+
+          <p class="lobby__title">오늘의 기록 준비 완료!</p>
+
+          <!-- 맨 위 눈물 모양: 위치 고정 -->
+          <svg class="lobby__marker" width="62.74" height="82.9" viewBox="936 18 62.74 82.9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M969.137 99.8916C968.15 101.232 966.144 101.223 965.17 99.874L942.502 68.4961L942.506 68.4961C938.427 63.2019 936 56.5699 936 49.3701C936 32.045 950.045 18 967.37 18C984.695 18.0001 998.74 32.0451 998.74 49.3701C998.74 56.57 996.312 63.2019 992.233 68.4961L992.237 68.4961L969.137 99.8916Z" fill="currentColor" />
+          </svg>
+
+          <div class="lobby__hint">
+            <svg class="lobby__hint-icon" width="59" height="59" viewBox="1533 951 59 59" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="1533" y="951" width="59" height="59" rx="29.5" fill="#4C4C4C" />
+              <path d="M1564.52 979.477H1579V982.523H1564.52V997H1561.48V982.523H1547V979.477H1561.48V965H1564.52V979.477Z" fill="#F0F0F0" />
+            </svg>
+            <p class="lobby__hint-text">슬라이드 / 결정</p>
+          </div>
+
+          <p class="stamp" data-clock-short>11/17 Tue. 9:41</p>
+        </section>
+
+        <!-- ───────── 로비 - 펜으로 작성한 키워드: 내용은 js/keywords.js가 채운다 ───────── -->
+        <section class="screen screen--keywords keywords" data-screen="keywords"></section>
+
+        <!-- ───────── 로비 - 세부 설정: 내용은 js/settings.js가 채운다 ───────── -->
+        <section class="screen screen--settings settings" data-screen="settings"></section>
+
+        <!-- ───────── 로비 - 오늘의 추천 시나리오: 내용은 js/recommend.js가 채운다 ───────── -->
+        <section class="screen screen--recommend recommend" data-screen="recommend"></section>
+
+        <!-- ───────── 로비 - 지난 기록 확인하기: 내용은 js/history.js가 채운다 ───────── -->
+        <section class="screen screen--history history" data-screen="history"></section>
+
+        <!-- ───────── 로비 - 지난스토리 리플레이: 내용은 js/replay.js가 채운다 ───────── -->
+        <section class="screen screen--replay replay" data-screen="replay"></section>
+
+        <!-- ───────── 로비 - 커스터마이징: 내용은 js/custom.js가 채운다 ───────── -->
+        <section class="screen screen--custom custom" data-screen="custom"></section>
+
+        <!-- ───────── 대화(극장) ───────── -->
+        <section class="screen screen--talk talk" data-screen="talk">
+          <div class="talk__light"></div>
+          <div class="talk__floor"></div>
+
+          <!-- 배우: 수염 쓴 파랑 -->
+          <div class="actor" role="img" aria-label="수염을 쓴 파란 캐릭터">
+            <div class="actor__bounce">
+              <div class="actor__idle">
+                <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M958 895H874C884.648 875.289 884.648 863.694 918.958 860.216C946.406 857.433 956.423 882.246 958 895Z" fill="#17179B" />
+                  <path d="M1000 895H1086C1075.1 875.289 1075.1 863.694 1039.97 860.216C1011.87 857.433 1001.62 882.246 1000 895Z" fill="#17179B" />
+                  <circle cx="983.5" cy="724.5" r="135.5" fill="#3A3AFF" />
+                  <!-- 오른쪽 눈: 지그시 내리깐 눈 -->
+                  <g>
+                    <path d="M987.492 708.008C986.377 714.576 986.566 721.298 988.049 727.792C989.532 734.286 992.279 740.425 996.134 745.857C999.989 751.289 1004.88 755.909 1010.52 759.452C1016.16 762.996 1022.44 765.393 1029.01 766.509C1035.58 767.624 1042.3 767.434 1048.79 765.952C1055.29 764.469 1061.42 761.721 1066.86 757.866C1072.29 754.011 1076.91 749.123 1080.45 743.483C1084 737.842 1086.39 731.559 1087.51 724.992L1037.5 716.5L987.492 708.008Z" fill="white" />
+                    <path d="M1003.99 710.81C1003.25 715.21 1003.37 719.714 1004.37 724.065C1005.36 728.416 1007.2 732.529 1009.78 736.169C1012.37 739.809 1015.64 742.904 1019.42 745.278C1023.2 747.652 1027.41 749.259 1031.81 750.006C1036.21 750.753 1040.72 750.626 1045.07 749.633C1049.42 748.639 1053.53 746.798 1057.17 744.215C1060.81 741.632 1063.9 738.358 1066.28 734.578C1068.65 730.799 1070.26 726.589 1071.01 722.189L1037.5 716.5L1003.99 710.81Z" fill="#191EAB" />
+                  </g>
+                  <!-- 왼쪽 눈: 동그랗게 뜬 눈 -->
+                  <g class="actor__eye">
+                    <circle cx="925.5" cy="719.5" r="45.5" fill="white" />
+                    <ellipse class="actor__pupil" cx="931" cy="719.5" rx="33" ry="32.5" fill="#191EAB" />
+                  </g>
+                  <path class="actor__stache actor__stache--l" d="M922.977 758.789C951.386 727.741 982.163 749.548 994 764.333C982.163 779.58 952.523 811.459 928.659 817.004C904.795 822.548 878.943 803.605 869 793.441C875.155 794.827 894.568 789.837 922.977 758.789Z" fill="black" />
+                  <path class="actor__stache actor__stache--r" d="M1036.45 757.21C1008.27 725.334 977.742 747.723 966 762.902C977.742 778.555 1007.15 811.285 1030.82 816.977C1054.49 822.669 1080.14 803.221 1090 792.786C1083.89 794.209 1064.64 789.086 1036.45 757.21Z" fill="black" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bubble">
+            <div class="bubble__pop">
+              <svg class="bubble__shape" width="1049" height="359" viewBox="0 0 1049 359" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M58.988 326.482L14.08 73.178L527.887 18.48L1048.96 73.178L1025.84 282.854L664.59 359.04L58.988 326.482Z" fill="#6B6B6B" />
+                <path d="M44.87 308.001L0 54.698L513.371 0L1034 54.698L1010.9 264.373L649.96 340.56L44.87 308.001Z" fill="#F4F4F4" />
+              </svg>
+              <p class="bubble__text" data-talk-text></p>
+              <svg class="bubble__next" width="24.42" height="44.202" viewBox="974.38 206.699 24.42 44.202" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M998.8 228.8L974.38 250.901L974.38 206.699L998.8 228.8Z" fill="#1871ED" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- 관객석 -->
+          <div class="crowd" aria-hidden="true">
+            <div class="crowd__seat" data-seat="peach" style="--x:88px;--y:1047px;--r:117px;--c:#ffd3af;--tempo:2.6s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="mint" style="--x:365px;--y:1059px;--r:91px;--c:#c7fffa;--tempo:2.1s;--offset:-0.7s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="green" style="--x:573.5px;--y:1075.5px;--r:74.5px;--c:#b9ffb8;--tempo:2.9s;--offset:-1.3s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="violet" style="--x:1597px;--y:1045px;--r:105px;--c:#bea9ff;--tempo:2.3s;--offset:-0.4s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+            <div class="crowd__seat" data-seat="pink" style="--x:1871.5px;--y:1027.5px;--r:122.5px;--c:#ffacce;--tempo:2.7s;--offset:-1.8s"><div class="crowd__hop"><i class="crowd__head"></i></div></div>
+          </div>
+
+          <!-- 관객 반응: 한마디와 느낌표 (내용은 js/talk.js가 채운다) -->
+          <p class="shout" data-shout="farLeft" style="transform: translate(44.85px, 829.96px) rotate(-18.08deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+          <p class="shout" data-shout="left" style="transform: translate(397.22px, 878px) rotate(16.52deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+          <p class="shout" data-shout="right" style="transform: translate(1393px, 938.89px) rotate(-18.08deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+          <p class="shout" data-shout="farRight" style="transform: translate(1813.94px, 802px) rotate(15deg)"><span class="shout__pop"><span class="shout__wiggle"></span></span></p>
+
+          <svg class="gasp" data-gasp="l" style="left:186px;top:853px" width="36" height="76" viewBox="186 853 36 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M205.801 854.167L193.886 904.02L206.518 907.404L221.16 858.282L205.801 854.167ZM194.283 927.801C196.561 928.411 198.733 928.13 200.798 926.957C202.869 925.761 204.199 924.021 204.786 921.737C205.413 919.488 205.126 917.34 203.924 915.291C202.722 913.243 200.982 911.914 198.704 911.303C196.518 910.718 194.381 911.008 192.293 912.175C190.205 913.342 188.847 915.049 188.22 917.298C187.836 918.823 187.865 920.323 188.309 921.798C188.735 923.244 189.468 924.513 190.507 925.605C191.552 926.674 192.811 927.406 194.283 927.801Z" fill="#A9A9A9" />
+          </svg>
+          <svg class="gasp" data-gasp="r" style="left:1721px;top:864px" width="20" height="76" viewBox="1721 864 20 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M1722.74 865.002L1724.41 916.231L1737.49 916.159L1738.64 864.914L1722.74 865.002ZM1731.08 939.063C1733.44 939.05 1735.46 938.205 1737.14 936.528C1738.82 934.828 1739.64 932.798 1739.61 930.44C1739.62 928.106 1738.77 926.109 1737.07 924.451C1735.37 922.793 1733.34 921.971 1730.98 921.984C1728.72 921.996 1726.74 922.841 1725.03 924.518C1723.32 926.194 1722.47 928.2 1722.46 930.535C1722.49 932.107 1722.91 933.545 1723.73 934.851C1724.52 936.133 1725.56 937.164 1726.86 937.943C1728.15 938.698 1729.55 939.071 1731.08 939.063Z" fill="#A9A9A9" />
+          </svg>
+        </section>
+
+        <!-- ───────── 대화2: 시나리오 두루마리 ───────── -->
+        <section class="screen screen--scenario scenario" data-screen="scenario">
+          <div class="scenario__light"></div>
+          <div class="scenario__floor"></div>
+
+          <!-- 메모 뒤에 비스듬히 깔린 판 -->
+          <div class="sc-back">
+            <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true"><rect x="197" y="465.4" width="1434.6" height="692.8" rx="40" transform="rotate(-11.1 197 465.4)" fill="#474747"/></svg>
+          </div>
+
+          <!-- 파랑(메모 뒤에서 뿅 올라온다) -->
+          <div class="sc-blue" role="img" aria-label="메모 뒤에서 튀어나오는 수염 쓴 파란 캐릭터">
+            <div class="sc-blue__bob">
+              <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true">
+                <path class="sc-blue__hand" d="M1196.5 115L1231.1 166.5C1214.6 168.1 1207.5 172.9 1191.2 153.3C1178.2 137.6 1189.3 121.2 1196.5 115Z" fill="#17179B"/>
+                <path d="M1380.6 297.4L1447.2 307.2C1441 290.7 1442.3 281.7 1415.5 275C1394.1 269.7 1383.3 287.7 1380.6 297.4Z" fill="#17179B"/>
+                <circle cx="1337.3" cy="215.3" r="100.3" fill="#3A3AFF"/>
+                <path d="M1340.3 203C1339.5 207.9 1339.6 212.8 1340.7 217.6C1341.8 222.4 1343.8 227 1346.7 231C1349.5 235 1353.2 238.4 1357.3 241.1C1361.5 243.7 1366.1 245.4 1371 246.3C1375.9 247.1 1380.8 247 1385.6 245.9C1390.4 244.8 1395 242.7 1399 239.9C1403 237 1406.4 233.4 1409.1 229.2C1411.7 225.1 1413.5 220.4 1414.3 215.6L1377.3 209.3L1340.3 203Z" fill="white"/>
+                <path d="M1352.5 205.1C1352 208.3 1352 211.7 1352.8 214.9C1353.5 218.1 1354.9 221.1 1356.8 223.8C1358.7 226.5 1361.1 228.8 1363.9 230.6C1366.7 232.3 1369.8 233.5 1373.1 234.1C1376.3 234.6 1379.7 234.5 1382.9 233.8C1386.1 233.1 1389.1 231.7 1391.8 229.8C1394.5 227.9 1396.8 225.4 1398.6 222.7C1400.3 219.9 1401.5 216.7 1402.1 213.5L1377.3 209.3L1352.5 205.1Z" fill="#191EAB"/>
+                <g class="sc-eye"><circle cx="1294.4" cy="211.5" r="33.6" fill="white"/><ellipse cx="1298.5" cy="211.5" rx="24.4" ry="24" fill="#191EAB"/></g>
+                <path class="sc-stache sc-stache--l" d="M1292.3 240.5C1313.4 217.6 1336.2 233.7 1345 244.6C1336.2 255.8 1314.2 279.3 1296.5 283.4C1278.8 287.5 1259.7 273.5 1252.3 266C1256.9 267 1271.3 263.4 1292.3 240.5Z" fill="black"/>
+                <path class="sc-stache sc-stache--r" d="M1376.7 239.1C1355.9 215.6 1333.2 232.1 1324.6 243.3C1333.2 254.9 1355 279.1 1372.5 283.3C1390.1 287.6 1409.1 273.2 1416.4 265.5C1411.8 266.5 1397.6 262.7 1376.7 239.1Z" fill="black"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 메모장: 위에서 툭! 떨어진다 -->
+          <div class="sc-memo">
+            <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true">
+              <rect class="sc-memo__paper" x="260.6" y="272" width="1434.6" height="692.8" rx="40" transform="rotate(1.5 260.6 272)" fill="white"/>
+              <line x1="328.2" y1="405.3" x2="1607" y2="448" stroke="#A0A0A0" stroke-width="3.4" stroke-dasharray="10.2 10.2"/>
+              <rect x="292.4" y="297.9" width="1369.6" height="637.1" rx="38.5" transform="rotate(1.5 292.4 297.9)" stroke="#7C7C7C" stroke-width="3" stroke-dasharray="13 13"/>
+              <circle cx="1601" cy="391" r="30" fill="#454546"/>
+            </svg>
+            <p class="sc-memo__title">11.17 시나리오 총 정리</p>
+            <p class="sc-memo__body">
+              <span>김부장이 오늘 퇴사한다는 후임을 찾아내 크게 열정을 냈다.</span>
+              <span>여기 아니면 너같은 사람 받아줄 곳이 없다나 뭐라나..</span>
+              <span>이렇게 모욕을 당하며 회사에 남아있을 이유가 있을까?</span>
+              <span>후임과 술 한잔 하며 행복을 빌어줄려고 하는데..</span>
+            </p>
+          </div>
+          <!-- 떨어질 때 날리는 먼지 -->
+          <div class="sc-dust" aria-hidden="true">
+            <i style="--x:300px;--y:960px;--dx:-70px"></i><i style="--x:420px;--y:975px;--dx:-30px"></i>
+            <i style="--x:1520px;--y:1000px;--dx:40px"></i><i style="--x:1660px;--y:985px;--dx:80px"></i>
+          </div>
+
+          <!-- 민트(오른쪽 아래에서 뿅) -->
+          <div class="sc-mint" aria-hidden="true">
+            <div class="sc-mint__bob">
+              <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none">
+                <path d="M1683 1030.5L1649.1 998.8C1661.1 994.5 1665.7 989.6 1680.9 1001.1C1693.1 1010.3 1687.4 1024.5 1683 1030.5Z" fill="#03A99B"/>
+                <path d="M1576 1031.2L1580 984.9C1590.8 991.7 1597.5 992.3 1597.8 1011.4C1598.1 1026.7 1583.4 1030.9 1576 1031.2Z" fill="#03A99B"/>
+                <circle cx="1646.5" cy="911.8" r="73.1" fill="#60FFCA"/>
+                <circle class="sc-mint__hand" cx="1573.5" cy="834.4" r="14.4" fill="#03A99B"/>
+                <path d="M1655 910.9C1655 912.1 1654.5 913.3 1653.5 914.5C1652.5 915.6 1651 916.6 1649.2 917.5C1647.3 918.4 1645.1 919.1 1642.7 919.5C1640.3 920 1637.7 920.3 1635 920.3C1632.4 920.3 1629.8 920 1627.4 919.5C1625 919.1 1622.8 918.4 1620.9 917.5C1619.1 916.6 1617.6 915.6 1616.6 914.5C1615.6 913.3 1615.1 912.1 1615.1 910.9H1655Z" fill="#03A99B"/>
+                <g class="sc-eye"><circle cx="1692.8" cy="911.3" r="22.5" fill="white"/><circle cx="1699.2" cy="910.9" r="16.1" fill="#03A99B"/></g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 말풍선 -->
+          <div class="cue">
+            <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" aria-hidden="true">
+              <path d="M629 228.9L638.1 139.3L850.7 72L1149 84.9V169.1L1119.3 206.7L1136 244L1076.3 228.9L910.5 257L629 228.9Z" fill="#6D6D6D"/>
+              <path d="M617 212.9L626.1 123.3L838.7 56L1137 68.9V153.1L1107.3 190.7L1124 228L1064.3 212.9L898.5 241L617 212.9Z" fill="#E3E3E3"/>
+            </svg>
+            <p class="cue__text" data-scenario-text></p>
+          </div>
+        </section>
+
+        <!-- ───────── 연극 1~5: 내용은 js/play.js가 채운다 ───────── -->
+        <section class="screen screen--play play" data-screen="play" data-scene="1" data-speaker="boss"></section>
+
+        <!-- ───────── 연극 종료 → 연극 결과 연결 ───────── -->
+        <section class="screen screen--bridge bridge" data-screen="bridge">
+          <div class="bridge__light"></div>
+
+          <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g class="painter__shadow">
+              <ellipse cx="1065.5" cy="942.03" rx="154.5" ry="11" fill="#474747" />
+              <ellipse cx="990.5" cy="942.03" rx="154.5" ry="11" fill="#0D0D0D" />
+            </g>
+          </svg>
+
+          <!-- 베레모를 쓰고 붓을 든 파랑 -->
+          <div class="painter" role="img" aria-label="베레모를 쓰고 붓을 든 파란 캐릭터">
+            <div class="painter__idle">
+              <svg width="1935" height="1047" viewBox="0 0 1935 1047" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="932" cy="791.11" r="132" fill="#1871ED" />
+                <path d="M893.18 947.67H799.81C811.65 925.89 811.65 913.08 849.78 909.23C880.29 906.16 891.42 933.58 893.18 947.67Z" fill="#1949AB" />
+                <path class="painter__beret" d="M844.12 606.32C847.13 605.19 850.4 607.15 850.83 610.33L852.52 622.87C910.22 616.27 974.54 655.03 993.44 657.61C1011.05 660.01 1015.11 679.16 1014.95 688.43L1025.46 685.61L1028.45 696.75L791.99 760.11L789.44 750.61L800.94 740.61C787.94 712.95 774.54 652.11 824.94 630.11C830.68 627.61 836.59 625.76 842.61 624.48L837.08 615.26C835.48 612.58 836.69 609.1 839.62 608.01L844.12 606.32Z" fill="#FF3D3D" />
+                <g class="painter__arm">
+                  <path d="M1095.22 808.22L1061 904.94C1088.99 901.05 1102.9 905.97 1121.05 867.94C1135.57 837.52 1109.88 815.45 1095.22 808.22Z" fill="#1949AB" />
+                  <path d="M1098.5 738.72C1098 736.72 1087 736.22 1090 718.22C1093 700.22 1106.5 705.72 1116 687.22C1122.5 674.56 1121.42 668.32 1119.51 666.05C1119.16 665.75 1118.82 665.48 1118.5 665.22C1118.84 665.39 1119.18 665.66 1119.51 666.05C1126.71 672.16 1138.91 687.05 1137 704.22C1135 722.22 1125.83 737.06 1121.5 742.22L1098.5 738.72Z" fill="#C2C2C2" />
+                  <path d="M1094.7 742.73L1073.77 865.43C1073.34 867.99 1074.94 870.46 1077.46 871.11L1085.66 873.22C1088.34 873.91 1091.06 872.3 1091.75 869.63L1124.22 743.96C1124.7 742.13 1124.11 740.14 1122.55 739.07C1112.28 732.06 1101.72 736.04 1096.4 739.86C1095.46 740.54 1094.89 741.59 1094.7 742.73Z" fill="#71340D" />
+                </g>
+                <g class="painter__eyes">
+                  <path d="M828.17 815.72C828.2 809.35 829.43 803.05 831.81 797.17C834.19 791.3 837.66 785.97 842.04 781.48C846.41 776.99 851.59 773.44 857.29 771.03C862.99 768.61 869.1 767.38 875.26 767.41C881.42 767.43 887.51 768.71 893.19 771.17C898.87 773.63 904.03 777.22 908.37 781.74C912.71 786.26 916.15 791.62 918.48 797.51C920.82 803.41 922.01 809.72 921.98 816.09L875.08 815.9L828.17 815.72Z" fill="white" />
+                  <path d="M843.65 815.78C843.66 811.51 844.49 807.29 846.08 803.35C847.68 799.41 850 795.84 852.93 792.84C855.86 789.83 859.34 787.45 863.16 785.83C866.97 784.21 871.06 783.39 875.19 783.41C879.32 783.42 883.4 784.28 887.21 785.93C891.02 787.57 894.47 789.98 897.38 793.01C900.29 796.04 902.59 799.63 904.15 803.58C905.72 807.53 906.52 811.75 906.5 816.02L875.07 815.9L843.65 815.78Z" fill="#1949AB" />
+                  <path d="M943.01 815.72C943.03 809.35 944.27 803.05 946.65 797.17C949.02 791.3 952.5 785.97 956.87 781.48C961.24 776.99 966.43 773.44 972.13 771.03C977.83 768.61 983.93 767.38 990.09 767.41C996.25 767.43 1002.35 768.71 1008.03 771.17C1013.71 773.63 1018.87 777.22 1023.21 781.74C1027.55 786.26 1030.98 791.62 1033.32 797.51C1035.66 803.41 1036.85 809.72 1036.82 816.09L989.91 815.9L943.01 815.72Z" fill="white" />
+                  <path d="M958.48 815.77C958.5 811.51 959.33 807.29 960.92 803.35C962.51 799.41 964.84 795.84 967.77 792.83C970.7 789.83 974.17 787.45 977.99 785.83C981.81 784.21 985.9 783.39 990.03 783.4C994.15 783.42 998.24 784.28 1002.05 785.92C1005.86 787.57 1009.31 789.98 1012.22 793.01C1015.13 796.04 1017.43 799.63 1018.99 803.58C1020.56 807.52 1021.36 811.75 1021.34 816.02L989.91 815.9L958.48 815.77Z" fill="#1949AB" />
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="bubble">
+            <div class="bubble__pop">
+              <svg class="bubble__shape" width="1049" height="359" viewBox="0 0 1049 359" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M58.988 326.482L14.08 73.178L527.887 18.48L1048.96 73.178L1025.84 282.854L664.59 359.04L58.988 326.482Z" fill="#6B6B6B" />
+                <path d="M44.87 308.001L0 54.698L513.371 0L1034 54.698L1010.9 264.373L649.96 340.56L44.87 308.001Z" fill="#F4F4F4" />
+              </svg>
+              <p class="bubble__text" data-bridge-text></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 연극 결과: 수정 시점 선택 · 등장인물 행동 수정 (내용은 js/edit.js가 채운다) ───────── -->
+        <section class="screen screen--pick pick" data-screen="pick"></section>
+        <section class="screen screen--edit edit" data-screen="edit"></section>
+
+        <!-- ───────── 연극 결과 - 루틴 추천(마무리 로딩): 내용은 js/wrap.js가 채운다 ───────── -->
+        <section class="screen screen--wrap wrap" data-screen="wrap"></section>
+
+        <!-- ───────── 연극 결과 - 비슷한 시나리오 추천(별점): 내용은 js/rate.js가 채운다 ───────── -->
+        <section class="screen screen--rate rate" data-screen="rate"></section>
+
+        <!-- 화면 전환용 암전 막 -->
+        <div class="blackout" aria-hidden="true"></div>
+      </main>
+      </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/stage.js"></script>
+    <script src="js/clock.js"></script>
+    <script src="js/typewriter.js"></script>
+    <script src="js/lobby.js"></script>
+    <script src="js/keywords.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/alert.js"></script>
+    <script src="js/recommend.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/replay.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/talk.js"></script>
+    <script src="js/scenario.js"></script>
+    <script src="js/play.js"></script>
+    <script src="js/bridge.js"></script>
+    <script src="js/edit.js"></script>
+    <script src="js/wrap.js"></script>
+    <script src="js/rate.js"></script>
+    <script src="js/flow.js"></script>
+  </body>
+</html>

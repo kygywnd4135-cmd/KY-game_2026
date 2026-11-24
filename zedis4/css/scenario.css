@@ -1,0 +1,430 @@
+/* ───────── 대화2: 두루마리에서 시나리오가 촤라라락 ─────────
+   .is-open 이 붙으면:
+   ① 민트가 두루마리 끝을 잡고 끙, 끄응, 끄으응— 세 번 당기다가(버티는 건 짧게)
+   ② 버티던 종이가 한 번에 촤라라락! 풀리고 민트는 끼익 멈춰 헉헉
+   ③ 배우가 종이 뒤에서 뾰요용~ 튀어나오고 → 말풍선
+   (글자 출력과 건너뛰기는 js/scenario.js) */
+
+.screen--scenario {
+  background: #1a1a1a;
+  --drop: 0.15s; /* 메모장이 떨어지기 시작 */
+  --land: 0.6s; /* 쿵! 닿는 시점 */
+  --pop: 0.95s; /* 파랑이 뿅 */
+  --pop2: 1.2s; /* 민트 뿅 */
+  --say: 1.45s; /* 말풍선 */
+}
+
+.scenario svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* 조명은 은은하게만 */
+.scenario__light {
+  position: absolute;
+  left: 429.677px;
+  top: -575px;
+  width: 1107.646px;
+  height: 1559.25px;
+  filter: blur(7.5px);
+  opacity: 0.3;
+}
+
+.scenario__light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: linear-gradient(
+    to bottom,
+    #fff 0,
+    rgba(230, 222, 206, 0.75) 337.3px,
+    rgba(204, 189, 157, 0.5) 674.6px,
+    rgba(179, 156, 108, 0.25) 1012px,
+    rgba(153, 123, 59, 0) 1349.3px
+  );
+}
+
+.scenario__floor {
+  position: absolute;
+  left: -68px;
+  top: 895px;
+  width: 2132px;
+  height: 216px;
+  border-radius: 25px;
+  background: #000;
+  filter: blur(5px);
+}
+
+/* ── 대화2(변경): 메모장이 위에서 툭! 떨어지고 캐릭터들이 뿅! ──
+   피그마 '대화2 변경'. 순서는 js/scenario.js가 is-open 을 붙이면 CSS가 맡는다. */
+
+.sc-back,
+.sc-blue,
+.sc-memo,
+.sc-mint,
+.cue {
+  position: absolute;
+  inset: 0;
+}
+
+/* 뒤에 깔린 판: 메모보다 살짝 먼저 비스듬히 떨어진다 */
+.sc-back {
+  transform-origin: 914px 812px;
+}
+
+.scenario.is-open .sc-back {
+  animation: sc-back-drop 0.6s calc(var(--drop) - 0.05s) cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+
+@keyframes sc-back-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-1150px) rotate(-6deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0) rotate(0);
+  }
+  90% {
+    transform: translateY(-14px) rotate(0.6deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* 메모장: 떨어져서 쿵 → 납작 → 통통 */
+.sc-memo {
+  filter: drop-shadow(0 0 30px rgba(26, 26, 26, 0.4));
+  transform-origin: 968px 965px;
+}
+
+.scenario.is-open .sc-memo {
+  animation: sc-memo-drop 0.95s var(--drop) both;
+}
+
+@keyframes sc-memo-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-1200px) rotate(-7deg);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35);
+  }
+  10% {
+    opacity: 1;
+  }
+  47% {
+    transform: translateY(0) rotate(0) scale(1, 1);
+    animation-timing-function: ease-out;
+  }
+  56% {
+    transform: translateY(6px) scale(1.035, 0.93);
+    animation-timing-function: ease-out;
+  }
+  70% {
+    transform: translateY(-26px) scale(0.985, 1.025) rotate(-0.6deg);
+    animation-timing-function: ease-in;
+  }
+  82% {
+    transform: translateY(0) scale(1.012, 0.985);
+  }
+  92% {
+    transform: translateY(-5px) scale(1, 1.004);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.sc-memo svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.sc-memo p {
+  position: absolute;
+  margin: 0;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sc-memo__title {
+  left: 332px;
+  top: 313px;
+  width: 440px;
+  color: #787878;
+  font-size: 48.45px;
+  line-height: 74.8px;
+  text-align: center;
+  /* 피그마 회전 -1.7(시계 방향) = CSS +1.7deg */
+  transform: rotate(1.7deg);
+  transform-origin: 0 0;
+}
+
+.sc-memo__body {
+  left: 377px;
+  top: 543px;
+  width: 1182px;
+  color: #333;
+  font-size: 52px;
+  text-align: center;
+}
+
+.sc-memo__body span {
+  display: block;
+}
+
+.sc-memo__body span:nth-child(1) {
+  line-height: 74.8px;
+}
+
+.sc-memo__body span:nth-child(2),
+.sc-memo__body span:nth-child(4) {
+  line-height: 68px;
+}
+
+.sc-memo__body span:nth-child(3) {
+  line-height: 85px;
+}
+
+/* 쿵 하는 순간 바닥 먼지가 퐁 */
+.sc-dust i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: #8a8a8a;
+  opacity: 0;
+}
+
+.scenario.is-open .sc-dust i {
+  animation: sc-dust 0.6s calc(var(--drop) + 0.42s) ease-out both;
+}
+
+@keyframes sc-dust {
+  0% {
+    opacity: 0.7;
+    transform: translate(0, 0) scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), -40px) scale(1.4);
+  }
+}
+
+/* 화면도 쿵! 하고 살짝 울린다 */
+.scenario.is-open .scenario__floor,
+.scenario.is-open .scenario__light {
+  animation: sc-thud 0.35s calc(var(--drop) + 0.44s) both;
+}
+
+@keyframes sc-thud {
+  30% {
+    translate: 0 9px;
+  }
+  60% {
+    translate: 0 -4px;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+/* ── 파랑: 메모 뒤에서 뾰용! ── */
+.sc-blue {
+  transform-origin: 1337px 320px;
+}
+
+.scenario.is-open .sc-blue {
+  animation: sc-blue-pop 0.75s var(--pop) var(--spring) both;
+}
+
+@keyframes sc-blue-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(190px) scale(0.7, 1.15);
+  }
+  25% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateY(-34px) scale(0.92, 1.1);
+  }
+  75% {
+    transform: translateY(6px) scale(1.07, 0.93);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.sc-blue__bob {
+  position: absolute;
+  inset: 0;
+  transform-origin: 1337px 315px;
+  animation: actor-bob 3s 2s ease-in-out infinite;
+}
+
+/* 손 흔들기 */
+.sc-blue__hand {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;
+}
+
+.scenario.is-open .sc-blue__hand {
+  animation: sc-wave 1.6s calc(var(--pop) + 0.4s) ease-in-out 3 both;
+}
+
+@keyframes sc-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-22deg);
+  }
+  75% {
+    transform: rotate(12deg);
+  }
+}
+
+/* 수염이 뿅 할 때 같이 출렁 */
+.sc-stache {
+  transform-box: fill-box;
+}
+
+.sc-stache--l {
+  transform-origin: 100% 20%;
+}
+
+.sc-stache--r {
+  transform-origin: 0 20%;
+}
+
+.scenario.is-open .sc-stache--l {
+  animation: sc-stache-l 0.8s calc(var(--pop) + 0.3s) ease-out both;
+}
+
+.scenario.is-open .sc-stache--r {
+  animation: sc-stache-r 0.8s calc(var(--pop) + 0.3s) ease-out both;
+}
+
+@keyframes sc-stache-l {
+  30% {
+    transform: rotate(14deg);
+  }
+  60% {
+    transform: rotate(-6deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes sc-stache-r {
+  30% {
+    transform: rotate(-14deg);
+  }
+  60% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.sc-eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: blink 4.2s 2.4s infinite;
+}
+
+/* ── 민트: 오른쪽 아래에서 뿅! ── */
+.sc-mint {
+  transform-origin: 1646px 1030px;
+}
+
+.scenario.is-open .sc-mint {
+  animation: sc-mint-pop 0.7s var(--pop2) var(--spring) both;
+}
+
+@keyframes sc-mint-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.1) rotate(-25deg);
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.18, 0.86) rotate(4deg);
+  }
+  80% {
+    transform: scale(0.94, 1.07);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.sc-mint__bob {
+  position: absolute;
+  inset: 0;
+  transform-origin: 1646px 1030px;
+  animation: actor-bob 2.6s 2.2s ease-in-out infinite;
+}
+
+.sc-mint__hand {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.scenario.is-open .sc-mint__hand {
+  animation: sc-hand 0.5s calc(var(--pop2) + 0.35s) ease-out 2 both;
+}
+
+@keyframes sc-hand {
+  50% {
+    transform: translate(-6px, -14px);
+  }
+}
+
+/* ── 말풍선 ── */
+.cue {
+  opacity: 0;
+  transform-origin: 1100px 230px;
+}
+
+.scenario.is-open .cue {
+  animation: bubble-enter 0.55s var(--say) var(--spring) both;
+}
+
+.cue__text {
+  position: absolute;
+  left: 693px;
+  top: 125px;
+  width: 363px;
+  margin: 0;
+  color: #1871ed;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 52px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scenario * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}

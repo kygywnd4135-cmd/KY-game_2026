@@ -1,0 +1,306 @@
+/* ───────── 로비 - 지난스토리 리플레이 ─────────
+   썸네일의 위치·크기·선택 정도(--sel)는 js/replay.js가 매 프레임 넣는다. */
+
+.screen--replay {
+  background: #3c3c3c;
+}
+
+.replay svg {
+  overflow: visible;
+}
+
+.rp__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.rp__ring,
+.rp__plate {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.rp__ring {
+  left: 200px;
+  top: 215px;
+  width: 1538px;
+  height: 1538px;
+  background: #ebebeb;
+}
+
+.rp__plate {
+  left: 274px;
+  top: 289px;
+  width: 1390px;
+  height: 1390px;
+  background: #fff;
+}
+
+/* ── 썸네일 다이얼 ── */
+.rp__dial {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  /* 빈 곳은 아래 버튼들이 눌리도록 통과시키고, 원만 잡는다 */
+  pointer-events: none;
+}
+
+.rp {
+  pointer-events: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  --sel: 0;
+  cursor: pointer;
+  will-change: transform, opacity;
+}
+
+.rp__pop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.rp__disc {
+  position: absolute;
+  left: calc(var(--size) / -2);
+  top: calc(var(--size) / -2);
+  width: var(--size);
+  height: var(--size);
+  overflow: hidden;
+  border-radius: 50%;
+  /* 모든 썸네일에 흰 테두리, 가운데일수록 그림자가 짙다 */
+  box-shadow: 0 0 0 10.4px #fff, 0 calc(4px - var(--sel) * 4px) calc(4px + var(--sel) * 55px) rgba(45, 47, 51, calc(0.25 - var(--sel) * 0.09));
+}
+
+.rp__disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rp__pop.is-picked {
+  animation: lc-picked 0.55s both;
+}
+
+/* NEW! 딱지: 썸네일 왼쪽 위에 비스듬히 붙어서 같이 돈다 */
+.rp__new {
+  position: absolute;
+  left: -194px;
+  top: -142px;
+  width: 129px;
+  height: 60px;
+  background: #ff235e;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 60px;
+  text-align: center;
+  transform: rotate(-15deg);
+  animation: rp-new 2.4s ease-in-out infinite;
+}
+
+@keyframes rp-new {
+  0%,
+  70%,
+  100% {
+    transform: rotate(-15deg);
+  }
+  78% {
+    transform: rotate(-15deg) scale(1.12);
+  }
+  86% {
+    transform: rotate(-19deg) scale(0.96);
+  }
+  93% {
+    transform: rotate(-13deg) scale(1.03);
+  }
+}
+
+/* 가운데 썸네일 아래의 눈물 모양(위를 가리킨다) */
+.rp__marker {
+  position: absolute;
+  left: 938.6px;
+  top: 389px;
+  color: #c480ff;
+  transform: rotate(180deg);
+}
+
+.rp__marker.is-ticking {
+  animation: rc-marker 0.45s both;
+}
+
+/* ── 정보 ── */
+.rp__info {
+  position: absolute;
+  left: 968px;
+  top: 495px;
+  width: 1300px;
+  margin-left: -650px;
+  text-align: center;
+}
+
+.rp__info p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.rp__title {
+  color: #363636;
+  font-size: 60px;
+  font-weight: 800;
+  line-height: 88px;
+}
+
+.rp__ep {
+  color: #a617ff;
+  font-weight: 800;
+}
+
+.rp__pills {
+  display: flex;
+  justify-content: center;
+  gap: 45px;
+  margin-top: 20px;
+}
+
+.rp__pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 61px;
+  border: 1.2px solid #c6c6c6;
+  border-radius: 30.5px;
+  background: #fff;
+}
+
+.rp__rating {
+  width: 407px;
+  gap: 2px;
+}
+
+.rp__date {
+  width: 384px;
+  color: #8a8a8a;
+  font-size: 37px;
+  font-weight: 700;
+}
+
+.rp__star {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 43px;
+}
+
+.rp__star svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.rp__star-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--part, 0) * 100%);
+  height: 100%;
+  overflow: hidden;
+}
+
+.rp__score {
+  margin-left: 14px;
+  color: #ffc61c;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(2px);
+}
+
+.rp__desc {
+  margin-top: 48px !important;
+  color: #424242;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 62px;
+}
+
+.rp__info.is-changing {
+  animation: lobby-info 0.4s var(--spring-soft) both;
+}
+
+.rp__line {
+  position: absolute;
+  left: 364px;
+  top: 887px;
+  width: 1208px;
+  height: 1px;
+  background: #c480ff;
+}
+
+/* 삭제 · 리플레이! */
+.rp__btn {
+  position: absolute;
+  top: 916px;
+  height: 96px;
+  padding: 0;
+  border: 0;
+  border-radius: 48px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font: inherit;
+  font-size: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rp__btn--delete {
+  left: 581px;
+  width: 286px;
+  background: #adadad;
+}
+
+.rp__btn--play {
+  left: 900px;
+  width: 457px;
+  background: #bc6fff;
+}
+
+.rp__btn.is-pressed {
+  animation: lc-picked 0.45s both;
+}
+
+.replay .rp__hint {
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ── 등장 ── */
+.replay.is-entering .rp__ring,
+.replay.is-entering .rp__plate {
+  animation: kw-rise 0.55s var(--spring-soft) both;
+}
+
+.replay.is-entering .rp__pop {
+  animation: lc-enter 0.55s 0.2s var(--spring) both;
+}
+
+.replay.is-entering .rp__info,
+.replay.is-entering .rp__line,
+.replay.is-entering .rp__btn {
+  animation: rate-drop 0.45s 0.25s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .replay * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+}
